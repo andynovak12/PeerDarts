@@ -1,0 +1,520 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A1BC22DF1CDA7FE600C714C2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BC22DE1CDA7FE600C714C2 /* main.m */; };
+		A1BC22E21CDA7FE600C714C2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BC22E11CDA7FE600C714C2 /* AppDelegate.m */; };
+		A1BC22E81CDA7FE600C714C2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A1BC22E61CDA7FE600C714C2 /* Main.storyboard */; };
+		A1BC22EB1CDA7FE600C714C2 /* DartsObjC.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A1BC22E91CDA7FE600C714C2 /* DartsObjC.xcdatamodeld */; };
+		A1BC22ED1CDA7FE600C714C2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1BC22EC1CDA7FE600C714C2 /* Assets.xcassets */; };
+		A1BC22F01CDA7FE600C714C2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A1BC22EE1CDA7FE600C714C2 /* LaunchScreen.storyboard */; };
+		A1BC22FB1CDA7FE700C714C2 /* DartsObjCTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BC22FA1CDA7FE700C714C2 /* DartsObjCTests.m */; };
+		A1BC230D1CDA840900C714C2 /* Turn+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BC23061CDA840900C714C2 /* Turn+CoreDataProperties.m */; };
+		A1BC230E1CDA840900C714C2 /* Turn.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BC23081CDA840900C714C2 /* Turn.m */; };
+		A1BC230F1CDA840900C714C2 /* Player+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BC230A1CDA840900C714C2 /* Player+CoreDataProperties.m */; };
+		A1BC23101CDA840900C714C2 /* Player.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BC230C1CDA840900C714C2 /* Player.m */; };
+		A1BC23131CDA888400C714C2 /* ASNDataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BC23121CDA888400C714C2 /* ASNDataStore.m */; };
+		A1BC23161CDA98CF00C714C2 /* ASNTeam.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BC23151CDA98CF00C714C2 /* ASNTeam.m */; };
+		A1BC23191CDACD1100C714C2 /* ASNGame.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BC23181CDACD1100C714C2 /* ASNGame.m */; };
+		A1BC231E1CDAED4500C714C2 /* ASNMainGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BC231D1CDAED4500C714C2 /* ASNMainGameViewController.m */; };
+		A1C58CD41CEBC8DD008E78A7 /* ASNCreateNewGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A1C58CD31CEBC8DD008E78A7 /* ASNCreateNewGameViewController.m */; };
+		A1C58CD61CEBCE93008E78A7 /* TeamForCreateGame.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1C58CD51CEBCE93008E78A7 /* TeamForCreateGame.xib */; };
+		A1C58CD91CEBD398008E78A7 /* ASNCreateTeamView.m in Sources */ = {isa = PBXBuildFile; fileRef = A1C58CD81CEBD398008E78A7 /* ASNCreateTeamView.m */; };
+		A1EE7FD61CF79D1A0018ECD3 /* ASNWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A1EE7FD51CF79D1A0018ECD3 /* ASNWelcomeViewController.m */; };
+		A1EE7FD91CF79E790018ECD3 /* MCManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A1EE7FD81CF79E790018ECD3 /* MCManager.m */; };
+		A1EE7FDC1CF88E0E0018ECD3 /* ASNAvailableGamesView.m in Sources */ = {isa = PBXBuildFile; fileRef = A1EE7FDB1CF88E0E0018ECD3 /* ASNAvailableGamesView.m */; };
+		A1EE7FDF1CF8AAF60018ECD3 /* ASNAvailablePlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = A1EE7FDE1CF8AAF60018ECD3 /* ASNAvailablePlayerView.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A1BC22F71CDA7FE700C714C2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A1BC22D21CDA7FE600C714C2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A1BC22D91CDA7FE600C714C2;
+			remoteInfo = DartsObjC;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		A1BC22DA1CDA7FE600C714C2 /* DartsObjC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DartsObjC.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1BC22DE1CDA7FE600C714C2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		A1BC22E01CDA7FE600C714C2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		A1BC22E11CDA7FE600C714C2 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		A1BC22E71CDA7FE600C714C2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		A1BC22EA1CDA7FE600C714C2 /* DartsObjC.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DartsObjC.xcdatamodel; sourceTree = "<group>"; };
+		A1BC22EC1CDA7FE600C714C2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A1BC22EF1CDA7FE600C714C2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		A1BC22F11CDA7FE600C714C2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A1BC22F61CDA7FE700C714C2 /* DartsObjCTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DartsObjCTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1BC22FA1CDA7FE700C714C2 /* DartsObjCTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DartsObjCTests.m; sourceTree = "<group>"; };
+		A1BC22FC1CDA7FE700C714C2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A1BC23051CDA840900C714C2 /* Turn+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Turn+CoreDataProperties.h"; sourceTree = "<group>"; };
+		A1BC23061CDA840900C714C2 /* Turn+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Turn+CoreDataProperties.m"; sourceTree = "<group>"; };
+		A1BC23071CDA840900C714C2 /* Turn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Turn.h; sourceTree = "<group>"; };
+		A1BC23081CDA840900C714C2 /* Turn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Turn.m; sourceTree = "<group>"; };
+		A1BC23091CDA840900C714C2 /* Player+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Player+CoreDataProperties.h"; sourceTree = "<group>"; };
+		A1BC230A1CDA840900C714C2 /* Player+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Player+CoreDataProperties.m"; sourceTree = "<group>"; };
+		A1BC230B1CDA840900C714C2 /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
+		A1BC230C1CDA840900C714C2 /* Player.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Player.m; sourceTree = "<group>"; };
+		A1BC23111CDA888400C714C2 /* ASNDataStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASNDataStore.h; sourceTree = "<group>"; };
+		A1BC23121CDA888400C714C2 /* ASNDataStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNDataStore.m; sourceTree = "<group>"; };
+		A1BC23141CDA98CF00C714C2 /* ASNTeam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASNTeam.h; sourceTree = "<group>"; };
+		A1BC23151CDA98CF00C714C2 /* ASNTeam.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNTeam.m; sourceTree = "<group>"; };
+		A1BC23171CDACD1100C714C2 /* ASNGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASNGame.h; sourceTree = "<group>"; };
+		A1BC23181CDACD1100C714C2 /* ASNGame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNGame.m; sourceTree = "<group>"; };
+		A1BC231C1CDAED4500C714C2 /* ASNMainGameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASNMainGameViewController.h; sourceTree = "<group>"; };
+		A1BC231D1CDAED4500C714C2 /* ASNMainGameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNMainGameViewController.m; sourceTree = "<group>"; };
+		A1C58CD21CEBC8DD008E78A7 /* ASNCreateNewGameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASNCreateNewGameViewController.h; sourceTree = "<group>"; };
+		A1C58CD31CEBC8DD008E78A7 /* ASNCreateNewGameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNCreateNewGameViewController.m; sourceTree = "<group>"; };
+		A1C58CD51CEBCE93008E78A7 /* TeamForCreateGame.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TeamForCreateGame.xib; sourceTree = "<group>"; };
+		A1C58CD71CEBD398008E78A7 /* ASNCreateTeamView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASNCreateTeamView.h; sourceTree = "<group>"; };
+		A1C58CD81CEBD398008E78A7 /* ASNCreateTeamView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNCreateTeamView.m; sourceTree = "<group>"; };
+		A1EE7FD41CF79D1A0018ECD3 /* ASNWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASNWelcomeViewController.h; sourceTree = "<group>"; };
+		A1EE7FD51CF79D1A0018ECD3 /* ASNWelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNWelcomeViewController.m; sourceTree = "<group>"; };
+		A1EE7FD71CF79E790018ECD3 /* MCManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCManager.h; sourceTree = "<group>"; };
+		A1EE7FD81CF79E790018ECD3 /* MCManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCManager.m; sourceTree = "<group>"; };
+		A1EE7FDA1CF88E0E0018ECD3 /* ASNAvailableGamesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASNAvailableGamesView.h; sourceTree = "<group>"; };
+		A1EE7FDB1CF88E0E0018ECD3 /* ASNAvailableGamesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNAvailableGamesView.m; sourceTree = "<group>"; };
+		A1EE7FDD1CF8AAF60018ECD3 /* ASNAvailablePlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASNAvailablePlayerView.h; sourceTree = "<group>"; };
+		A1EE7FDE1CF8AAF60018ECD3 /* ASNAvailablePlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNAvailablePlayerView.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A1BC22D71CDA7FE600C714C2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1BC22F31CDA7FE700C714C2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A1BC22D11CDA7FE600C714C2 = {
+			isa = PBXGroup;
+			children = (
+				A1BC22DC1CDA7FE600C714C2 /* DartsObjC */,
+				A1BC22F91CDA7FE700C714C2 /* DartsObjCTests */,
+				A1BC22DB1CDA7FE600C714C2 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A1BC22DB1CDA7FE600C714C2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A1BC22DA1CDA7FE600C714C2 /* DartsObjC.app */,
+				A1BC22F61CDA7FE700C714C2 /* DartsObjCTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A1BC22DC1CDA7FE600C714C2 /* DartsObjC */ = {
+			isa = PBXGroup;
+			children = (
+				A1BC22E01CDA7FE600C714C2 /* AppDelegate.h */,
+				A1BC22E11CDA7FE600C714C2 /* AppDelegate.m */,
+				A1EE7FD71CF79E790018ECD3 /* MCManager.h */,
+				A1EE7FD81CF79E790018ECD3 /* MCManager.m */,
+				A1BC23141CDA98CF00C714C2 /* ASNTeam.h */,
+				A1BC23151CDA98CF00C714C2 /* ASNTeam.m */,
+				A1BC23171CDACD1100C714C2 /* ASNGame.h */,
+				A1BC23181CDACD1100C714C2 /* ASNGame.m */,
+				A1EE7FD41CF79D1A0018ECD3 /* ASNWelcomeViewController.h */,
+				A1EE7FD51CF79D1A0018ECD3 /* ASNWelcomeViewController.m */,
+				A1EE7FDA1CF88E0E0018ECD3 /* ASNAvailableGamesView.h */,
+				A1EE7FDB1CF88E0E0018ECD3 /* ASNAvailableGamesView.m */,
+				A1EE7FDD1CF8AAF60018ECD3 /* ASNAvailablePlayerView.h */,
+				A1EE7FDE1CF8AAF60018ECD3 /* ASNAvailablePlayerView.m */,
+				A1C58CD21CEBC8DD008E78A7 /* ASNCreateNewGameViewController.h */,
+				A1C58CD31CEBC8DD008E78A7 /* ASNCreateNewGameViewController.m */,
+				A1BC231C1CDAED4500C714C2 /* ASNMainGameViewController.h */,
+				A1BC231D1CDAED4500C714C2 /* ASNMainGameViewController.m */,
+				A1C58CD71CEBD398008E78A7 /* ASNCreateTeamView.h */,
+				A1C58CD81CEBD398008E78A7 /* ASNCreateTeamView.m */,
+				A1C58CD51CEBCE93008E78A7 /* TeamForCreateGame.xib */,
+				A1BC22E61CDA7FE600C714C2 /* Main.storyboard */,
+				A1BC22EC1CDA7FE600C714C2 /* Assets.xcassets */,
+				A1BC22EE1CDA7FE600C714C2 /* LaunchScreen.storyboard */,
+				A1BC22F11CDA7FE600C714C2 /* Info.plist */,
+				A1BC22DD1CDA7FE600C714C2 /* Supporting Files */,
+				A1BC22E91CDA7FE600C714C2 /* DartsObjC.xcdatamodeld */,
+				A1BC23051CDA840900C714C2 /* Turn+CoreDataProperties.h */,
+				A1BC23061CDA840900C714C2 /* Turn+CoreDataProperties.m */,
+				A1BC23071CDA840900C714C2 /* Turn.h */,
+				A1BC23081CDA840900C714C2 /* Turn.m */,
+				A1BC23091CDA840900C714C2 /* Player+CoreDataProperties.h */,
+				A1BC230A1CDA840900C714C2 /* Player+CoreDataProperties.m */,
+				A1BC230B1CDA840900C714C2 /* Player.h */,
+				A1BC230C1CDA840900C714C2 /* Player.m */,
+				A1BC23111CDA888400C714C2 /* ASNDataStore.h */,
+				A1BC23121CDA888400C714C2 /* ASNDataStore.m */,
+			);
+			path = DartsObjC;
+			sourceTree = "<group>";
+		};
+		A1BC22DD1CDA7FE600C714C2 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A1BC22DE1CDA7FE600C714C2 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		A1BC22F91CDA7FE700C714C2 /* DartsObjCTests */ = {
+			isa = PBXGroup;
+			children = (
+				A1BC22FA1CDA7FE700C714C2 /* DartsObjCTests.m */,
+				A1BC22FC1CDA7FE700C714C2 /* Info.plist */,
+			);
+			path = DartsObjCTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A1BC22D91CDA7FE600C714C2 /* DartsObjC */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1BC22FF1CDA7FE700C714C2 /* Build configuration list for PBXNativeTarget "DartsObjC" */;
+			buildPhases = (
+				A1BC22D61CDA7FE600C714C2 /* Sources */,
+				A1BC22D71CDA7FE600C714C2 /* Frameworks */,
+				A1BC22D81CDA7FE600C714C2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DartsObjC;
+			productName = DartsObjC;
+			productReference = A1BC22DA1CDA7FE600C714C2 /* DartsObjC.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A1BC22F51CDA7FE700C714C2 /* DartsObjCTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1BC23021CDA7FE700C714C2 /* Build configuration list for PBXNativeTarget "DartsObjCTests" */;
+			buildPhases = (
+				A1BC22F21CDA7FE700C714C2 /* Sources */,
+				A1BC22F31CDA7FE700C714C2 /* Frameworks */,
+				A1BC22F41CDA7FE700C714C2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A1BC22F81CDA7FE700C714C2 /* PBXTargetDependency */,
+			);
+			name = DartsObjCTests;
+			productName = DartsObjCTests;
+			productReference = A1BC22F61CDA7FE700C714C2 /* DartsObjCTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A1BC22D21CDA7FE600C714C2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = "Andy Novak";
+				TargetAttributes = {
+					A1BC22D91CDA7FE600C714C2 = {
+						CreatedOnToolsVersion = 7.3;
+					};
+					A1BC22F51CDA7FE700C714C2 = {
+						CreatedOnToolsVersion = 7.3;
+						TestTargetID = A1BC22D91CDA7FE600C714C2;
+					};
+				};
+			};
+			buildConfigurationList = A1BC22D51CDA7FE600C714C2 /* Build configuration list for PBXProject "DartsObjC" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A1BC22D11CDA7FE600C714C2;
+			productRefGroup = A1BC22DB1CDA7FE600C714C2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A1BC22D91CDA7FE600C714C2 /* DartsObjC */,
+				A1BC22F51CDA7FE700C714C2 /* DartsObjCTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A1BC22D81CDA7FE600C714C2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1BC22F01CDA7FE600C714C2 /* LaunchScreen.storyboard in Resources */,
+				A1BC22ED1CDA7FE600C714C2 /* Assets.xcassets in Resources */,
+				A1C58CD61CEBCE93008E78A7 /* TeamForCreateGame.xib in Resources */,
+				A1BC22E81CDA7FE600C714C2 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1BC22F41CDA7FE700C714C2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A1BC22D61CDA7FE600C714C2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1BC23131CDA888400C714C2 /* ASNDataStore.m in Sources */,
+				A1BC23101CDA840900C714C2 /* Player.m in Sources */,
+				A1BC230F1CDA840900C714C2 /* Player+CoreDataProperties.m in Sources */,
+				A1C58CD41CEBC8DD008E78A7 /* ASNCreateNewGameViewController.m in Sources */,
+				A1BC22E21CDA7FE600C714C2 /* AppDelegate.m in Sources */,
+				A1BC23191CDACD1100C714C2 /* ASNGame.m in Sources */,
+				A1BC22EB1CDA7FE600C714C2 /* DartsObjC.xcdatamodeld in Sources */,
+				A1C58CD91CEBD398008E78A7 /* ASNCreateTeamView.m in Sources */,
+				A1BC22DF1CDA7FE600C714C2 /* main.m in Sources */,
+				A1BC230E1CDA840900C714C2 /* Turn.m in Sources */,
+				A1EE7FD91CF79E790018ECD3 /* MCManager.m in Sources */,
+				A1EE7FD61CF79D1A0018ECD3 /* ASNWelcomeViewController.m in Sources */,
+				A1BC230D1CDA840900C714C2 /* Turn+CoreDataProperties.m in Sources */,
+				A1EE7FDC1CF88E0E0018ECD3 /* ASNAvailableGamesView.m in Sources */,
+				A1EE7FDF1CF8AAF60018ECD3 /* ASNAvailablePlayerView.m in Sources */,
+				A1BC231E1CDAED4500C714C2 /* ASNMainGameViewController.m in Sources */,
+				A1BC23161CDA98CF00C714C2 /* ASNTeam.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1BC22F21CDA7FE700C714C2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1BC22FB1CDA7FE700C714C2 /* DartsObjCTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A1BC22F81CDA7FE700C714C2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A1BC22D91CDA7FE600C714C2 /* DartsObjC */;
+			targetProxy = A1BC22F71CDA7FE700C714C2 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		A1BC22E61CDA7FE600C714C2 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A1BC22E71CDA7FE600C714C2 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		A1BC22EE1CDA7FE600C714C2 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A1BC22EF1CDA7FE600C714C2 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		A1BC22FD1CDA7FE700C714C2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A1BC22FE1CDA7FE700C714C2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A1BC23001CDA7FE700C714C2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = DartsObjC/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ASN.DartsObjC;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		A1BC23011CDA7FE700C714C2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = DartsObjC/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ASN.DartsObjC;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		A1BC23031CDA7FE700C714C2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = DartsObjCTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ASN.DartsObjCTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DartsObjC.app/DartsObjC";
+			};
+			name = Debug;
+		};
+		A1BC23041CDA7FE700C714C2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = DartsObjCTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ASN.DartsObjCTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DartsObjC.app/DartsObjC";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A1BC22D51CDA7FE600C714C2 /* Build configuration list for PBXProject "DartsObjC" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1BC22FD1CDA7FE700C714C2 /* Debug */,
+				A1BC22FE1CDA7FE700C714C2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1BC22FF1CDA7FE700C714C2 /* Build configuration list for PBXNativeTarget "DartsObjC" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1BC23001CDA7FE700C714C2 /* Debug */,
+				A1BC23011CDA7FE700C714C2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1BC23021CDA7FE700C714C2 /* Build configuration list for PBXNativeTarget "DartsObjCTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1BC23031CDA7FE700C714C2 /* Debug */,
+				A1BC23041CDA7FE700C714C2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		A1BC22E91CDA7FE600C714C2 /* DartsObjC.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				A1BC22EA1CDA7FE600C714C2 /* DartsObjC.xcdatamodel */,
+			);
+			currentVersion = A1BC22EA1CDA7FE600C714C2 /* DartsObjC.xcdatamodel */;
+			path = DartsObjC.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = A1BC22D21CDA7FE600C714C2 /* Project object */;
+}
