@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "Player.h"
+#import "ASNPlayer.h"
 
 @interface ASNTeam : NSObject <NSCoding>
 
@@ -16,13 +16,14 @@
 @property (strong, nonatomic) NSMutableDictionary *hitsInCurrentRound;
 @property (nonatomic) NSUInteger wins;
 @property (nonatomic) NSUInteger loses;
-@property (strong, nonatomic) Player *previousPlayer;
+@property (strong, nonatomic) ASNPlayer *previousPlayer;
 @property (nonatomic) NSUInteger scoreOfCurrentRound;
 @property (nonatomic) BOOL hasThreeOrMoreOfEveryHit;
 
 - (instancetype) initWithName:(NSString *)teamName;
-- (void) addPlayerToTeam:(Player *)player;
-- (void) removePlayerFromTeam:(Player *)player;
+- (void) addPlayerToTeam:(ASNPlayer *)player;
+- (void) removePlayerFromTeam:(ASNPlayer *)player;
+-(void) resetTeam;
 
 
 @end

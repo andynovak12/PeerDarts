@@ -20,17 +20,21 @@
         _createdAt = [NSDate date];
         _previousTeam = nil;
         _gameName = @"Game Name";
+        
+        
+        for (ASNTeam *team in teams) {
+            [team resetTeam];
+        }
     }
     return self;
 }
 
-- (void)logTurnOfPlayer:(Player *)loggedPlayer {
-    self.dataStore = [ASNDataStore sharedDataStore];
-    Turn *playerTurn = [NSEntityDescription insertNewObjectForEntityForName:@"Turn" inManagedObjectContext:self.dataStore.managedObjectContext];
+- (void)logTurnOfPlayer:(ASNPlayer *)loggedPlayer {
+//    self.dataStore = [ASNDataStore sharedDataStore];
+    ASNTurn *playerTurn = [ASNTurn new];
     playerTurn.hits = loggedPlayer.currentHits;
-    playerTurn.gameDate = [[NSDate alloc] init];
-    [loggedPlayer addTurnsOfPlayerObject:playerTurn];
-    [self.dataStore saveContext];
+    [loggedPlayer addTurnToPlayer:playerTurn];
+//    [self.dataStore saveContext];
 }
 
 - (void)logTurnOfCurrentPlayer {
@@ -55,7 +59,7 @@
     return teamValueForHit + 1;
 }
 
-- (NSMutableDictionary *)addHitsOfPlayer:(Player *)player toCurrentRoundHitsOfTeam:(ASNTeam *)team {
+- (NSMutableDictionary *)addHitsOfPlayer:(ASNPlayer *)player toCurrentRoundHitsOfTeam:(ASNTeam *)team {
     NSMutableDictionary *newTeamHits = [team.hitsInCurrentRound mutableCopy];
     for (NSString *key in player.currentHits) {
         NSUInteger teamValueForKey = [team.hitsInCurrentRound[key] integerValue];
@@ -78,14 +82,14 @@
     return YES;
 }
 
--(BOOL)isThereAWinner {
+-(ASNTeam *)returnIfThereIsAWinner {
     for (ASNTeam *team in self.teams) {
         if (team.hasThreeOrMoreOfEveryHit && [self teamHasMostPoints:team]) {
-            NSLog(@"WINNER WINNER %@",team.teamName);
-            return YES;
+//            NSLog(@"WINNER WINNER %@",team.teamName);
+            return team;
         }
     }
-    return NO;
+    return nil;
 }
 
 @end

@@ -60,24 +60,24 @@
     self.teamNameTextField.text = self.team.teamName;
     if (self.team.players.count > 0) {
         self.p1Label.hidden = NO;
-        self.p1Label.text = ((Player *)self.team.players[0]).name;
+        self.p1Label.text = ((ASNPlayer *)self.team.players[0]).name;
         self.p1AddButton.hidden = YES;
         self.p2AddButton.hidden = NO;
     }
     if (self.team.players.count > 1) {
-        self.p2Label.text = ((Player *)self.team.players[1]).name;
+        self.p2Label.text = ((ASNPlayer *)self.team.players[1]).name;
         self.p2Label.hidden = NO;
         self.p2AddButton.hidden = YES;
         self.p3AddButton.hidden = NO;
     }
     if (self.team.players.count > 2) {
-        self.p3Label.text = ((Player *)self.team.players[2]).name;
+        self.p3Label.text = ((ASNPlayer *)self.team.players[2]).name;
         self.p3Label.hidden = NO;
         self.p3AddButton.hidden = YES;
         self.p4AddButton.hidden = NO;
     }
     if (self.team.players.count > 3) {
-        self.p4Label.text = ((Player *)self.team.players[3]).name;
+        self.p4Label.text = ((ASNPlayer *)self.team.players[3]).name;
         self.p4Label.hidden = NO;
         self.p4AddButton.hidden = YES;
     }

@@ -9,11 +9,13 @@
 #import "ASNWelcomeViewController.h"
 #import "AppDelegate.h"
 #import "ASNAvailableGamesView.h"
+#import "ASNMainGameViewController.h"
 
 @interface ASNWelcomeViewController ()
 @property (nonatomic, strong) AppDelegate *appDelegate;
 @property (nonatomic, strong) NSMutableArray *availableGamesArray;
 @property (nonatomic, strong) NSMutableArray *availableGameViewsArray;
+@property (nonatomic, strong) NSMutableArray *receivedDataUnarchived;
 
 @end
 
@@ -21,6 +23,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    
+    self.receivedDataUnarchived = [NSMutableArray new];
 
     self.navigationController.navigationBarHidden = YES;
     
@@ -38,10 +43,22 @@
                                                  name:@"MCDidChangeStateNotification"
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveDataNotification:)
+                                                 name:@"MCDidReceiveDataNotification"
+                                               object:nil];
     // added this to automatically start looking for available games
     [self searchForAvailableGames];
 
 }
+
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"MCDidReceiveDataNotification" object:nil];
+}
+
 - (IBAction)refreshTapped:(id)sender {
     [self searchForAvailableGames];
 }
@@ -55,16 +72,16 @@
 
 
 -(void)browser:(MCNearbyServiceBrowser *)browser foundPeer:(MCPeerID *)peerID withDiscoveryInfo:(NSDictionary<NSString *,NSString *> *)info {
-    NSLog(@"Found a nearby advertising peer %@ withDiscoveryInfo %@", peerID, info);
-    if ([info[@"isGame"] isEqualToString:@"yes"]) {
+    if (([info[@"isGame"] isEqualToString:@"yes"]) && (![peerID isEqual:self.appDelegate.mcManager.peerID])) {
+        NSLog(@"Found a nearby advertising peer %@ withDiscoveryInfo %@", peerID, info);
         [self.availableGamesArray addObject:peerID];
         [self reloadAvailableGamesUI];
     }
 }
 
 -(void)browser:(MCNearbyServiceBrowser *)browser lostPeer:(MCPeerID *)peerID {
-    NSLog(@"lost peer %@",peerID.displayName);
-    if ([self.availableGamesArray containsObject:peerID]) {
+    if (([self.availableGamesArray containsObject:peerID]) && (![peerID isEqual:self.appDelegate.mcManager.peerID])) {
+        NSLog(@"lost peer %@",peerID.displayName);
         [self.availableGamesArray removeObject:peerID];
         [self reloadAvailableGamesUI];
     }
@@ -141,7 +158,7 @@
     if (state != MCSessionStateConnecting) {
         if (state == MCSessionStateConnected) {
 //            [self.connectedDevicesArray addObject:peerDisplayName];
-            NSLog(@"This is where we would transition to the game");
+            NSLog(@"Connected to %@", peerDisplayName);
         }
         else if (state == MCSessionStateNotConnected){
 //            if ([self.connectedDevicesArray count] > 0) {
@@ -155,6 +172,27 @@
         BOOL peersExist = ([[_appDelegate.mcManager.session connectedPeers] count] == 0);
 //        [_btnDisconnect setEnabled:!peersExist];
         [self.displayNameTextField setEnabled:peersExist];
+    }
+}
+
+-(void)didReceiveDataNotification:(NSNotification *)notification {
+    MCPeerID *peerID = [[notification userInfo] objectForKey:@"peerID"];
+    NSString *peerDisplayName = peerID.displayName;
+    
+    NSData *receivedData = [[notification userInfo] objectForKey:@"data"];
+    self.receivedDataUnarchived = [NSKeyedUnarchiver unarchiveObjectWithData:receivedData];
+    NSLog(@"this is the unarchived data i received in WelcomeVC: %@", self.receivedDataUnarchived);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self performSegueWithIdentifier:@"goToMainGameSegue" sender:self];
+        NSLog(@"executing segue in dispatch");
+    });
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if ([segue.identifier isEqualToString:@"goToMainGameSegue"]) {
+        ASNMainGameViewController *mainGameVC = segue.destinationViewController;
+        mainGameVC.teamsArray = self.receivedDataUnarchived;
+        NSLog(@"segueing from welcome VC, this is the array: %@", self.receivedDataUnarchived);
     }
 }
 

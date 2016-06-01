@@ -11,6 +11,7 @@
 #import "ASNDataStore.h"
 #import "AppDelegate.h"
 #import "ASNAvailablePlayerView.h"
+#import "ASNMainGameViewController.h"
 
 @interface ASNCreateNewGameViewController ()
 
@@ -53,6 +54,7 @@
 
     
     
+//    self.teamsArray = [NSMutableArray new];
     
     self.dataStore = [ASNDataStore sharedDataStore];
 
@@ -92,8 +94,9 @@
 }
 
 -(void)browser:(MCNearbyServiceBrowser *)browser foundPeer:(MCPeerID *)peerID withDiscoveryInfo:(NSDictionary<NSString *,NSString *> *)info {
-    NSLog(@"Found a nearby advertising peer %@ withDiscoveryInfo %@", peerID, info);
-    if ([info[@"isGame"] isEqualToString:@"no"]) {
+    // tried to not show peer if its self, but discovered peerid is different from users peerid
+    if (([info[@"isGame"] isEqualToString:@"no"]) && (![peerID isEqual:self.appDelegate.mcManager.peerID])){
+        NSLog(@"Found a nearby advertising peer %@ withDiscoveryInfo %@", peerID, info);
         [self.availablePlayerArray addObject:peerID];
         [self reloadAvailablePlayersUI];
     }
@@ -101,7 +104,7 @@
 
 -(void)browser:(MCNearbyServiceBrowser *)browser lostPeer:(MCPeerID *)peerID {
     NSLog(@"lost peer %@",peerID.displayName);
-    if ([self.availablePlayerArray containsObject:peerID]) {
+    if (([self.availablePlayerArray containsObject:peerID]) && (![peerID isEqual:self.appDelegate.mcManager.peerID])) {
         [self.availablePlayerArray removeObject:peerID];
         [self reloadAvailablePlayersUI];
     }
@@ -141,7 +144,9 @@
 -(void)reloadConnectedPlayersUI {
     // remove the previous games
     for (ASNAvailablePlayerView *playerView in self.connectedPlayerViewsArray) {
-        [playerView removeFromSuperview];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [playerView removeFromSuperview];
+        });
     }
     self.connectedPlayerViewsArray = [NSMutableArray new];
     // add the new player views
@@ -243,7 +248,7 @@
     ASNTeam *t1 = [[ASNTeam alloc] initWithName:[NSString stringWithFormat:@"Team %lu", numberOfTeams+1]];
     [self.dataStore.teams addObject:t1];
     // this is too slow
-//    [self viewDidLoad];
+    [self viewDidLoad];
     
 }
 
@@ -256,7 +261,7 @@
     
     UIAlertAction *submit = [UIAlertAction actionWithTitle:@"Submit" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         UITextField *nameField = addPlayerAlert.textFields.firstObject;
-        Player *p1 = [NSEntityDescription insertNewObjectForEntityForName:@"Player" inManagedObjectContext:self.dataStore.managedObjectContext];
+        ASNPlayer *p1 = [ASNPlayer new];
         p1.name = nameField.text;
         [((ASNCreateTeamView *) view).team.players addObject:p1];
         // this is too slow
@@ -280,5 +285,26 @@
 //    // dismiss keyboard
 //}
 
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"startGameSegue"]) {
+//        ASNMainGameViewController *nextVC = segue.destinationViewController;
+        
+        // send teams array to all players in session
+        NSData *teamsToStartGame = [NSKeyedArchiver archivedDataWithRootObject:self.dataStore.teams];
+        NSArray *allPeers = self.appDelegate.mcManager.session.connectedPeers;
+        NSError *error;
+        
+        [self.appDelegate.mcManager.session sendData:teamsToStartGame
+                                         toPeers:allPeers
+                                        withMode:MCSessionSendDataReliable
+                                           error:&error];
+        
+        if (error) {
+            NSLog(@"%@", [error localizedDescription]);
+        }
+        
+        NSLog(@"Sent data to all users. These are the unarchived teams: %@", self.dataStore.teams);
+    }
+}
 
 @end

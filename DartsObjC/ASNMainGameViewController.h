@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "ASNTeam.h"
+#import <MultipeerConnectivity/MultipeerConnectivity.h>
 
 @interface ASNMainGameViewController : UIViewController
-//@property(strong,nonatomic)NSArray *teamsArray;
+@property(strong,nonatomic)NSArray *teamsArray;
 @end

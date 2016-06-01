@@ -62,6 +62,23 @@
     
     return self;
 }
+
+-(void) resetTeam {
+    self.hitsInCurrentRound = [@{@"15" : @0,
+                                 @"16" : @0,
+                                 @"17" : @0,
+                                 @"18" : @0,
+                                 @"19" : @0,
+                                 @"20" : @0,
+                                 @"Bull" : @0
+                                 } mutableCopy];
+    self.scoreOfCurrentRound = 0;
+    self.previousPlayer = nil;
+    self.hasThreeOrMoreOfEveryHit = NO;
+    for (ASNPlayer *player in self.players) {
+        [player setupPlayerForRound];
+    }
+}
 -(NSUInteger)scoreOfCurrentRound {
     NSUInteger score = 0;
     for (NSString *hit in self.hitsInCurrentRound) {
@@ -84,11 +101,11 @@
     return YES;
 }
 
-- (void) addPlayerToTeam:(Player *)player {
+- (void) addPlayerToTeam:(ASNPlayer *)player {
     [self.players addObject:player];
 }
 
-- (void) removePlayerFromTeam:(Player *)player {
+- (void) removePlayerFromTeam:(ASNPlayer *)player {
     if ([self.players containsObject:player]) {
         [self.players removeObject:player];
     }

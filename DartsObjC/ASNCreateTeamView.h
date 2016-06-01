@@ -14,6 +14,7 @@
 @protocol ASNCreateTeamViewDelegate <NSObject>
 
 -(void)addPlayerButtonTappedInView:(UIView *)view;
+@optional
 -(void)teamNameEntered:(UITextField *)textField;
 @end
 

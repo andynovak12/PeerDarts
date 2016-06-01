@@ -11,13 +11,13 @@
 #import "ASNDataStore.h"
 
 @interface ASNGame : NSObject
-@property (nonatomic, strong) Player *createdBy;
+@property (nonatomic, strong) ASNPlayer *createdBy;
 @property (nonatomic, strong) NSString *gameName;
 
 @property (nonatomic, strong) NSDate *createdAt;
 @property (nonatomic, strong) NSMutableArray *teams;
 
-@property (nonatomic, strong) Player *currentPlayer;
+@property (nonatomic, strong) ASNPlayer *currentPlayer;
 @property (nonatomic, strong) ASNTeam *currentTeam;
 @property (nonatomic, strong) ASNTeam *previousTeam;
 @property (strong, nonatomic) ASNDataStore *dataStore;
@@ -25,6 +25,6 @@
 - (instancetype) initWithTeams:(NSArray *)teams;
 - (void)logTurnOfCurrentPlayer;
 -(NSUInteger)addHit:(NSString *)hit toTeamCurrentRound:(ASNTeam *)team;
--(BOOL)isThereAWinner;
+-(ASNTeam *)returnIfThereIsAWinner;
 
 @end

@@ -56,7 +56,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="Start Game"/>
                                 <connections>
-                                    <segue destination="BYZ-38-t0r" kind="push" id="yn5-Sx-OfA"/>
+                                    <segue destination="BYZ-38-t0r" kind="push" identifier="startGameSegue" id="yn5-Sx-OfA"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Create New Game" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="EcI-lG-nUa">
@@ -91,7 +91,6 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <connections>
                                     <action selector="toggleVisibility:" destination="uGD-Ji-WDQ" eventType="valueChanged" id="ZhC-b0-Qfc"/>
-                                    <action selector="toggleVisibility:" destination="7bH-k2-vn3" eventType="valueChanged" id="wHL-Eh-Ias"/>
                                 </connections>
                             </switch>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="d9r-G1-4vR">
@@ -115,7 +114,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dQi-QJ-b4h" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="731.5" y="224.5"/>
+            <point key="canvasLocation" x="704.5" y="-143.5"/>
         </scene>
         <!--Welcome View Controller-->
         <scene sceneID="9GL-Md-SNv">
@@ -147,27 +146,18 @@
                                 </connections>
                             </switch>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Join Game" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="T79-Ej-s2G">
-                                <rect key="frame" x="20" y="213" width="118" height="21"/>
+                                <rect key="frame" x="20" y="275" width="118" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="qBS-KM-Ego">
-                                <rect key="frame" x="302" y="208" width="53" height="30"/>
+                                <rect key="frame" x="302" y="270" width="53" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Refresh"/>
                                 <connections>
                                     <action selector="refreshTapped:" destination="7bH-k2-vn3" eventType="touchUpInside" id="aWZ-do-c1f"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="xig-mk-ZZO">
-                                <rect key="frame" x="91" y="596" width="192" height="51"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
-                                <state key="normal" title="Create New Game"/>
-                                <connections>
-                                    <segue destination="uGD-Ji-WDQ" kind="push" id="T5Z-TO-aMX"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="6Xz-lW-rZP">
@@ -175,8 +165,8 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Stats"/>
                             </button>
-                            <view contentMode="scaleToFill" id="7PQ-68-Pq7">
-                                <rect key="frame" x="20" y="256" width="100" height="128"/>
+                            <view hidden="YES" contentMode="scaleToFill" id="7PQ-68-Pq7">
+                                <rect key="frame" x="20" y="318" width="100" height="128"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Game 1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="yVO-39-PDe">
@@ -198,8 +188,8 @@ Name</string>
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
-                            <view contentMode="scaleToFill" id="gGJ-FV-696">
-                                <rect key="frame" x="137" y="256" width="100" height="128"/>
+                            <view hidden="YES" contentMode="scaleToFill" id="gGJ-FV-696">
+                                <rect key="frame" x="137" y="318" width="100" height="128"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Game 2" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="y74-vy-bIp">
@@ -221,8 +211,8 @@ Name</string>
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
-                            <view contentMode="scaleToFill" id="ngo-Ui-CcM">
-                                <rect key="frame" x="255" y="256" width="100" height="128"/>
+                            <view hidden="YES" contentMode="scaleToFill" id="ngo-Ui-CcM">
+                                <rect key="frame" x="255" y="318" width="100" height="128"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Game 3" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="cs4-cq-EOr">
@@ -244,8 +234,8 @@ Name</string>
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
-                            <view contentMode="scaleToFill" id="4G0-aN-Ed9">
-                                <rect key="frame" x="20" y="399" width="100" height="128"/>
+                            <view hidden="YES" contentMode="scaleToFill" id="4G0-aN-Ed9">
+                                <rect key="frame" x="20" y="461" width="100" height="128"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Game 4" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="EsF-MX-ZRc">
@@ -267,8 +257,8 @@ Name</string>
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
-                            <view contentMode="scaleToFill" id="scq-tm-rgd">
-                                <rect key="frame" x="137" y="399" width="100" height="128"/>
+                            <view hidden="YES" contentMode="scaleToFill" id="scq-tm-rgd">
+                                <rect key="frame" x="137" y="461" width="100" height="128"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Game 5" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="c22-Ua-dte">
@@ -290,8 +280,8 @@ Name</string>
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
-                            <view contentMode="scaleToFill" id="xzD-N8-8l0">
-                                <rect key="frame" x="255" y="399" width="100" height="128"/>
+                            <view hidden="YES" contentMode="scaleToFill" id="xzD-N8-8l0">
+                                <rect key="frame" x="255" y="461" width="100" height="128"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Game 6" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="nva-7R-Cz6">
@@ -319,6 +309,15 @@ Name</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="xig-mk-ZZO">
+                                <rect key="frame" x="20" y="193" width="192" height="51"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <state key="normal" title="Create New Game"/>
+                                <connections>
+                                    <segue destination="uGD-Ji-WDQ" kind="push" id="T5Z-TO-aMX"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -328,6 +327,7 @@ Name</string>
                     <connections>
                         <outlet property="displayNameTextField" destination="NMs-wA-N9l" id="yHH-1M-Vtz"/>
                         <outlet property="visibilityToggle" destination="HDB-ud-VPg" id="6SW-Kk-vnj"/>
+                        <segue destination="BYZ-38-t0r" kind="push" identifier="goToMainGameSegue" id="wpe-Sa-1cH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oPC-ne-PRy" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -353,4 +353,7 @@ Name</string>
             <point key="canvasLocation" x="-372" y="274"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="wpe-Sa-1cH"/>
+    </inferredMetricsTieBreakers>
 </document>
