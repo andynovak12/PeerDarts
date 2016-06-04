@@ -16,7 +16,7 @@
 @interface ASNCreateNewGameViewController ()
 
 @property (weak, nonatomic) IBOutlet UIButton *startGameButton;
-@property (strong, nonatomic) ASNDataStore *dataStore;
+//@property (strong, nonatomic) ASNDataStore *dataStore;
 
 @property (nonatomic, strong) AppDelegate *appDelegate;
 @property (nonatomic, strong) NSMutableArray *availablePlayerArray;
@@ -34,53 +34,75 @@
     
     self.displayNameTextField.delegate = self;
     
-    self.availablePlayerArray = [[NSMutableArray alloc] init];
-    self.connectedPlayerArray = [[NSMutableArray alloc] init];
+    self.availablePlayerArray = [NSMutableArray new];
+    self.connectedPlayerArray = [NSMutableArray new];
     self.availablePlayerViewsArray = [NSMutableArray new];
     self.connectedPlayerViewsArray = [NSMutableArray new];
+    self.teamsArray = [NSMutableArray new];
     
     self.appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [self.appDelegate.mcManager setupPeerAndSessionWithDisplayName:[UIDevice currentDevice].name];
+//    [self.appDelegate.mcManager setupPeerAndSessionWithDisplayName:self.appDelegate.mcManager.peerID.displayName];
     [self.appDelegate.mcManager advertiseGame:self.visibilityToggle.isOn];
-//    [self.appDelegate.mcManager advertiseSelf:self.visibilityToggle.isOn];
+//    self.appDelegate.mcManager.advertiser.delegate = self;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(peerDidChangeStateWithNotification:)
                                                  name:@"MCDidChangeStateNotification"
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveDataNotification:)
+                                                 name:@"MCDidReceiveDataNotification"
+                                               object:nil];
+    
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(handleAddToTeamNotification:)
+//                                                 name:@"addToTeamNotification"
+//                                               object:nil];
+//    
     // added this to automatically start looking for available games
     [self searchForAvailablePlayers];
+    
+//    self.dataStore = [ASNDataStore sharedDataStore];
 
-    
-    
-//    self.teamsArray = [NSMutableArray new];
-    
-    self.dataStore = [ASNDataStore sharedDataStore];
+    // create a team initially
+    if (self.teamsArray.count == 0) {
+        [self addTeam];
+        [self addPlayerWithName:self.appDelegate.mcManager.peerID.displayName toTeam:self.teamsArray[0]];
+    }
+//    if ((self.dataStore.teams.count > 0) && ((ASNTeam *)self.dataStore.teams[0]).players.count <= 1) {
+//    }
+    [self reloadTeamViews];
+}
 
-    for (ASNTeam *team in self.dataStore.teams) {
+
+-(void)reloadTeamViews {
+    for (ASNTeam *team in self.teamsArray) {
         ASNCreateTeamView *newTeamView = [[ASNCreateTeamView alloc] init];
         newTeamView.team = team;
         
         [self.view addSubview:newTeamView];
-        NSUInteger teamIndexInDataStore = [self.dataStore.teams indexOfObject:team];
+        NSUInteger teamIndexInDataStore = [self.teamsArray indexOfObject:team];
         
         [newTeamView setTranslatesAutoresizingMaskIntoConstraints:NO];
         newTeamView.userInteractionEnabled = YES;
-        [newTeamView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:200].active = YES;
+        [newTeamView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:175].active = YES;
         [newTeamView.heightAnchor constraintEqualToAnchor:self.view.heightAnchor multiplier:0.3].active = YES;
         [newTeamView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor constant:20+(200*teamIndexInDataStore)].active  = YES;
         [newTeamView.widthAnchor constraintEqualToAnchor:self.view.widthAnchor multiplier:0.3].active = YES;
         newTeamView.delegate = self;
         
     }
-    if ((self.dataStore.teams.count > 0) &&  ((ASNTeam *)self.dataStore.teams[0]).players.count > 0){
+    if ((self.teamsArray.count > 0) &&  ((ASNTeam *)self.teamsArray[0]).players.count > 0){
         self.startGameButton.enabled = YES;
     }
     else {
         self.startGameButton.enabled = NO;
     }
 }
+
+
+
 - (IBAction)refreshTapped:(id)sender {
     self.availablePlayerArray = [NSMutableArray new];
     [self searchForAvailablePlayers];
@@ -132,7 +154,7 @@
             [newPlayerView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:525].active = YES;
             [newPlayerView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor constant:(20+(counter*110))].active = YES;
             newPlayerView.userInteractionEnabled = YES;
-            UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+            UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapOfAvailablePlayer:)];
             [newPlayerView addGestureRecognizer:recognizer];
         });
 
@@ -163,7 +185,7 @@
             [newPlayerView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:400].active = YES;
             [newPlayerView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor constant:(20+(counter*110))].active = YES;
             newPlayerView.userInteractionEnabled = YES;
-            UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+            UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapOfAvailablePlayer:)];
             [newPlayerView addGestureRecognizer:recognizer];
         });
    
@@ -172,12 +194,29 @@
     }
 }
 
--(void)handleTap:(UITapGestureRecognizer *) recognizer {
+-(void)handleTapOfAvailablePlayer:(UITapGestureRecognizer *) recognizer {
     // invite this peer to the game
     MCPeerID *receivedPeerID = ((ASNAvailablePlayerView *) recognizer.view).peerID;
-    NSLog(@"tapped : %@", receivedPeerID.displayName);
     
-    [self.appDelegate.mcManager.serviceBrowser invitePeer:receivedPeerID toSession:self.appDelegate.mcManager.session withContext:nil timeout:30];
+    // create alert that prompts to add player to team
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Connect" message:[NSString stringWithFormat:@"Invite %@ to join team:", receivedPeerID.displayName] preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+    [alertController addAction:cancelAction];
+    
+    for (ASNTeam *team in self.teamsArray) {
+        UIAlertAction *teamAction = [UIAlertAction actionWithTitle:[NSString stringWithFormat:@"%@",team.teamName] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self invitePeer:receivedPeerID toTeam:team];
+        }];
+        [alertController addAction:teamAction];
+    }
+
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
+-(void)invitePeer:(MCPeerID *)receivedPeerID toTeam:(ASNTeam *)team {
+    NSUInteger indexOfTeam = [self.teamsArray indexOfObject:team];
+    NSData *indexOfTeamAsData = [NSData dataWithBytes:&indexOfTeam length:sizeof(indexOfTeam)];
+    [self.appDelegate.mcManager.serviceBrowser invitePeer:receivedPeerID toSession:self.appDelegate.mcManager.session withContext:indexOfTeamAsData timeout:30];
 }
 
 - (IBAction)toggleVisibility:(id)sender {
@@ -194,7 +233,7 @@
     self.appDelegate.mcManager.serviceBrowser = nil;
     
     if ([self.visibilityToggle isOn]) {
-        [self.appDelegate.mcManager.advertiser stop];
+        [self.appDelegate.mcManager.advertiser stopAdvertisingPeer];
     }
     self.appDelegate.mcManager.advertiser = nil;
     
@@ -239,19 +278,16 @@
 }
 
 
-
-
-
-
 - (IBAction)addTeamButtonTapped:(id)sender {
-    NSUInteger numberOfTeams = self.dataStore.teams.count;
-    ASNTeam *t1 = [[ASNTeam alloc] initWithName:[NSString stringWithFormat:@"Team %lu", numberOfTeams+1]];
-    [self.dataStore.teams addObject:t1];
-    // this is too slow
-    [self viewDidLoad];
-    
+    [self addTeam];
 }
 
+-(void)addTeam {
+    NSUInteger numberOfTeams = self.teamsArray.count;
+    ASNTeam *t1 = [[ASNTeam alloc] initWithName:[NSString stringWithFormat:@"Team %lu", numberOfTeams+1]];
+    [self.teamsArray addObject:t1];
+    [self reloadTeamViews];
+}
 
 -(void)addPlayerButtonTappedInView:(UIView *)view{
     UIAlertController *addPlayerAlert = [UIAlertController alertControllerWithTitle:@"Add Player" message:nil preferredStyle:UIAlertControllerStyleAlert];
@@ -261,12 +297,9 @@
     
     UIAlertAction *submit = [UIAlertAction actionWithTitle:@"Submit" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         UITextField *nameField = addPlayerAlert.textFields.firstObject;
-        ASNPlayer *p1 = [ASNPlayer new];
-        p1.name = nameField.text;
-        [((ASNCreateTeamView *) view).team.players addObject:p1];
+        [self addPlayerWithName:nameField.text toTeam:((ASNCreateTeamView *) view).team];
         // this is too slow
         [((ASNCreateTeamView *) view) updateUI];
-//        [self viewDidLoad];
     }];
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDestructive handler:nil];
     
@@ -275,6 +308,36 @@
     [addPlayerAlert.view setNeedsLayout];
     [self presentViewController:addPlayerAlert animated:YES completion:nil];
 }
+
+-(void)addPlayerWithName:(NSString *)playerName toTeam:(ASNTeam *)team {
+    ASNPlayer *player = [ASNPlayer new];
+    player.name = playerName;
+    [team.players addObject:player];
+    // this is too slow
+//    [((ASNCreateTeamView *) view) updateUI];
+    [self reloadTeamViews];
+}
+
+-(void)didReceiveDataNotification:(NSNotification *)notification {
+    MCPeerID *peerID = [[notification userInfo] objectForKey:@"peerID"];
+    NSString *peerDisplayName = peerID.displayName;
+    
+    NSData *receivedData = [[notification userInfo] objectForKey:@"data"];
+    NSString *receivedDataUnarchived = [[NSString alloc] initWithData:receivedData encoding:NSUTF8StringEncoding];
+    NSLog(@"this is the unarchived data i received in MainGameVC: %@ from %@", receivedDataUnarchived, peerDisplayName);
+    
+    
+    
+}
+
+//-(void)handleAddToTeamNotification:(NSNotification *)notification {
+//    MCPeerID *peerID = [[notification userInfo] objectForKey:@"peerID"];
+//    NSString *peerDisplayName = peerID.displayName;
+//    NSUInteger teamIndex = [[[notification userInfo] objectForKey:@"teamIndex"] intValue];
+//    
+//    [self addPlayerWithName:peerDisplayName toTeam:self.teamsArray[teamIndex]];
+//    [self reloadTeamViews];
+//}
 
 //-(void)teamNameEntered:(UITextField *)textField {
 ////    NSLog(@"t %@", textField.text);
@@ -287,10 +350,11 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"startGameSegue"]) {
-//        ASNMainGameViewController *nextVC = segue.destinationViewController;
+        ASNMainGameViewController *nextVC = segue.destinationViewController;
+        nextVC.teamsArray = self.teamsArray;
         
         // send teams array to all players in session
-        NSData *teamsToStartGame = [NSKeyedArchiver archivedDataWithRootObject:self.dataStore.teams];
+        NSData *teamsToStartGame = [NSKeyedArchiver archivedDataWithRootObject:self.teamsArray];
         NSArray *allPeers = self.appDelegate.mcManager.session.connectedPeers;
         NSError *error;
         
@@ -303,7 +367,7 @@
             NSLog(@"%@", [error localizedDescription]);
         }
         
-        NSLog(@"Sent data to all users. These are the unarchived teams: %@", self.dataStore.teams);
+        NSLog(@"Sent data to all users. These are the unarchived teams: %@", self.teamsArray);
     }
 }
 

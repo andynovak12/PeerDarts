@@ -37,6 +37,7 @@
     self.appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [self.appDelegate.mcManager setupPeerAndSessionWithDisplayName:[UIDevice currentDevice].name];
     [self.appDelegate.mcManager advertiseSelf:self.visibilityToggle.isOn];
+//    self.appDelegate.mcManager.advertiser.delegate = self;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(peerDidChangeStateWithNotification:)
@@ -47,6 +48,13 @@
                                              selector:@selector(didReceiveDataNotification:)
                                                  name:@"MCDidReceiveDataNotification"
                                                object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveInvitationNotification:)
+                                                 name:@"MCDidReceiveInvitationNotification"
+                                               object:nil];
+    
+
+    
     // added this to automatically start looking for available games
     [self searchForAvailableGames];
 
@@ -136,7 +144,7 @@
     self.appDelegate.mcManager.serviceBrowser = nil;
     
     if ([self.visibilityToggle isOn]) {
-        [self.appDelegate.mcManager.advertiser stop];
+        [self.appDelegate.mcManager.advertiser stopAdvertisingPeer];
     }
     self.appDelegate.mcManager.advertiser = nil;
     
@@ -176,8 +184,7 @@
 }
 
 -(void)didReceiveDataNotification:(NSNotification *)notification {
-    MCPeerID *peerID = [[notification userInfo] objectForKey:@"peerID"];
-    NSString *peerDisplayName = peerID.displayName;
+//    MCPeerID *peerID = [[notification userInfo] objectForKey:@"peerID"];
     
     NSData *receivedData = [[notification userInfo] objectForKey:@"data"];
     self.receivedDataUnarchived = [NSKeyedUnarchiver unarchiveObjectWithData:receivedData];
@@ -187,6 +194,61 @@
         NSLog(@"executing segue in dispatch");
     });
 }
+
+-(void)didReceiveInvitationNotification:(NSNotification *)notification {
+    MCPeerID *peerID = [[notification userInfo] objectForKey:@"peerID"];
+    NSString *peerDisplayName = peerID.displayName;
+    NSUInteger teamIndex = [[[notification userInfo] objectForKey:@"teamIndex"] intValue];
+    // present an alert to ask to join
+    UIAlertController *invitationAlert = [UIAlertController alertControllerWithTitle:@"You're Invited!" message:[NSString stringWithFormat:@"Join %@'s Game?", peerDisplayName] preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *yes = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSDictionary *dict = @{@"peerID": peerID,
+                               @"teamIndex" : @(teamIndex)
+                               };
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"didAcceptInvitationNotification"
+                                                            object:nil
+                                                          userInfo:dict];
+    }];
+    UIAlertAction *no = [UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleDestructive handler:nil];
+    
+    [invitationAlert addAction:no];
+    [invitationAlert addAction:yes];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:invitationAlert animated:YES completion:nil];
+    });
+}
+
+
+
+
+//-(void)advertiser:(MCNearbyServiceAdvertiser *)advertiser didReceiveInvitationFromPeer:(MCPeerID *)peerID withContext:(NSData *)context invitationHandler:(void (^)(BOOL, MCSession * _Nonnull))invitationHandler{
+//    NSUInteger receivedDataUnarchived;
+//    [context getBytes:&receivedDataUnarchived length:sizeof(receivedDataUnarchived)];
+////    NSDictionary *dict = @{@"peerID": peerID,
+////                           @"teamIndex" : @(receivedDataUnarchived)
+////                           };
+//     // present an alert to ask to join
+//        UIAlertController *invitationAlert = [UIAlertController alertControllerWithTitle:@"You're Invited!" message:[NSString stringWithFormat:@"Join %@'s Game?", peerID.displayName] preferredStyle:UIAlertControllerStyleAlert];
+//        UIAlertAction *yes = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//            // create session
+//            
+//            MCSession *session = [[MCSession alloc] initWithPeer:peerID];
+//            NSLog(@"yes, yes, a thousand times yes");
+//            
+//            
+//            invitationHandler(YES, session);
+//        }];
+//        UIAlertAction *no = [UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleDestructive handler:nil];
+//    
+//        [invitationAlert addAction:no];
+//        [invitationAlert addAction:yes];
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [self presentViewController:invitationAlert animated:YES completion:nil];
+//        });
+//    
+//
+//}
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if ([segue.identifier isEqualToString:@"goToMainGameSegue"]) {

@@ -13,7 +13,7 @@
 
 @interface ASNMainGameViewController ()
 
-@property (strong, nonatomic) ASNDataStore *dataStore;
+//@property (strong, nonatomic) ASNDataStore *dataStore;
 @property (nonatomic, strong) AppDelegate *appDelegate;
 
 @property (strong, nonatomic) NSMutableArray *teamContainersArray;
@@ -47,6 +47,7 @@
 
 @property (strong, nonatomic) NSMutableArray *playerNamesLabelsArray;
 
+@property (strong,nonatomic) NSString *fontName;
 
 @property (strong, nonatomic) ASNGame *currentGame;
 
@@ -56,10 +57,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSLog(@"in view did load of Main");
 
     self.appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 
+    self.fontName = @"Copperplate";
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(didReceiveDataNotification:)
                                                  name:@"MCDidReceiveDataNotification"
@@ -76,62 +78,27 @@
 
     [self initializeImageViews];
     self.playerNamesLabelsArray = [NSMutableArray new];
-    self.dataStore = [ASNDataStore sharedDataStore];
+//    self.dataStore = [ASNDataStore sharedDataStore];
     
-    // this will be done on previous page and taken from datastore
-//    Player *p1 = [NSEntityDescription insertNewObjectForEntityForName:@"Player" inManagedObjectContext:self.dataStore.managedObjectContext];
-//    p1.name = @"Player 1";
-//    Player *p2 = [NSEntityDescription insertNewObjectForEntityForName:@"Player" inManagedObjectContext:self.dataStore.managedObjectContext];
-//    p2.name = @"Player 2";
-//    Player *p3 = [NSEntityDescription insertNewObjectForEntityForName:@"Player" inManagedObjectContext:self.dataStore.managedObjectContext];
-//    p3.name = @"Player 3";
-//    Player *p4 = [NSEntityDescription insertNewObjectForEntityForName:@"Player" inManagedObjectContext:self.dataStore.managedObjectContext];
-//    p4.name = @"Player 4234";
-//    
-//    ASNTeam *t1 = [[ASNTeam alloc] initWithName:@"Team 1"];
-//    [t1 addPlayerToTeam:p1];
-//    [t1 addPlayerToTeam:p2];
-//    
-//    ASNTeam *t2 = [[ASNTeam alloc] initWithName:@"Team 2"];
-//    [t2 addPlayerToTeam:p3];
-//    [t2 addPlayerToTeam:p4];
-//    
-//    self.currentGame = [[ASNGame alloc] initWithTeams:@[t1, t2]];
-    
+    // setup game depending on if they received data from MC or started game
     if (self.teamsArray.count > 0) {
         self.currentGame = [[ASNGame alloc] initWithTeams:self.teamsArray];
     }
-    else {
-        self.currentGame = [[ASNGame alloc] initWithTeams:self.dataStore.teams];
+    else{
+        NSLog(@"there was an error receiving the TeamsArray from previous VC");
     }
-    
-    // move this line to other place later
-//    [self.currentGame.currentPlayer setupPlayerForRound];
-    
+
     [self setupGameVisuals];
-    
-//    [self enableTouchingForTeam:self.currentGame.currentTeam];
-
-}
-
--(void)viewDidLayoutSubviews {
-//    [self setupGameVisuals];
-    
 }
 
 -(void)newGame {
-    if (self.teamsArray.count > 0) {
-        self.currentGame = [[ASNGame alloc] initWithTeams:self.teamsArray];
-    }
-    else {
-        self.currentGame = [[ASNGame alloc] initWithTeams:self.dataStore.teams];
-    }
+    
+    self.currentGame = [[ASNGame alloc] initWithTeams:self.teamsArray];
 
     for (ASNTeam *team in self.currentGame.teams) {
-        [self updateTeamNameAndScore:team];
+        [self updateTeamNameAndWins:team];
         [self updatePlayerNamesLabelsOfPreviousTeam:team];
     }
-//    [self updateCurrentPlayerLabel];
     for (UIImageView *imageview in self.team1ImageViewsArray) {
         imageview.alpha = 0.1;
     }
@@ -152,52 +119,37 @@
     }
     [self setupNumbersContainerView];
     
-//    
-//    // setup current player label
-//    self.currentPlayerLabel = [[UILabel alloc] init];
-//    self.currentPlayerLabel.numberOfLines = 4;
-//    [self.currentPlayerLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
-    dispatch_async(dispatch_get_main_queue(), ^{
-//        [self.view addSubview:self.currentPlayerLabel];
-//        [self.currentPlayerLabel.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:20].active = YES;
-//        [self.currentPlayerLabel.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
-//        [self updateCurrentPlayerLabel];
-    
 
-        
+    dispatch_async(dispatch_get_main_queue(), ^{
         // setup log turn button
         UIButton *logTurnButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.view addSubview:logTurnButton];
         
         [logTurnButton addTarget:self action:@selector(handleLogButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        logTurnButton.backgroundColor = [UIColor blueColor];
+//        logTurnButton.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0.7 alpha:0.2];
         [logTurnButton setTranslatesAutoresizingMaskIntoConstraints:NO];
         [logTurnButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
         [logTurnButton.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor constant:-200].active = YES;
         [logTurnButton.widthAnchor constraintEqualToConstant:150].active = YES;
         [logTurnButton.heightAnchor constraintEqualToConstant:30].active = YES;
         [logTurnButton setTitle:@"Log Turn" forState:UIControlStateNormal];
+        logTurnButton.titleLabel.font = [UIFont fontWithName:self.fontName size:20];
+        [logTurnButton setTitleColor:[UIColor colorWithRed:255.0/255 green:239.0/255 blue:129.0/255 alpha:0.8] forState:UIControlStateNormal];
         
         [self makeCurrentPlayerNameBig];
-
     });
-    
 }
 
 - (void) loadPlayerNamesOfTeam:(ASNTeam *)team{
-//    NSUInteger indexOfPlayer = 0;
     NSUInteger numberOfPlayersOnTeam = team.players.count;
-//    if ([team.players containsObject:self.currentGame.currentPlayer]) {
-//        indexOfPlayer = [team.players indexOfObject:self.currentGame.currentPlayer];
-//    }
-    
     
     // get index of team
     NSUInteger teamIndex = [self.currentGame.teams indexOfObject:team];
     for (NSUInteger i = 0; i < numberOfPlayersOnTeam; i++) {
         UILabel *currentLabel = [[UILabel alloc] init];
         [currentLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
-        currentLabel.text = [NSString stringWithFormat:@"%@ : N/A", ((Player *)team.players[i]).name];
+        currentLabel.text = [NSString stringWithFormat:@"%@ : Didn't go", ((Player *)team.players[i]).name];
+        currentLabel.font = [UIFont fontWithName:self.fontName size:15];
 //        currentLabel.text = ((Player *)team.players[(i+indexOfPlayer)%numberOfPlayersOnTeam]).name;
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -205,7 +157,6 @@
             [currentLabel.centerXAnchor constraintEqualToAnchor:((UIView *)self.teamContainersArray[teamIndex]).centerXAnchor].active = YES;
             [currentLabel.centerYAnchor constraintEqualToAnchor:((UIView *)self.teamContainersArray[teamIndex]).centerYAnchor constant:20*i].active = YES;
             [self.playerNamesLabelsArray[teamIndex] addObject:currentLabel];
-//            [self makeCurrentPlayerNameBig];
         });
 
     }
@@ -228,11 +179,11 @@
         dispatch_async(dispatch_get_main_queue(), ^{
 
             [containerView setTranslatesAutoresizingMaskIntoConstraints:NO];
-            containerView.backgroundColor = [UIColor redColor];
+//            containerView.backgroundColor = [UIColor redColor];
             [self.view addSubview:containerView];
             [containerView.heightAnchor constraintEqualToAnchor:self.view.heightAnchor multiplier:0.2].active = YES;
             [containerView.widthAnchor constraintEqualToAnchor:self.view.widthAnchor multiplier:0.4].active = YES;
-            [containerView.topAnchor constraintEqualToAnchor:self.view.topAnchor].active = YES;
+            [containerView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:20].active = YES;
             if (counter == 0) {
                 [containerView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor].active = YES;
             }
@@ -244,14 +195,27 @@
             }
             
             UILabel *teamNameLabel = self.teamNameLabelsArray[counter];
-            teamNameLabel.numberOfLines = 2;
+            teamNameLabel.numberOfLines = 3;
             [teamNameLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
             
-            teamNameLabel.text = [[NSString stringWithFormat:@"%@\nScore: %lu",team.teamName, team.scoreOfCurrentRound] mutableCopy];
-            teamNameLabel.font = [UIFont fontWithName:@"Times" size:20];
+            [self updateTeamNameAndWins:team];
+//            // team name and wins/loses
+//            UIFont *largerFont = [UIFont fontWithName:self.fontName size:22.0];
+//            NSDictionary *largerFontDict = [NSDictionary dictionaryWithObject: largerFont forKey:NSFontAttributeName];
+//            NSMutableAttributedString *firstLine = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n", team.teamName] attributes: largerFontDict];
+//            
+//            UIFont *smallerFont = [UIFont fontWithName:self.fontName size:15.0];
+//            NSDictionary *smallerFontDict = [NSDictionary dictionaryWithObject:smallerFont forKey:NSFontAttributeName];
+//            NSMutableAttributedString *secondLine = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"W:%lu L:%lu", team.wins, team.loses] attributes:smallerFontDict];
+//            [firstLine appendAttributedString:secondLine];
+//            teamNameLabel.attributedText = firstLine;
+            teamNameLabel.textAlignment = NSTextAlignmentCenter;
+            
+
+            teamNameLabel.textColor = [UIColor whiteColor];
             [containerView addSubview:teamNameLabel];
             [teamNameLabel.centerXAnchor constraintEqualToAnchor:containerView.centerXAnchor].active = YES;
-            [teamNameLabel.centerYAnchor constraintEqualToAnchor:containerView.centerYAnchor constant:-50].active = YES;
+            [teamNameLabel.topAnchor constraintEqualToAnchor:containerView.topAnchor].active = YES;
             
             counter++;
         });
@@ -275,10 +239,10 @@
         
         // set up numbers
         CGFloat counterForNumbers = 0;
-        for (NSString *number in @[@"20",@"19",@"18",@"17", @"16", @"15", @"Bulls"]) {
+        for (NSString *number in @[@"20",@"19",@"18",@"17", @"16", @"15", @"Bull"]) {
             UILabel *numberLabel = [UILabel new];
             numberLabel.text = number;
-            numberLabel.font = [UIFont fontWithName:@"Copperplate" size:24];
+            numberLabel.font = [UIFont fontWithName:self.fontName size:24];
             numberLabel.textColor = [UIColor whiteColor];
             [numberLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
             [numbersContainerView addSubview:numberLabel];
@@ -332,8 +296,8 @@
             UIImageView *currentTeam1ImageView = self.team1ImageViewsArray[i];
             [currentTeam1ImageView setTranslatesAutoresizingMaskIntoConstraints:NO];
             [numbersContainerView addSubview:currentTeam1ImageView];
-            [currentTeam1ImageView.heightAnchor constraintEqualToConstant:heightConstant/7].active = YES;
-            [currentTeam1ImageView.widthAnchor constraintEqualToConstant:outsideLineConstant-insideLineConstant].active = YES;
+            [currentTeam1ImageView.heightAnchor constraintEqualToConstant:(heightConstant/7)-(heightConstant/20)].active = YES;
+            [currentTeam1ImageView.widthAnchor constraintEqualToConstant:outsideLineConstant-insideLineConstant-(heightConstant/20)].active = YES;
             [currentTeam1ImageView.centerXAnchor constraintEqualToAnchor:numbersContainerView.centerXAnchor constant:-(insideLineConstant + outsideLineConstant)/2].active = YES;
             [currentTeam1ImageView.centerYAnchor constraintEqualToAnchor:numbersContainerView.topAnchor constant:(heightConstant/7)*(i + 0.5)].active = YES;
             currentTeam1ImageView.alpha = 0.1;
@@ -350,8 +314,8 @@
             UIImageView *currentTeam2ImageView = self.team2ImageViewsArray[i];
             [currentTeam2ImageView setTranslatesAutoresizingMaskIntoConstraints:NO];
             [numbersContainerView addSubview:currentTeam2ImageView];
-            [currentTeam2ImageView.heightAnchor constraintEqualToConstant:heightConstant/7].active = YES;
-            [currentTeam2ImageView.widthAnchor constraintEqualToConstant:outsideLineConstant-insideLineConstant].active = YES;
+            [currentTeam2ImageView.heightAnchor constraintEqualToConstant:(heightConstant/7)-(heightConstant/20)].active = YES;
+            [currentTeam2ImageView.widthAnchor constraintEqualToConstant:outsideLineConstant-insideLineConstant-(heightConstant/20)].active = YES;
             [currentTeam2ImageView.centerXAnchor constraintEqualToAnchor:numbersContainerView.centerXAnchor constant:(insideLineConstant + outsideLineConstant)/2].active = YES;
             [currentTeam2ImageView.centerYAnchor constraintEqualToAnchor:numbersContainerView.topAnchor constant:(heightConstant/7)*(i + 0.5)].active = YES;
             currentTeam2ImageView.alpha = 0.1;
@@ -401,15 +365,16 @@
             imageView.alpha = 0.1;
         }
         else if (newValue == 1) {
-            [imageView setImage:[UIImage imageNamed:@"slash"]];
+            [imageView setImage:[UIImage imageNamed:@"one"]];
             imageView.alpha = 1;
+            
         }
         else if (newValue == 2) {
-            [imageView setImage:[UIImage imageNamed:@"x image"]];
+            [imageView setImage:[UIImage imageNamed:@"two"]];
             imageView.alpha = 1;
         }
         else if (newValue == 3) {
-            [imageView setImage:[UIImage imageNamed:@"circle cross"]];
+            [imageView setImage:[UIImage imageNamed:@"three"]];
             imageView.alpha = 1;
         }
         else if (newValue == 4) {
@@ -423,11 +388,23 @@
     });
 }
 
--(void)updateTeamNameAndScore:(ASNTeam *)team {
-    NSMutableString *teamNameAndScore = [[NSString stringWithFormat:@"%@\nScore: %lu",team.teamName, team.scoreOfCurrentRound] mutableCopy];
+-(void)updateTeamNameAndWins:(ASNTeam *)team {
+    // team name and wins/loses
+    UIFont *largerFont = [UIFont fontWithName:self.fontName size:22.0];
+    NSDictionary *largerFontDict = [NSDictionary dictionaryWithObject: largerFont forKey:NSFontAttributeName];
+    NSMutableAttributedString *firstLine = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n", team.teamName] attributes: largerFontDict];
+    
+    UIFont *smallerFont = [UIFont fontWithName:self.fontName size:15.0];
+    NSDictionary *smallerFontDict = [NSDictionary dictionaryWithObject:smallerFont forKey:NSFontAttributeName];
+    NSMutableAttributedString *secondLine = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"W:%lu L:%lu", team.wins, team.loses] attributes:smallerFontDict];
+    [firstLine appendAttributedString:secondLine];
+//    teamNameLabel.attributedText = firstLine;
+    
+    
+//    NSMutableString *teamNameAndScore = [[NSString stringWithFormat:@"%@\nScore: %lu",team.teamName, team.scoreOfCurrentRound] mutableCopy];
     NSUInteger indexOfTeam = [self.currentGame.teams indexOfObject:team];
     dispatch_async(dispatch_get_main_queue(), ^{
-        ((UILabel *)self.teamNameLabelsArray[indexOfTeam]).text = teamNameAndScore;;
+        ((UILabel *)self.teamNameLabelsArray[indexOfTeam]).attributedText = firstLine;;
     });
 }
 
@@ -451,27 +428,13 @@
     }
 }
 
-//-(void)updateCurrentPlayerLabel {
-//    NSMutableString *labelText = [[NSString stringWithFormat:@"Current Player: \n%@ \nCurrent Hits:\n",self.currentGame.currentPlayer.name] mutableCopy];
-//    for (NSString *key in self.currentGame.currentPlayer.currentHits) {
-//        NSUInteger countOfHitsForKey = [self.currentGame.currentPlayer.currentHits[key] integerValue];
-//        while (countOfHitsForKey>0) {
-//            labelText = [[labelText stringByAppendingString:[NSString stringWithFormat:@"%@ ",key]] mutableCopy];
-//            countOfHitsForKey--;
-//        }
-//
-//    }
-//    self.currentPlayerLabel.text = labelText;
-//}
-
 // called when logTurn, rotates names of players
+// TODO: this should ONLY rotate the players names, and it should be animated. The 'updateCurrentPlayerLabel' method should be enough to handle the hits of the current player
 -(void)updatePlayerNamesLabelsOfPreviousTeam:(ASNTeam *)team{
     NSUInteger indexOfPlayer = [team.players indexOfObject:team.previousPlayer]+1;
     NSUInteger numberOfPlayersOnTeam = team.players.count;
     NSUInteger teamIndex = [self.currentGame.teams indexOfObject:team];
-//    if ([team.players containsObject:self.currentGame.currentPlayer]) {
-//        indexOfPlayer = [team.players indexOfObject:self.currentGame.currentPlayer];
-//    }
+
     for (NSUInteger i = 0; i < numberOfPlayersOnTeam; i++) {
         ASNPlayer *currentPlayer = ((ASNPlayer *)team.players[(i+indexOfPlayer)%numberOfPlayersOnTeam]);
         NSDictionary *previousHits = ((ASNTurn *)[currentPlayer.turnsOfPlayer lastObject]).hits;
@@ -482,6 +445,9 @@
                     playersPreviousRoundResults = [playersPreviousRoundResults stringByAppendingString:[NSString stringWithFormat:@"%@ ",hit]];
                 }
             }
+        }
+        if (playersPreviousRoundResults.length == 0) {
+            playersPreviousRoundResults = @"Nada";
         }
 
         ((UILabel *)self.playerNamesLabelsArray[teamIndex][i]).text = [NSString stringWithFormat:@"%@ : %@", currentPlayer.name, playersPreviousRoundResults];
@@ -496,19 +462,32 @@
     for (NSArray *teamPlayerLabelArray in self.playerNamesLabelsArray) {
         for (UILabel *playerNameLabel in teamPlayerLabelArray) {
             playerNameLabel.font = [UIFont systemFontOfSize:15];
-            playerNameLabel.textColor = [UIColor blackColor];
+            playerNameLabel.textColor = [UIColor whiteColor];
+            playerNameLabel.transform = CGAffineTransformIdentity;
         }
     }
     // make current player's label bigger
     NSUInteger teamIndex = [self.currentGame.teams indexOfObject:self.currentGame.currentTeam];
-//    NSUInteger playerIndex = [self.currentGame.currentTeam.players indexOfObject:self.currentGame.currentPlayer];
     UILabel *playerLabel = ((UILabel *)self.playerNamesLabelsArray[teamIndex][0]);
     playerLabel.font = [UIFont systemFontOfSize:18];
-    playerLabel.textColor = [UIColor whiteColor];
-    playerLabel.transform = CGAffineTransformScale(playerLabel.transform, 0.35, 0.35);
+    playerLabel.textColor = [UIColor colorWithRed:255.0/255 green:239.0/255 blue:129.0/255 alpha:1];
     [UIView animateWithDuration:0.25 animations:^{
-        playerLabel.transform = CGAffineTransformScale(playerLabel.transform, 3, 3);
+        playerLabel.transform = CGAffineTransformScale(playerLabel.transform, 1.25, 1.25);
     }];
+}
+
+-(void)updateCurrentPlayerLabel {
+    NSString *playersCurrentHits = @"";
+    for (NSString *hit in self.currentGame.currentPlayer.currentHits) {
+        if ([self.currentGame.currentPlayer.currentHits[hit] integerValue] > 0) {
+            for (NSUInteger i = 0; i< [self.currentGame.currentPlayer.currentHits[hit] integerValue]; i++) {
+                playersCurrentHits = [playersCurrentHits stringByAppendingString:[NSString stringWithFormat:@"%@ ",hit]];
+            }
+        }
+    }
+    NSUInteger teamIndex = [self.currentGame.teams indexOfObject:self.currentGame.currentTeam];
+    UILabel *playerLabel = ((UILabel *)self.playerNamesLabelsArray[teamIndex][0]);
+    playerLabel.text = [NSString stringWithFormat:@"%@ : %@", self.currentGame.currentPlayer.name, playersCurrentHits];
 }
 
 
@@ -523,34 +502,47 @@
     else {
         hit = [[NSString stringWithFormat:@"%li",[recognizer.view tag]] mutableCopy];
     }
-    NSLog(@"Team %@ pressed %@", self.currentGame.currentTeam.teamName, hit);
+//    NSLog(@"Team %@ pressed %@", self.currentGame.currentTeam.teamName, hit);
     [self recordNumberHit:hit andView:((UIImageView *)recognizer.view)];
     
-    // send data to everyone in session
-    NSData *dataToSend = [hit dataUsingEncoding:NSUTF8StringEncoding];
-    NSArray *allPeers = self.appDelegate.mcManager.session.connectedPeers;
-    NSError *error;
     
-    [self.appDelegate.mcManager.session sendData:dataToSend
-                                     toPeers:allPeers
-                                    withMode:MCSessionSendDataReliable
-                                       error:&error];
-    
-    if (error) {
-        NSLog(@"%@", [error localizedDescription]);
+    if (self.appDelegate.mcManager.session.connectedPeers.count > 0) {
+        // send data to everyone in session
+        NSData *dataToSend = [hit dataUsingEncoding:NSUTF8StringEncoding];
+        NSArray *allPeers = self.appDelegate.mcManager.session.connectedPeers;
+        NSError *error;
+        
+        [self.appDelegate.mcManager.session sendData:dataToSend
+                                             toPeers:allPeers
+                                            withMode:MCSessionSendDataReliable
+                                               error:&error];
+        if (error) {
+            NSLog(@"%@", [error localizedDescription]);
+        }
+        NSLog(@"sent a hit %@ to peers %@", hit, allPeers);
     }
 
-    NSLog(@"sent a hit %@ to peers %@", hit, allPeers);
 }
 
 -(void)recordNumberHit:(NSString *)hit andView:(UIImageView *)associatedView {
     [self.currentGame.currentPlayer addHitToCurrentHits:hit];
     NSUInteger newValueForKey = [self.currentGame addHit:hit toTeamCurrentRound:self.currentGame.currentTeam];
-    [self updateTeamNameAndScore:self.currentGame.currentTeam];
+    [self updateTeamNameAndWins:self.currentGame.currentTeam];
+    [self updateCurrentPlayerLabel];
     [self updateImageOfImageView:associatedView withValue:newValueForKey];
-//    [self updateCurrentPlayerLabel];
+
     ASNTeam *winner = [self.currentGame returnIfThereIsAWinner];
     if (winner) {
+        //update wins/losses for each team
+        for (ASNTeam *team in self.currentGame.teams) {
+            if (winner == team) {
+                team.wins++;
+            }
+            else {
+                team.loses++;
+            }
+        }
+        
         // present alert
         UIAlertController *gameOverAlert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"%@ wins!", winner.teamName] message:@"Play Again?" preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *yes = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -575,28 +567,28 @@
     [self logTurn];
     
     // tell everyone turn logged
-    NSData *dataToSend = [@"logTurn" dataUsingEncoding:NSUTF8StringEncoding];
-    NSArray *allPeers = self.appDelegate.mcManager.session.connectedPeers;
-    NSError *error;
-    
-    [self.appDelegate.mcManager.session sendData:dataToSend
-                                         toPeers:allPeers
-                                        withMode:MCSessionSendDataReliable
-                                           error:&error];
-    
-    if (error) {
-        NSLog(@"%@", [error localizedDescription]);
+    if (self.appDelegate.mcManager.session.connectedPeers.count > 0) {
+        NSData *dataToSend = [@"logTurn" dataUsingEncoding:NSUTF8StringEncoding];
+        NSArray *allPeers = self.appDelegate.mcManager.session.connectedPeers;
+        NSError *error;
+        
+        [self.appDelegate.mcManager.session sendData:dataToSend
+                                             toPeers:allPeers
+                                            withMode:MCSessionSendDataReliable
+                                               error:&error];
+        if (error) {
+            NSLog(@"%@", [error localizedDescription]);
+        }
+        NSLog(@"sent log Turn to peers %@", allPeers);
     }
-    NSLog(@"sent log Turn to peers %@", allPeers);
-
 }
 
 -(void)logTurn {
     [self.currentGame logTurnOfCurrentPlayer];
     [self updatePlayerNamesLabelsOfPreviousTeam:self.currentGame.previousTeam];
     [self makeCurrentPlayerNameBig];
-//    [self updateCurrentPlayerLabel];
     [self enableTouchingForTeam:self.currentGame.currentTeam];
+    [self updateCurrentPlayerLabel];
 }
 
 -(void)didReceiveDataNotification:(NSNotification *)notification {

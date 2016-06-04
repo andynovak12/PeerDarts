@@ -13,5 +13,5 @@
 @interface ASNCreateNewGameViewController : UIViewController <UITextFieldDelegate, MCNearbyServiceBrowserDelegate, ASNCreateTeamViewDelegate>
 @property (weak, nonatomic) IBOutlet UISwitch *visibilityToggle;
 @property (weak, nonatomic) IBOutlet UITextField *displayNameTextField;
-//@property (strong, nonatomic) NSMutableArray *teamsArray;
+@property (strong, nonatomic) NSMutableArray *teamsArray;
 @end

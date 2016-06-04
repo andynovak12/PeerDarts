@@ -55,7 +55,7 @@
 -(NSUInteger)addHit:(NSString *)hit toTeamCurrentRound:(ASNTeam *)team {
     NSUInteger teamValueForHit = [team.hitsInCurrentRound[hit] integerValue];
     [team.hitsInCurrentRound setObject:@(teamValueForHit + 1) forKey:hit];
-    NSLog(@"New scores for team %@: %@", team.teamName, team.hitsInCurrentRound);
+//    NSLog(@"New scores for team %@: %@", team.teamName, team.hitsInCurrentRound);
     return teamValueForHit + 1;
 }
 

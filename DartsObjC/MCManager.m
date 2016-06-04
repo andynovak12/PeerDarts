@@ -8,6 +8,12 @@
 
 #import "MCManager.h"
 
+@interface MCManager ()
+
+@property (strong, nonatomic) NSArray *arrayInvitationHandler;
+
+@end
+
 @implementation MCManager
 
 -(id)init{
@@ -19,6 +25,10 @@
         //        _browser = nil;
         _serviceBrowser = nil;
         _advertiser = nil;
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(didAcceptInvitationNotification:)
+                                                     name:@"didAcceptInvitationNotification"
+                                                   object:nil];
     }
     
     return self;
@@ -46,6 +56,41 @@
                                                       userInfo:dict];
     
 }
+-(void)advertiser:(MCNearbyServiceAdvertiser *)advertiser didReceiveInvitationFromPeer:(MCPeerID *)peerID withContext:(NSData *)context invitationHandler:(void (^)(BOOL, MCSession * _Nonnull))invitationHandler{
+    
+    NSUInteger receivedDataUnarchived;
+    [context getBytes:&receivedDataUnarchived length:sizeof(receivedDataUnarchived)];
+    NSDictionary *dict = @{@"peerID": peerID,
+                           @"teamIndex" : @(receivedDataUnarchived)
+                           };
+    self.arrayInvitationHandler = [NSArray arrayWithObject:[invitationHandler copy]];
+    
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"MCDidReceiveInvitationNotification"
+                                                        object:nil
+                                                      userInfo:dict];
+    
+}
+
+// this gets called when user accepts an invitation
+-(void)didAcceptInvitationNotification:(NSNotification *)notification {
+    void (^invitationHandler)(BOOL, MCSession *) = [self.arrayInvitationHandler objectAtIndex:0];
+    invitationHandler(YES, self.session);
+    
+    NSUInteger teamIndex = [[[notification userInfo] objectForKey:@"teamIndex"] intValue];
+    NSData *teamIndexData = [NSData dataWithBytes:&teamIndex length:sizeof(teamIndex)];
+
+    MCPeerID *peerID = [[notification userInfo] objectForKey:@"peerID"];
+
+    
+    //send to peer that invited index of team to be added to
+    NSError *error;
+    [self.session sendData:teamIndexData toPeers:@[peerID] withMode:MCSessionSendDataReliable error:&error];
+    if (error) {
+        NSLog(@"%@", [error localizedDescription]);
+    }}
+
+
 
 
 -(void)session:(MCSession *)session didStartReceivingResourceWithName:(NSString *)resourceName fromPeer:(MCPeerID *)peerID withProgress:(NSProgress *)progress{
@@ -89,28 +134,47 @@
                                    @"isGame" : @"no"}
                                        mutableCopy];
     if (shouldAdvertise) {
-        _advertiser = [[MCAdvertiserAssistant alloc] initWithServiceType:@"darts" discoveryInfo:info session:_session];
-        [_advertiser start];
+        self.advertiser = [[MCNearbyServiceAdvertiser alloc] initWithPeer:self.session.myPeerID discoveryInfo:info serviceType:@"darts"];
+//        self.advertiser = [[MCNearbyServiceAdvertiser alloc] initWithServiceType:@"darts" discoveryInfo:info session:_session];
+        [self.advertiser startAdvertisingPeer];
+        self.advertiser.delegate = self;
     }
     else{
-        [_advertiser stop];
-        _advertiser = nil;
+        [self.advertiser stopAdvertisingPeer];
+        self.advertiser = nil;
+        self.advertiser.delegate = nil;
     }
 }
 
+//-(void)advertiseGame:(BOOL)shouldAdvertise{
+//    //    NSMutableDictionary *info = [NSMutableDictionary dictionaryWithObject:self.peerID.displayName forKey:@"peerInfo"];
+//    NSMutableDictionary *info = [@{@"peerInfo": [NSString stringWithFormat:@"%@'s Game", self.peerID.displayName] ,
+//                                   @"isGame" : @"yes"}
+//                                 mutableCopy];
+//    if (shouldAdvertise) {
+//        _advertiser = [[MCAdvertiserAssistant alloc] initWithServiceType:@"darts" discoveryInfo:info session:_session];
+//        [_advertiser start];
+//    }
+//    else{
+//        [_advertiser stop];
+//        _advertiser = nil;
+//    }
+//}
 -(void)advertiseGame:(BOOL)shouldAdvertise{
     //    NSMutableDictionary *info = [NSMutableDictionary dictionaryWithObject:self.peerID.displayName forKey:@"peerInfo"];
     NSMutableDictionary *info = [@{@"peerInfo": [NSString stringWithFormat:@"%@'s Game", self.peerID.displayName] ,
                                    @"isGame" : @"yes"}
                                  mutableCopy];
     if (shouldAdvertise) {
-        _advertiser = [[MCAdvertiserAssistant alloc] initWithServiceType:@"darts" discoveryInfo:info session:_session];
-        [_advertiser start];
+        self.advertiser = [[MCNearbyServiceAdvertiser alloc] initWithPeer:self.session.myPeerID discoveryInfo:info serviceType:@"darts"];
+        //        self.advertiser = [[MCNearbyServiceAdvertiser alloc] initWithServiceType:@"darts" discoveryInfo:info session:_session];
+        [self.advertiser startAdvertisingPeer];
+        self.advertiser.delegate = self;
     }
     else{
-        [_advertiser stop];
-        _advertiser = nil;
+        [self.advertiser stopAdvertisingPeer];
+        self.advertiser = nil;
+        self.advertiser.delegate = nil;
     }
 }
-
 @end

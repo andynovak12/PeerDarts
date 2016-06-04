@@ -61,6 +61,8 @@
     if (self.team.players.count > 0) {
         self.p1Label.hidden = NO;
         self.p1Label.text = ((ASNPlayer *)self.team.players[0]).name;
+        self.p1Label.minimumScaleFactor = 8./self.p1Label.font.pointSize;
+        self.p1Label.adjustsFontSizeToFitWidth = YES;
         self.p1AddButton.hidden = YES;
         self.p2AddButton.hidden = NO;
     }
