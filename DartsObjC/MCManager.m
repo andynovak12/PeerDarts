@@ -77,20 +77,12 @@
     void (^invitationHandler)(BOOL, MCSession *) = [self.arrayInvitationHandler objectAtIndex:0];
     invitationHandler(YES, self.session);
     
-    NSUInteger teamIndex = [[[notification userInfo] objectForKey:@"teamIndex"] intValue];
-    NSData *teamIndexData = [NSData dataWithBytes:&teamIndex length:sizeof(teamIndex)];
-
-    MCPeerID *peerID = [[notification userInfo] objectForKey:@"peerID"];
-
-    
-    //send to peer that invited index of team to be added to
-    NSError *error;
-    [self.session sendData:teamIndexData toPeers:@[peerID] withMode:MCSessionSendDataReliable error:&error];
-    if (error) {
-        NSLog(@"%@", [error localizedDescription]);
-    }}
-
-
+//    NSUInteger teamIndex = [[[notification userInfo] objectForKey:@"teamIndex"] intValue];
+//    NSData *teamIndexData = [NSData dataWithBytes:&teamIndex length:sizeof(teamIndex)];
+//
+//    MCPeerID *peerID = [[notification userInfo] objectForKey:@"peerID"];
+//
+}
 
 
 -(void)session:(MCSession *)session didStartReceivingResourceWithName:(NSString *)resourceName fromPeer:(MCPeerID *)peerID withProgress:(NSProgress *)progress{

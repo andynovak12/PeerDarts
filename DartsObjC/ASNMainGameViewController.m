@@ -10,6 +10,7 @@
 #import "ASNDataStore.h"
 #import "ASNGame.h"
 #import "AppDelegate.h"
+#import "ASNHitsContainerViews.h"
 
 @interface ASNMainGameViewController ()
 
@@ -18,22 +19,36 @@
 
 @property (strong, nonatomic) NSMutableArray *teamContainersArray;
 
-@property (strong, nonatomic) UIImageView *team120;
-@property (strong, nonatomic) UIImageView *team119;
-@property (strong, nonatomic) UIImageView *team118;
-@property (strong, nonatomic) UIImageView *team117;
-@property (strong, nonatomic) UIImageView *team116;
-@property (strong, nonatomic) UIImageView *team115;
-@property (strong, nonatomic) UIImageView *team1Bull;
+//@property (strong, nonatomic) UIImageView *team120;
+//@property (strong, nonatomic) UIImageView *team119;
+//@property (strong, nonatomic) UIImageView *team118;
+//@property (strong, nonatomic) UIImageView *team117;
+//@property (strong, nonatomic) UIImageView *team116;
+//@property (strong, nonatomic) UIImageView *team115;
+//@property (strong, nonatomic) UIImageView *team1Bull;
+//
+//@property (strong, nonatomic) UIImageView *team220;
+//@property (strong, nonatomic) UIImageView *team219;
+//@property (strong, nonatomic) UIImageView *team218;
+//@property (strong, nonatomic) UIImageView *team217;
+//@property (strong, nonatomic) UIImageView *team216;
+//@property (strong, nonatomic) UIImageView *team215;
+//@property (strong, nonatomic) UIImageView *team2Bull;
+@property (strong, nonatomic) ASNHitsContainerViews *team120;
+@property (strong, nonatomic) ASNHitsContainerViews *team119;
+@property (strong, nonatomic) ASNHitsContainerViews *team118;
+@property (strong, nonatomic) ASNHitsContainerViews *team117;
+@property (strong, nonatomic) ASNHitsContainerViews *team116;
+@property (strong, nonatomic) ASNHitsContainerViews *team115;
+@property (strong, nonatomic) ASNHitsContainerViews *team1Bull;
 
-@property (strong, nonatomic) UIImageView *team220;
-@property (strong, nonatomic) UIImageView *team219;
-@property (strong, nonatomic) UIImageView *team218;
-@property (strong, nonatomic) UIImageView *team217;
-@property (strong, nonatomic) UIImageView *team216;
-@property (strong, nonatomic) UIImageView *team215;
-@property (strong, nonatomic) UIImageView *team2Bull;
-
+@property (strong, nonatomic) ASNHitsContainerViews *team220;
+@property (strong, nonatomic) ASNHitsContainerViews *team219;
+@property (strong, nonatomic) ASNHitsContainerViews *team218;
+@property (strong, nonatomic) ASNHitsContainerViews *team217;
+@property (strong, nonatomic) ASNHitsContainerViews *team216;
+@property (strong, nonatomic) ASNHitsContainerViews *team215;
+@property (strong, nonatomic) ASNHitsContainerViews *team2Bull;
 @property (strong, nonatomic) NSArray *team1ImageViewsArray;
 @property (strong, nonatomic) NSArray *team2ImageViewsArray;
 
@@ -293,25 +308,28 @@
         
         // make image views
         for (NSUInteger i = 0; i < self.team1ImageViewsArray.count; i++) {
-            UIImageView *currentTeam1ImageView = self.team1ImageViewsArray[i];
-            [currentTeam1ImageView setTranslatesAutoresizingMaskIntoConstraints:NO];
-            [numbersContainerView addSubview:currentTeam1ImageView];
-            [currentTeam1ImageView.heightAnchor constraintEqualToConstant:(heightConstant/7)-(heightConstant/20)].active = YES;
-            [currentTeam1ImageView.widthAnchor constraintEqualToConstant:outsideLineConstant-insideLineConstant-(heightConstant/20)].active = YES;
-            [currentTeam1ImageView.centerXAnchor constraintEqualToAnchor:numbersContainerView.centerXAnchor constant:-(insideLineConstant + outsideLineConstant)/2].active = YES;
-            [currentTeam1ImageView.centerYAnchor constraintEqualToAnchor:numbersContainerView.topAnchor constant:(heightConstant/7)*(i + 0.5)].active = YES;
-            currentTeam1ImageView.alpha = 0.1;
+            ASNHitsContainerViews *hitsContainerView = self.team1ImageViewsArray[i];
+            hitsContainerView = [ASNHitsContainerViews new];
+//            UIImageView *currentTeam1ImageView = self.team1ImageViewsArray[i];
+            [hitsContainerView setTranslatesAutoresizingMaskIntoConstraints:NO];
+            [numbersContainerView addSubview:hitsContainerView];
+            [hitsContainerView.heightAnchor constraintEqualToConstant:(heightConstant/7)-(heightConstant/20)].active = YES;
+            [hitsContainerView.widthAnchor constraintEqualToConstant:outsideLineConstant-insideLineConstant-(heightConstant/20)].active = YES;
+            [hitsContainerView.centerXAnchor constraintEqualToAnchor:numbersContainerView.centerXAnchor constant:-(insideLineConstant + outsideLineConstant)/2].active = YES;
+            [hitsContainerView.centerYAnchor constraintEqualToAnchor:numbersContainerView.topAnchor constant:(heightConstant/7)*(i + 0.5)].active = YES;
+            hitsContainerView.alpha = 0.1;
             
             // add tap gesture
             UITapGestureRecognizer *team1Tap =
             [[UITapGestureRecognizer alloc] initWithTarget:self
                                                     action:@selector(handleNumberTap:)];
-            [currentTeam1ImageView addGestureRecognizer:team1Tap];
-            currentTeam1ImageView.tag = 20 - i;
-            currentTeam1ImageView.userInteractionEnabled = YES;
+            [hitsContainerView addGestureRecognizer:team1Tap];
+            hitsContainerView.tag = 20 - i;
+            hitsContainerView.userInteractionEnabled = YES;
             
             
-            UIImageView *currentTeam2ImageView = self.team2ImageViewsArray[i];
+            ASNHitsContainerViews *currentTeam2ImageView = self.team2ImageViewsArray[i];
+            currentTeam2ImageView = [ASNHitsContainerViews new];
             [currentTeam2ImageView setTranslatesAutoresizingMaskIntoConstraints:NO];
             [numbersContainerView addSubview:currentTeam2ImageView];
             [currentTeam2ImageView.heightAnchor constraintEqualToConstant:(heightConstant/7)-(heightConstant/20)].active = YES;
@@ -336,50 +354,50 @@
 
 -(void) initializeImageViews {
     // initial image of 'buttons'
-    UIImage *testImage = [UIImage imageNamed:@"Chalkboard"];
+//    UIImage *testImage = [UIImage imageNamed:@"Chalkboard"];
     
-    self.team120 = [[UIImageView alloc] initWithImage:testImage];
-    self.team119 = [[UIImageView alloc] initWithImage:testImage];
-    self.team118 = [[UIImageView alloc] initWithImage:testImage];
-    self.team117 = [[UIImageView alloc] initWithImage:testImage];
-    self.team116 = [[UIImageView alloc] initWithImage:testImage];
-    self.team115 = [[UIImageView alloc] initWithImage:testImage];
-    self.team1Bull = [[UIImageView alloc] initWithImage:testImage];
+//    self.team120 = [[UIImageView alloc] initWithImage:testImage];
+//    self.team119 = [[UIImageView alloc] initWithImage:testImage];
+//    self.team118 = [[UIImageView alloc] initWithImage:testImage];
+//    self.team117 = [[UIImageView alloc] initWithImage:testImage];
+//    self.team116 = [[UIImageView alloc] initWithImage:testImage];
+//    self.team115 = [[UIImageView alloc] initWithImage:testImage];
+//    self.team1Bull = [[UIImageView alloc] initWithImage:testImage];
     self.team1ImageViewsArray = @[self.team120, self.team119, self.team118, self.team117, self.team116, self.team115, self.team1Bull];
 
     
-    self.team220 = [[UIImageView alloc] initWithImage:testImage];
-    self.team219 = [[UIImageView alloc] initWithImage:testImage];
-    self.team218 = [[UIImageView alloc] initWithImage:testImage];
-    self.team217 = [[UIImageView alloc] initWithImage:testImage];
-    self.team216 = [[UIImageView alloc] initWithImage:testImage];
-    self.team215 = [[UIImageView alloc] initWithImage:testImage];
-    self.team2Bull = [[UIImageView alloc] initWithImage:testImage];
+//    self.team220 = [[UIImageView alloc] initWithImage:testImage];
+//    self.team219 = [[UIImageView alloc] initWithImage:testImage];
+//    self.team218 = [[UIImageView alloc] initWithImage:testImage];
+//    self.team217 = [[UIImageView alloc] initWithImage:testImage];
+//    self.team216 = [[UIImageView alloc] initWithImage:testImage];
+//    self.team215 = [[UIImageView alloc] initWithImage:testImage];
+//    self.team2Bull = [[UIImageView alloc] initWithImage:testImage];
     self.team2ImageViewsArray = @[self.team220, self.team219, self.team218, self.team217, self.team216, self.team215, self.team2Bull];
 }
 
--(void)updateImageOfImageView:(UIImageView *)imageView withValue:(NSUInteger)newValue {
+-(void)updateImageOfImageView:(ASNHitsContainerViews *)imageView withValue:(NSUInteger)newValue {
     dispatch_async(dispatch_get_main_queue(), ^{
         imageView.tintColor = [UIColor whiteColor];
         if (newValue == 0) {
             imageView.alpha = 0.1;
         }
         else if (newValue == 1) {
-            [imageView setImage:[UIImage imageNamed:@"one"]];
+            [imageView.hitImageView setImage:[UIImage imageNamed:@"one"]];
             imageView.alpha = 1;
             
         }
         else if (newValue == 2) {
-            [imageView setImage:[UIImage imageNamed:@"two"]];
+            [imageView.hitImageView setImage:[UIImage imageNamed:@"two"]];
             imageView.alpha = 1;
         }
         else if (newValue == 3) {
-            [imageView setImage:[UIImage imageNamed:@"three"]];
+            [imageView.hitImageView setImage:[UIImage imageNamed:@"three"]];
             imageView.alpha = 1;
         }
-        else if (newValue == 4) {
-            [imageView setImage:[UIImage imageNamed:@"slash"]];
-            imageView.alpha = 1;
+        else if (newValue > 3) {
+            imageView.additionalHitsLabel.text =[NSString stringWithFormat:@"+%lu", newValue-3];
+            
         }
         else {
             NSLog(@"%@ has more than 4", self.currentGame.currentTeam.teamName);

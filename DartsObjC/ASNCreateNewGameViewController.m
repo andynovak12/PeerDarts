@@ -24,6 +24,9 @@
 @property (nonatomic, strong) NSMutableArray *availablePlayerViewsArray;
 @property (nonatomic, strong) NSMutableArray *connectedPlayerViewsArray;
 
+@property (nonatomic, strong) NSMutableArray *pendingInvites;
+
+
 @end
 
 @implementation ASNCreateNewGameViewController
@@ -39,6 +42,7 @@
     self.availablePlayerViewsArray = [NSMutableArray new];
     self.connectedPlayerViewsArray = [NSMutableArray new];
     self.teamsArray = [NSMutableArray new];
+    self.pendingInvites = [NSMutableArray new];
     
     self.appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 //    [self.appDelegate.mcManager setupPeerAndSessionWithDisplayName:self.appDelegate.mcManager.peerID.displayName];
@@ -80,16 +84,19 @@
     for (ASNTeam *team in self.teamsArray) {
         ASNCreateTeamView *newTeamView = [[ASNCreateTeamView alloc] init];
         newTeamView.team = team;
-        
-        [self.view addSubview:newTeamView];
         NSUInteger teamIndexInDataStore = [self.teamsArray indexOfObject:team];
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.view addSubview:newTeamView];
+            [newTeamView setTranslatesAutoresizingMaskIntoConstraints:NO];
+            newTeamView.userInteractionEnabled = YES;
+            [newTeamView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:175].active = YES;
+            [newTeamView.heightAnchor constraintEqualToAnchor:self.view.heightAnchor multiplier:0.3].active = YES;
+            [newTeamView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor constant:20+(200*teamIndexInDataStore)].active  = YES;
+            [newTeamView.widthAnchor constraintEqualToAnchor:self.view.widthAnchor multiplier:0.3].active = YES;
+        });
         
-        [newTeamView setTranslatesAutoresizingMaskIntoConstraints:NO];
-        newTeamView.userInteractionEnabled = YES;
-        [newTeamView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:175].active = YES;
-        [newTeamView.heightAnchor constraintEqualToAnchor:self.view.heightAnchor multiplier:0.3].active = YES;
-        [newTeamView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor constant:20+(200*teamIndexInDataStore)].active  = YES;
-        [newTeamView.widthAnchor constraintEqualToAnchor:self.view.widthAnchor multiplier:0.3].active = YES;
+        
         newTeamView.delegate = self;
         
     }
@@ -214,9 +221,13 @@
 }
 
 -(void)invitePeer:(MCPeerID *)receivedPeerID toTeam:(ASNTeam *)team {
-    NSUInteger indexOfTeam = [self.teamsArray indexOfObject:team];
-    NSData *indexOfTeamAsData = [NSData dataWithBytes:&indexOfTeam length:sizeof(indexOfTeam)];
-    [self.appDelegate.mcManager.serviceBrowser invitePeer:receivedPeerID toSession:self.appDelegate.mcManager.session withContext:indexOfTeamAsData timeout:30];
+//    NSUInteger indexOfTeam = [self.teamsArray indexOfObject:team];
+//    NSData *indexOfTeamAsData = [NSData dataWithBytes:&indexOfTeam length:sizeof(indexOfTeam)];
+    [self.appDelegate.mcManager.serviceBrowser invitePeer:receivedPeerID toSession:self.appDelegate.mcManager.session withContext:nil timeout:30];
+    // add peer to array of pending users
+    NSDictionary *inviteDict = @{@"peerID" : receivedPeerID ,
+                                 @"team" : team};
+    [self.pendingInvites addObject:inviteDict];
 }
 
 - (IBAction)toggleVisibility:(id)sender {
@@ -255,6 +266,16 @@
     if (state != MCSessionStateConnecting) {
         if (state == MCSessionStateConnected) {
             NSLog(@"Connected to %@", peerDisplayName);
+            
+            // check if the peer is in the pendingInvites array, if so, add them to the right team
+            NSPredicate *peerIDPredicate = [NSPredicate predicateWithFormat:@"peerID = %@", peerID];
+            NSArray *matchingObjects = [self.pendingInvites filteredArrayUsingPredicate:peerIDPredicate];
+            if (matchingObjects.count > 0) {
+                [self addPlayerWithName:peerDisplayName toTeam:matchingObjects[0][@"team"]];
+                [self.pendingInvites removeObject:matchingObjects[0]];
+            }
+            
+            
             [self.connectedPlayerArray addObject:peerID];
             [self.availablePlayerArray removeObject:peerDisplayName];
             [self reloadConnectedPlayersUI];

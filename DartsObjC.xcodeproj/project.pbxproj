@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		A144A65E1CFE0FA400EBD276 /* ASNPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = A144A65D1CFE0FA400EBD276 /* ASNPlayer.m */; };
 		A144A6611CFE103700EBD276 /* ASNTurn.m in Sources */ = {isa = PBXBuildFile; fileRef = A144A6601CFE103700EBD276 /* ASNTurn.m */; };
+		A17BE2491D0602EA009995B1 /* ASNHitsContainerViews.m in Sources */ = {isa = PBXBuildFile; fileRef = A17BE2481D0602EA009995B1 /* ASNHitsContainerViews.m */; };
 		A1BC22DF1CDA7FE600C714C2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BC22DE1CDA7FE600C714C2 /* main.m */; };
 		A1BC22E21CDA7FE600C714C2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BC22E11CDA7FE600C714C2 /* AppDelegate.m */; };
 		A1BC22E81CDA7FE600C714C2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A1BC22E61CDA7FE600C714C2 /* Main.storyboard */; };
@@ -48,6 +49,8 @@
 		A144A65D1CFE0FA400EBD276 /* ASNPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNPlayer.m; sourceTree = "<group>"; };
 		A144A65F1CFE103700EBD276 /* ASNTurn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASNTurn.h; sourceTree = "<group>"; };
 		A144A6601CFE103700EBD276 /* ASNTurn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNTurn.m; sourceTree = "<group>"; };
+		A17BE2471D0602EA009995B1 /* ASNHitsContainerViews.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASNHitsContainerViews.h; sourceTree = "<group>"; };
+		A17BE2481D0602EA009995B1 /* ASNHitsContainerViews.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNHitsContainerViews.m; sourceTree = "<group>"; };
 		A1BC22DA1CDA7FE600C714C2 /* DartsObjC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DartsObjC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1BC22DE1CDA7FE600C714C2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		A1BC22E01CDA7FE600C714C2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -149,6 +152,17 @@
 				A1C58CD31CEBC8DD008E78A7 /* ASNCreateNewGameViewController.m */,
 				A1BC231C1CDAED4500C714C2 /* ASNMainGameViewController.h */,
 				A1BC231D1CDAED4500C714C2 /* ASNMainGameViewController.m */,
+				A17BE2471D0602EA009995B1 /* ASNHitsContainerViews.h */,
+				A17BE2481D0602EA009995B1 /* ASNHitsContainerViews.m */,
+				A17BE2431D05F6EF009995B1 /* Views */,
+				A1BC22E61CDA7FE600C714C2 /* Main.storyboard */,
+			);
+			name = "Views and View Controllers";
+			sourceTree = "<group>";
+		};
+		A17BE2431D05F6EF009995B1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
 				A1EE7FDA1CF88E0E0018ECD3 /* ASNAvailableGamesView.h */,
 				A1EE7FDB1CF88E0E0018ECD3 /* ASNAvailableGamesView.m */,
 				A1EE7FDD1CF8AAF60018ECD3 /* ASNAvailablePlayerView.h */,
@@ -156,9 +170,8 @@
 				A1C58CD71CEBD398008E78A7 /* ASNCreateTeamView.h */,
 				A1C58CD81CEBD398008E78A7 /* ASNCreateTeamView.m */,
 				A1C58CD51CEBCE93008E78A7 /* TeamForCreateGame.xib */,
-				A1BC22E61CDA7FE600C714C2 /* Main.storyboard */,
 			);
-			name = "Views and View Controllers";
+			name = Views;
 			sourceTree = "<group>";
 		};
 		A1BC22D11CDA7FE600C714C2 = {
@@ -325,6 +338,7 @@
 				A1C58CD41CEBC8DD008E78A7 /* ASNCreateNewGameViewController.m in Sources */,
 				A1BC22E21CDA7FE600C714C2 /* AppDelegate.m in Sources */,
 				A1BC23191CDACD1100C714C2 /* ASNGame.m in Sources */,
+				A17BE2491D0602EA009995B1 /* ASNHitsContainerViews.m in Sources */,
 				A1BC22EB1CDA7FE600C714C2 /* DartsObjC.xcdatamodeld in Sources */,
 				A1C58CD91CEBD398008E78A7 /* ASNCreateTeamView.m in Sources */,
 				A1BC22DF1CDA7FE600C714C2 /* main.m in Sources */,

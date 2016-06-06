@@ -69,18 +69,24 @@
     if (self.team.players.count > 1) {
         self.p2Label.text = ((ASNPlayer *)self.team.players[1]).name;
         self.p2Label.hidden = NO;
+        self.p2Label.minimumScaleFactor = 8./self.p2Label.font.pointSize;
+        self.p2Label.adjustsFontSizeToFitWidth = YES;
         self.p2AddButton.hidden = YES;
         self.p3AddButton.hidden = NO;
     }
     if (self.team.players.count > 2) {
         self.p3Label.text = ((ASNPlayer *)self.team.players[2]).name;
         self.p3Label.hidden = NO;
+        self.p3Label.minimumScaleFactor = 8./self.p3Label.font.pointSize;
+        self.p3Label.adjustsFontSizeToFitWidth = YES;
         self.p3AddButton.hidden = YES;
         self.p4AddButton.hidden = NO;
     }
     if (self.team.players.count > 3) {
         self.p4Label.text = ((ASNPlayer *)self.team.players[3]).name;
         self.p4Label.hidden = NO;
+        self.p4Label.minimumScaleFactor = 8./self.p4Label.font.pointSize;
+        self.p4Label.adjustsFontSizeToFitWidth = YES;
         self.p4AddButton.hidden = YES;
     }
 }
