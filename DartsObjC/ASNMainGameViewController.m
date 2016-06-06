@@ -18,39 +18,24 @@
 @property (nonatomic, strong) AppDelegate *appDelegate;
 
 @property (strong, nonatomic) NSMutableArray *teamContainersArray;
-
-//@property (strong, nonatomic) UIImageView *team120;
-//@property (strong, nonatomic) UIImageView *team119;
-//@property (strong, nonatomic) UIImageView *team118;
-//@property (strong, nonatomic) UIImageView *team117;
-//@property (strong, nonatomic) UIImageView *team116;
-//@property (strong, nonatomic) UIImageView *team115;
-//@property (strong, nonatomic) UIImageView *team1Bull;
 //
-//@property (strong, nonatomic) UIImageView *team220;
-//@property (strong, nonatomic) UIImageView *team219;
-//@property (strong, nonatomic) UIImageView *team218;
-//@property (strong, nonatomic) UIImageView *team217;
-//@property (strong, nonatomic) UIImageView *team216;
-//@property (strong, nonatomic) UIImageView *team215;
-//@property (strong, nonatomic) UIImageView *team2Bull;
-@property (strong, nonatomic) ASNHitsContainerViews *team120;
-@property (strong, nonatomic) ASNHitsContainerViews *team119;
-@property (strong, nonatomic) ASNHitsContainerViews *team118;
-@property (strong, nonatomic) ASNHitsContainerViews *team117;
-@property (strong, nonatomic) ASNHitsContainerViews *team116;
-@property (strong, nonatomic) ASNHitsContainerViews *team115;
-@property (strong, nonatomic) ASNHitsContainerViews *team1Bull;
-
-@property (strong, nonatomic) ASNHitsContainerViews *team220;
-@property (strong, nonatomic) ASNHitsContainerViews *team219;
-@property (strong, nonatomic) ASNHitsContainerViews *team218;
-@property (strong, nonatomic) ASNHitsContainerViews *team217;
-@property (strong, nonatomic) ASNHitsContainerViews *team216;
-@property (strong, nonatomic) ASNHitsContainerViews *team215;
-@property (strong, nonatomic) ASNHitsContainerViews *team2Bull;
-@property (strong, nonatomic) NSArray *team1ImageViewsArray;
-@property (strong, nonatomic) NSArray *team2ImageViewsArray;
+//@property (strong, nonatomic) ASNHitsContainerViews *team120;
+//@property (strong, nonatomic) ASNHitsContainerViews *team119;
+//@property (strong, nonatomic) ASNHitsContainerViews *team118;
+//@property (strong, nonatomic) ASNHitsContainerViews *team117;
+//@property (strong, nonatomic) ASNHitsContainerViews *team116;
+//@property (strong, nonatomic) ASNHitsContainerViews *team115;
+//@property (strong, nonatomic) ASNHitsContainerViews *team1Bull;
+//
+//@property (strong, nonatomic) ASNHitsContainerViews *team220;
+//@property (strong, nonatomic) ASNHitsContainerViews *team219;
+//@property (strong, nonatomic) ASNHitsContainerViews *team218;
+//@property (strong, nonatomic) ASNHitsContainerViews *team217;
+//@property (strong, nonatomic) ASNHitsContainerViews *team216;
+//@property (strong, nonatomic) ASNHitsContainerViews *team215;
+//@property (strong, nonatomic) ASNHitsContainerViews *team2Bull;
+//@property (strong, nonatomic) NSArray *team1ImageViewsArray;
+//@property (strong, nonatomic) NSArray *team2ImageViewsArray;
 
 //@property (strong, nonatomic) UILabel *currentPlayerLabel;
 
@@ -89,13 +74,14 @@
     UIImageView *chalkboardImageView = [[UIImageView alloc] init];
     [chalkboardImageView setImage:[UIImage imageNamed:@"Chalkboard"]];
     [chalkboardImageView setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [self.view addSubview:chalkboardImageView];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.view addSubview:chalkboardImageView];
+    });
 
-    [self initializeImageViews];
     self.playerNamesLabelsArray = [NSMutableArray new];
 //    self.dataStore = [ASNDataStore sharedDataStore];
     
-    // setup game depending on if they received data from MC or started game
+    // setup game 
     if (self.teamsArray.count > 0) {
         self.currentGame = [[ASNGame alloc] initWithTeams:self.teamsArray];
     }
@@ -114,11 +100,10 @@
         [self updateTeamNameAndWins:team];
         [self updatePlayerNamesLabelsOfPreviousTeam:team];
     }
-    for (UIImageView *imageview in self.team1ImageViewsArray) {
-        imageview.alpha = 0.1;
-    }
-    for (UIImageView *imageview in self.team2ImageViewsArray) {
-        imageview.alpha = 0.1;
+    for (ASNTeam *team in self.currentGame.teams) {
+        for (ASNHitsContainerViews *view in team.arrayOfNumberViews) {
+            view.alpha = 0.1;
+        }
     }
 }
 
@@ -306,74 +291,50 @@
             }
         }
         
-        // make image views
-        for (NSUInteger i = 0; i < self.team1ImageViewsArray.count; i++) {
-            ASNHitsContainerViews *hitsContainerView = self.team1ImageViewsArray[i];
-            hitsContainerView = [ASNHitsContainerViews new];
-//            UIImageView *currentTeam1ImageView = self.team1ImageViewsArray[i];
-            [hitsContainerView setTranslatesAutoresizingMaskIntoConstraints:NO];
-            [numbersContainerView addSubview:hitsContainerView];
-            [hitsContainerView.heightAnchor constraintEqualToConstant:(heightConstant/7)-(heightConstant/20)].active = YES;
-            [hitsContainerView.widthAnchor constraintEqualToConstant:outsideLineConstant-insideLineConstant-(heightConstant/20)].active = YES;
-            [hitsContainerView.centerXAnchor constraintEqualToAnchor:numbersContainerView.centerXAnchor constant:-(insideLineConstant + outsideLineConstant)/2].active = YES;
-            [hitsContainerView.centerYAnchor constraintEqualToAnchor:numbersContainerView.topAnchor constant:(heightConstant/7)*(i + 0.5)].active = YES;
-            hitsContainerView.alpha = 0.1;
-            
-            // add tap gesture
-            UITapGestureRecognizer *team1Tap =
-            [[UITapGestureRecognizer alloc] initWithTarget:self
-                                                    action:@selector(handleNumberTap:)];
-            [hitsContainerView addGestureRecognizer:team1Tap];
-            hitsContainerView.tag = 20 - i;
-            hitsContainerView.userInteractionEnabled = YES;
-            
-            
-            ASNHitsContainerViews *currentTeam2ImageView = self.team2ImageViewsArray[i];
-            currentTeam2ImageView = [ASNHitsContainerViews new];
-            [currentTeam2ImageView setTranslatesAutoresizingMaskIntoConstraints:NO];
-            [numbersContainerView addSubview:currentTeam2ImageView];
-            [currentTeam2ImageView.heightAnchor constraintEqualToConstant:(heightConstant/7)-(heightConstant/20)].active = YES;
-            [currentTeam2ImageView.widthAnchor constraintEqualToConstant:outsideLineConstant-insideLineConstant-(heightConstant/20)].active = YES;
-            [currentTeam2ImageView.centerXAnchor constraintEqualToAnchor:numbersContainerView.centerXAnchor constant:(insideLineConstant + outsideLineConstant)/2].active = YES;
-            [currentTeam2ImageView.centerYAnchor constraintEqualToAnchor:numbersContainerView.topAnchor constant:(heightConstant/7)*(i + 0.5)].active = YES;
-            currentTeam2ImageView.alpha = 0.1;
-            
-            // add tap gesture
-            UITapGestureRecognizer *team2Tap =
-            [[UITapGestureRecognizer alloc] initWithTarget:self
-                                                    action:@selector(handleNumberTap:)];
-            [currentTeam2ImageView addGestureRecognizer:team2Tap];
-            currentTeam2ImageView.tag = 20 - i;
-            currentTeam2ImageView.userInteractionEnabled = YES;
+        // for every team, create the tapable numbers
+        for (ASNTeam *team in self.currentGame.teams) {
+            NSUInteger teamIndex = [self.currentGame.teams indexOfObject:team];
+            for (NSUInteger j = 20; j>=14; j--) {
+                ASNHitsContainerViews *hitsContainerView = [ASNHitsContainerViews new];
+                hitsContainerView.tag = j;
+                [team.arrayOfNumberViews addObject:hitsContainerView];
+                
+                
+                [hitsContainerView setTranslatesAutoresizingMaskIntoConstraints:NO];
+                [numbersContainerView addSubview:hitsContainerView];
+                [hitsContainerView.heightAnchor constraintEqualToConstant:(heightConstant/7)-(heightConstant/20)].active = YES;
+                [hitsContainerView.widthAnchor constraintEqualToConstant:outsideLineConstant-insideLineConstant-(heightConstant/20)].active = YES;
+                // This moves the column of numberviews horizontally, based on the number of teams
+                // TODO check with 3, 4 teams
+                NSInteger teamHorizontalMultiplier = 0;
+                if (teamIndex == 0) {
+                    teamHorizontalMultiplier = -1;
+                }
+                else if (teamIndex == 1) {
+                    teamHorizontalMultiplier = 1;
+                }
+                else if (teamIndex == 2) {
+                    teamHorizontalMultiplier = -2;
+                }
+                else if (teamIndex == 3) {
+                    teamHorizontalMultiplier = 2;
+                }
+                [hitsContainerView.centerXAnchor constraintEqualToAnchor:numbersContainerView.centerXAnchor constant:teamHorizontalMultiplier * (insideLineConstant + outsideLineConstant)/2].active = YES;
+                [hitsContainerView.centerYAnchor constraintEqualToAnchor:numbersContainerView.topAnchor constant:(heightConstant/7)*((20-j) + 0.5)].active = YES;
+                hitsContainerView.alpha = 0.1;
+                
+                // add tap gesture
+                UITapGestureRecognizer *teamTap =
+                [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                        action:@selector(handleNumberTap:)];
+                [hitsContainerView addGestureRecognizer:teamTap];
+                hitsContainerView.userInteractionEnabled = YES;
+            }
         }
         [self enableTouchingForTeam:self.currentGame.currentTeam];
 
     });
     
-}
-
--(void) initializeImageViews {
-    // initial image of 'buttons'
-//    UIImage *testImage = [UIImage imageNamed:@"Chalkboard"];
-    
-//    self.team120 = [[UIImageView alloc] initWithImage:testImage];
-//    self.team119 = [[UIImageView alloc] initWithImage:testImage];
-//    self.team118 = [[UIImageView alloc] initWithImage:testImage];
-//    self.team117 = [[UIImageView alloc] initWithImage:testImage];
-//    self.team116 = [[UIImageView alloc] initWithImage:testImage];
-//    self.team115 = [[UIImageView alloc] initWithImage:testImage];
-//    self.team1Bull = [[UIImageView alloc] initWithImage:testImage];
-    self.team1ImageViewsArray = @[self.team120, self.team119, self.team118, self.team117, self.team116, self.team115, self.team1Bull];
-
-    
-//    self.team220 = [[UIImageView alloc] initWithImage:testImage];
-//    self.team219 = [[UIImageView alloc] initWithImage:testImage];
-//    self.team218 = [[UIImageView alloc] initWithImage:testImage];
-//    self.team217 = [[UIImageView alloc] initWithImage:testImage];
-//    self.team216 = [[UIImageView alloc] initWithImage:testImage];
-//    self.team215 = [[UIImageView alloc] initWithImage:testImage];
-//    self.team2Bull = [[UIImageView alloc] initWithImage:testImage];
-    self.team2ImageViewsArray = @[self.team220, self.team219, self.team218, self.team217, self.team216, self.team215, self.team2Bull];
 }
 
 -(void)updateImageOfImageView:(ASNHitsContainerViews *)imageView withValue:(NSUInteger)newValue {
@@ -427,23 +388,37 @@
 }
 
 -(void)enableTouchingForTeam:(ASNTeam *)team {
-    NSUInteger indexOfTeam = [self.currentGame.teams indexOfObject:team];
-    if (indexOfTeam == 0) {
-        for (UIImageView *imageView in self.team1ImageViewsArray) {
-            imageView.userInteractionEnabled = YES;
+//    NSUInteger indexOfTeam = [self.currentGame.teams indexOfObject:team];
+//    if (indexOfTeam == 0) {
+//        for (UIImageView *imageView in self.team1ImageViewsArray) {
+//            imageView.userInteractionEnabled = YES;
+//        }
+//        for (UIImageView *imageView in self.team2ImageViewsArray) {
+//            imageView.userInteractionEnabled = NO;
+//        }
+//    }
+//    else if (indexOfTeam == 1) {
+//        for (UIImageView *imageView in self.team1ImageViewsArray) {
+//            imageView.userInteractionEnabled = NO;
+//        }
+//        for (UIImageView *imageView in self.team2ImageViewsArray) {
+//            imageView.userInteractionEnabled = YES;
+//        }
+//    }
+    
+    for (ASNTeam *allTeam in self.currentGame.teams) {
+        if (allTeam == team) {
+            for (ASNHitsContainerViews *view in allTeam.arrayOfNumberViews) {
+                view.userInteractionEnabled = YES;
+            }
         }
-        for (UIImageView *imageView in self.team2ImageViewsArray) {
-            imageView.userInteractionEnabled = NO;
+        else {
+            for (ASNHitsContainerViews *view in allTeam.arrayOfNumberViews) {
+                view.userInteractionEnabled = NO;
+            }
         }
     }
-    else if (indexOfTeam == 1) {
-        for (UIImageView *imageView in self.team1ImageViewsArray) {
-            imageView.userInteractionEnabled = NO;
-        }
-        for (UIImageView *imageView in self.team2ImageViewsArray) {
-            imageView.userInteractionEnabled = YES;
-        }
-    }
+
 }
 
 // called when logTurn, rotates names of players
@@ -467,8 +442,9 @@
         if (playersPreviousRoundResults.length == 0) {
             playersPreviousRoundResults = @"Nada";
         }
-
-        ((UILabel *)self.playerNamesLabelsArray[teamIndex][i]).text = [NSString stringWithFormat:@"%@ : %@", currentPlayer.name, playersPreviousRoundResults];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            ((UILabel *)self.playerNamesLabelsArray[teamIndex][i]).text = [NSString stringWithFormat:@"%@ : %@", currentPlayer.name, playersPreviousRoundResults];
+        });
     }
     
     [self enableTouchingForTeam:self.currentGame.currentTeam];
@@ -520,8 +496,14 @@
     else {
         hit = [[NSString stringWithFormat:@"%li",[recognizer.view tag]] mutableCopy];
     }
-//    NSLog(@"Team %@ pressed %@", self.currentGame.currentTeam.teamName, hit);
-    [self recordNumberHit:hit andView:((UIImageView *)recognizer.view)];
+    
+    // check if number not closed when number of hits is 3 or more
+    if ([self.currentGame.currentTeam.hitsInCurrentRound[hit] integerValue] >=3 && [self.currentGame isCurrentTeamsNumberClosed:hit]) {
+        // TODO: make the other team's views glow red
+        return;
+    }
+
+    [self recordNumberHit:hit andView:((ASNHitsContainerViews *)recognizer.view)];
     
     
     if (self.appDelegate.mcManager.session.connectedPeers.count > 0) {
@@ -542,7 +524,7 @@
 
 }
 
--(void)recordNumberHit:(NSString *)hit andView:(UIImageView *)associatedView {
+-(void)recordNumberHit:(NSString *)hit andView:(ASNHitsContainerViews *)associatedView {
     [self.currentGame.currentPlayer addHitToCurrentHits:hit];
     NSUInteger newValueForKey = [self.currentGame addHit:hit toTeamCurrentRound:self.currentGame.currentTeam];
     [self updateTeamNameAndWins:self.currentGame.currentTeam];
@@ -581,6 +563,8 @@
 
 }
 
+
+
 -(void)handleLogButtonTapped:(id)sender {
     [self logTurn];
     
@@ -617,7 +601,7 @@
     NSString *receivedDataUnarchived = [[NSString alloc] initWithData:receivedData encoding:NSUTF8StringEncoding];
     NSLog(@"this is the unarchived data i received in MainGameVC: %@ from %@", receivedDataUnarchived, peerDisplayName);
     
-    NSUInteger indexOfCurrentTeam = [self.currentGame.teams indexOfObject:self.currentGame.currentTeam];
+    
     
     // TODO make this work for more than 2 teams. make this less code and simpler
     if ([receivedDataUnarchived isEqualToString:@"logTurn"]) {
@@ -625,68 +609,32 @@
     }
     else if ([receivedDataUnarchived isEqualToString:@"20"]) {
         // find associated view for number
-        if (indexOfCurrentTeam == 0) {
-            [self recordNumberHit:receivedDataUnarchived andView:self.team120];
-        }
-        else if (indexOfCurrentTeam == 1) {
-            [self recordNumberHit:receivedDataUnarchived andView:self.team220];
-        }
+        [self recordNumberHit:receivedDataUnarchived andView:self.currentGame.currentTeam.arrayOfNumberViews[0]];
     }
     else if ([receivedDataUnarchived isEqualToString:@"19"]) {
         // find associated view for number
-        if (indexOfCurrentTeam == 0) {
-            [self recordNumberHit:receivedDataUnarchived andView:self.team119];
-        }
-        else if (indexOfCurrentTeam == 1) {
-            [self recordNumberHit:receivedDataUnarchived andView:self.team219];
-        }
+        [self recordNumberHit:receivedDataUnarchived andView:self.currentGame.currentTeam.arrayOfNumberViews[1]];
     }
     else if ([receivedDataUnarchived isEqualToString:@"18"]) {
         // find associated view for number
-        if (indexOfCurrentTeam == 0) {
-            [self recordNumberHit:receivedDataUnarchived andView:self.team118];
-        }
-        else if (indexOfCurrentTeam == 1) {
-            [self recordNumberHit:receivedDataUnarchived andView:self.team218];
-        }
+        [self recordNumberHit:receivedDataUnarchived andView:self.currentGame.currentTeam.arrayOfNumberViews[2]];
     }
     else if ([receivedDataUnarchived isEqualToString:@"17"]) {
         // find associated view for number
-        if (indexOfCurrentTeam == 0) {
-            [self recordNumberHit:receivedDataUnarchived andView:self.team117];
-        }
-        else if (indexOfCurrentTeam == 1) {
-            [self recordNumberHit:receivedDataUnarchived andView:self.team217];
-        }
+        [self recordNumberHit:receivedDataUnarchived andView:self.currentGame.currentTeam.arrayOfNumberViews[3]];
     }
     else if ([receivedDataUnarchived isEqualToString:@"16"]) {
         // find associated view for number
-        if (indexOfCurrentTeam == 0) {
-            [self recordNumberHit:receivedDataUnarchived andView:self.team116];
-        }
-        else if (indexOfCurrentTeam == 1) {
-            [self recordNumberHit:receivedDataUnarchived andView:self.team216];
-        }
+        [self recordNumberHit:receivedDataUnarchived andView:self.currentGame.currentTeam.arrayOfNumberViews[4]];
     }
     else if ([receivedDataUnarchived isEqualToString:@"15"]) {
         // find associated view for number
-        if (indexOfCurrentTeam == 0) {
-            [self recordNumberHit:receivedDataUnarchived andView:self.team115];
-        }
-        else if (indexOfCurrentTeam == 1) {
-            [self recordNumberHit:receivedDataUnarchived andView:self.team215];
-        }
+        [self recordNumberHit:receivedDataUnarchived andView:self.currentGame.currentTeam.arrayOfNumberViews[5]];
     }
     else if ([receivedDataUnarchived isEqualToString:@"Bull"]) {
         // find associated view for number
-        if (indexOfCurrentTeam == 0) {
-            [self recordNumberHit:receivedDataUnarchived andView:self.team1Bull];
-        }
-        else if (indexOfCurrentTeam == 1) {
-            [self recordNumberHit:receivedDataUnarchived andView:self.team2Bull];
-        }
+        [self recordNumberHit:receivedDataUnarchived andView:self.currentGame.currentTeam.arrayOfNumberViews[6]];
     }
 }
-
 
 @end

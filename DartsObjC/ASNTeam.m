@@ -24,6 +24,8 @@
         self.previousPlayer = [coder decodeObjectForKey:@"previousPlayer"];
         self.scoreOfCurrentRound = [coder decodeIntegerForKey:@"scoreOfCurrentRound"];
         self.hasThreeOrMoreOfEveryHit = [coder decodeBoolForKey:@"hasThreeOrMoreOfEveryHit"];
+        self.arrayOfNumberViews = [coder decodeObjectForKey:@"arrayOfNumberViews"];
+
     }
     return self;
 }
@@ -36,6 +38,8 @@
     [aCoder encodeObject:self.previousPlayer forKey:@"previousPlayer"];
     [aCoder encodeInteger:self.scoreOfCurrentRound forKey:@"scoreOfCurrentRound"];
     [aCoder encodeBool:self.hasThreeOrMoreOfEveryHit forKey:@"hasThreeOrMoreOfEveryHit"];
+    [aCoder encodeObject:self.arrayOfNumberViews forKey:@"arrayOfNumberViews"];
+
 }
 
 
@@ -58,6 +62,8 @@
         _scoreOfCurrentRound = 0;
         _previousPlayer = nil;
         _hasThreeOrMoreOfEveryHit = NO;
+        _arrayOfNumberViews = [NSMutableArray
+                               new];
     }
     
     return self;

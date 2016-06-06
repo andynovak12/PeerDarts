@@ -92,4 +92,15 @@
     return nil;
 }
 
+-(BOOL)isCurrentTeamsNumberClosed:(NSString *)numberString{
+    // yes, if every other team has 3 or more of the number
+    for (ASNTeam *team in self.teams) {
+        if (team != self.currentTeam && [team.hitsInCurrentRound[numberString] integerValue] < 3 ) {
+            return NO;
+        }
+    }
+    return YES;
+}
+
+
 @end

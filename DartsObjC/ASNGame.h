@@ -26,5 +26,5 @@
 - (void)logTurnOfCurrentPlayer;
 -(NSUInteger)addHit:(NSString *)hit toTeamCurrentRound:(ASNTeam *)team;
 -(ASNTeam *)returnIfThereIsAWinner;
-
+-(BOOL)isCurrentTeamsNumberClosed:(NSString *)numberString;
 @end

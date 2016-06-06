@@ -152,8 +152,6 @@
 				A1C58CD31CEBC8DD008E78A7 /* ASNCreateNewGameViewController.m */,
 				A1BC231C1CDAED4500C714C2 /* ASNMainGameViewController.h */,
 				A1BC231D1CDAED4500C714C2 /* ASNMainGameViewController.m */,
-				A17BE2471D0602EA009995B1 /* ASNHitsContainerViews.h */,
-				A17BE2481D0602EA009995B1 /* ASNHitsContainerViews.m */,
 				A17BE2431D05F6EF009995B1 /* Views */,
 				A1BC22E61CDA7FE600C714C2 /* Main.storyboard */,
 			);
@@ -163,6 +161,8 @@
 		A17BE2431D05F6EF009995B1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A17BE2471D0602EA009995B1 /* ASNHitsContainerViews.h */,
+				A17BE2481D0602EA009995B1 /* ASNHitsContainerViews.m */,
 				A1EE7FDA1CF88E0E0018ECD3 /* ASNAvailableGamesView.h */,
 				A1EE7FDB1CF88E0E0018ECD3 /* ASNAvailableGamesView.m */,
 				A1EE7FDD1CF8AAF60018ECD3 /* ASNAvailablePlayerView.h */,

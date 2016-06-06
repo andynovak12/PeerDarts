@@ -20,6 +20,8 @@
 @property (nonatomic) NSUInteger scoreOfCurrentRound;
 @property (nonatomic) BOOL hasThreeOrMoreOfEveryHit;
 
+@property (strong, nonatomic) NSMutableArray *arrayOfNumberViews;
+
 - (instancetype) initWithName:(NSString *)teamName;
 - (void) addPlayerToTeam:(ASNPlayer *)player;
 - (void) removePlayerFromTeam:(ASNPlayer *)player;
