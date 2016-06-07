@@ -41,7 +41,6 @@
     [self logTurnOfPlayer:self.currentPlayer];
     self.currentTeam.previousPlayer = self.currentPlayer;
     
-    
     NSUInteger currentTeamIndex = [self.teams indexOfObject:self.currentTeam];
     NSUInteger nextTeamIndex = (currentTeamIndex + 1) % self.teams.count;
     self.previousTeam = self.currentTeam;
@@ -55,7 +54,6 @@
 -(NSUInteger)addHit:(NSString *)hit toTeamCurrentRound:(ASNTeam *)team {
     NSUInteger teamValueForHit = [team.hitsInCurrentRound[hit] integerValue];
     [team.hitsInCurrentRound setObject:@(teamValueForHit + 1) forKey:hit];
-//    NSLog(@"New scores for team %@: %@", team.teamName, team.hitsInCurrentRound);
     return teamValueForHit + 1;
 }
 
@@ -85,7 +83,6 @@
 -(ASNTeam *)returnIfThereIsAWinner {
     for (ASNTeam *team in self.teams) {
         if (team.hasThreeOrMoreOfEveryHit && [self teamHasMostPoints:team]) {
-//            NSLog(@"WINNER WINNER %@",team.teamName);
             return team;
         }
     }
@@ -93,7 +90,10 @@
 }
 
 -(BOOL)isCurrentTeamsNumberClosed:(NSString *)numberString{
-    // yes, if every other team has 3 or more of the number
+    if (self.teams.count == 1) {
+        return NO;
+    }
+    
     for (ASNTeam *team in self.teams) {
         if (team != self.currentTeam && [team.hitsInCurrentRound[numberString] integerValue] < 3 ) {
             return NO;

@@ -29,6 +29,10 @@
                                                  selector:@selector(didAcceptInvitationNotification:)
                                                      name:@"didAcceptInvitationNotification"
                                                    object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(didRejectInvitationNotification:)
+                                                     name:@"didRejectInvitationNotification"
+                                                   object:nil];
     }
     
     return self;
@@ -84,6 +88,10 @@
 //
 }
 
+-(void)didRejectInvitationNotification:(NSNotification *)notification {
+    void (^invitationHandler)(BOOL, MCSession *) = [self.arrayInvitationHandler objectAtIndex:0];
+    invitationHandler(NO, self.session);
+}
 
 -(void)session:(MCSession *)session didStartReceivingResourceWithName:(NSString *)resourceName fromPeer:(MCPeerID *)peerID withProgress:(NSProgress *)progress{
     

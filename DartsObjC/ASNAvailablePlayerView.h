@@ -14,5 +14,6 @@
 @property(strong,nonatomic)MCPeerID *peerID;
 @property (nonatomic,strong) UIImageView *imageView;
 @property (nonatomic,strong) UILabel *label;
+@property (nonatomic,strong) UIActivityIndicatorView *spinner;
 
 @end

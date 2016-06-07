@@ -601,38 +601,13 @@
     NSString *receivedDataUnarchived = [[NSString alloc] initWithData:receivedData encoding:NSUTF8StringEncoding];
     NSLog(@"this is the unarchived data i received in MainGameVC: %@ from %@", receivedDataUnarchived, peerDisplayName);
     
-    
-    
-    // TODO make this work for more than 2 teams. make this less code and simpler
     if ([receivedDataUnarchived isEqualToString:@"logTurn"]) {
         [self logTurn];
     }
-    else if ([receivedDataUnarchived isEqualToString:@"20"]) {
-        // find associated view for number
-        [self recordNumberHit:receivedDataUnarchived andView:self.currentGame.currentTeam.arrayOfNumberViews[0]];
-    }
-    else if ([receivedDataUnarchived isEqualToString:@"19"]) {
-        // find associated view for number
-        [self recordNumberHit:receivedDataUnarchived andView:self.currentGame.currentTeam.arrayOfNumberViews[1]];
-    }
-    else if ([receivedDataUnarchived isEqualToString:@"18"]) {
-        // find associated view for number
-        [self recordNumberHit:receivedDataUnarchived andView:self.currentGame.currentTeam.arrayOfNumberViews[2]];
-    }
-    else if ([receivedDataUnarchived isEqualToString:@"17"]) {
-        // find associated view for number
-        [self recordNumberHit:receivedDataUnarchived andView:self.currentGame.currentTeam.arrayOfNumberViews[3]];
-    }
-    else if ([receivedDataUnarchived isEqualToString:@"16"]) {
-        // find associated view for number
-        [self recordNumberHit:receivedDataUnarchived andView:self.currentGame.currentTeam.arrayOfNumberViews[4]];
-    }
-    else if ([receivedDataUnarchived isEqualToString:@"15"]) {
-        // find associated view for number
-        [self recordNumberHit:receivedDataUnarchived andView:self.currentGame.currentTeam.arrayOfNumberViews[5]];
+    else if ([receivedDataUnarchived integerValue] >= 15 && [receivedDataUnarchived integerValue] <= 20 ) {
+        [self recordNumberHit:receivedDataUnarchived andView:self.currentGame.currentTeam.arrayOfNumberViews[20-[receivedDataUnarchived integerValue]]];
     }
     else if ([receivedDataUnarchived isEqualToString:@"Bull"]) {
-        // find associated view for number
         [self recordNumberHit:receivedDataUnarchived andView:self.currentGame.currentTeam.arrayOfNumberViews[6]];
     }
 }

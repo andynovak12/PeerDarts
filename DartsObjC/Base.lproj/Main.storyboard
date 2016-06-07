@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="0le-Pf-q6W">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="0le-Pf-q6W">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -81,7 +81,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" id="FRN-vq-TxR">
-                                <rect key="frame" x="124" y="247" width="22" height="22"/>
+                                <rect key="frame" x="184" y="247" width="22" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <connections>
                                     <action selector="addTeamButtonTapped:" destination="uGD-Ji-WDQ" eventType="touchUpInside" id="yFJ-TM-3Xt"/>
@@ -95,6 +95,7 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                     <connections>
+                        <outlet property="addTeamButton" destination="FRN-vq-TxR" id="neF-We-NPd"/>
                         <outlet property="displayNameTextField" destination="F5Q-i9-77m" id="U3o-Lx-fdq"/>
                         <outlet property="startGameButton" destination="4Ws-Xm-LRy" id="6Gc-kY-5ZN"/>
                         <outlet property="visibilityToggle" destination="qKW-FQ-TY7" id="rcw-Pr-c7K"/>

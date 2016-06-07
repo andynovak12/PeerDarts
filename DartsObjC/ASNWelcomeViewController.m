@@ -65,6 +65,8 @@
     [super viewWillDisappear:animated];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"MCDidReceiveDataNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"MCDidReceiveInvitationNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"MCDidChangeStateNotification" object:nil];
 }
 
 - (IBAction)refreshTapped:(id)sender {
@@ -210,7 +212,11 @@
                                                             object:nil
                                                           userInfo:dict];
     }];
-    UIAlertAction *no = [UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleDestructive handler:nil];
+    UIAlertAction *no = [UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"didRejectInvitationNotification"
+                                                            object:nil
+                                                          userInfo:nil];
+    }];
     
     [invitationAlert addAction:no];
     [invitationAlert addAction:yes];

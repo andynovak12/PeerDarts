@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -44,7 +44,6 @@
                                     </connections>
                                 </button>
                             </subviews>
-                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstItem="6Wz-Yg-Fhq" firstAttribute="centerY" secondItem="eoF-Vb-RQ6" secondAttribute="centerY" id="Be0-ly-9p6"/>
                                 <constraint firstItem="6Wz-Yg-Fhq" firstAttribute="centerX" secondItem="eoF-Vb-RQ6" secondAttribute="centerX" id="G77-Zu-A3J"/>
@@ -68,7 +67,6 @@
                                     </connections>
                                 </button>
                             </subviews>
-                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstItem="wwV-UR-U9u" firstAttribute="centerY" secondItem="bV0-Ew-sLl" secondAttribute="centerY" id="9cU-ts-rX6"/>
                                 <constraint firstItem="wwV-UR-U9u" firstAttribute="centerX" secondItem="bV0-Ew-sLl" secondAttribute="centerX" id="L9v-Wk-xXj"/>
@@ -92,7 +90,6 @@
                                     </connections>
                                 </button>
                             </subviews>
-                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstItem="hlf-q3-2pg" firstAttribute="centerY" secondItem="hry-6M-PMl" secondAttribute="centerY" id="63n-1L-Dyw"/>
                                 <constraint firstItem="hlf-q3-2pg" firstAttribute="centerX" secondItem="hry-6M-PMl" secondAttribute="centerX" id="RGS-md-HBW"/>
@@ -116,7 +113,6 @@
                                     </connections>
                                 </button>
                             </subviews>
-                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstItem="snV-5Z-eeX" firstAttribute="centerX" secondItem="Rcv-1F-iwB" secondAttribute="centerX" id="7il-DM-HAk"/>
                                 <constraint firstItem="VxT-D1-iPE" firstAttribute="centerY" secondItem="Rcv-1F-iwB" secondAttribute="centerY" id="EHa-Gp-0vU"/>
@@ -131,11 +127,10 @@
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits"/>
                             <connections>
-                                <action selector="teamNameTextField:" destination="-1" eventType="editingDidEnd" id="hK4-fi-OD6"/>
+                                <outlet property="delegate" destination="-1" id="KYH-yn-v9D"/>
                             </connections>
                         </textField>
                     </subviews>
-                    <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstItem="bV0-Ew-sLl" firstAttribute="width" secondItem="8Fd-Nq-Zzk" secondAttribute="width" id="2Cz-Sk-zyI"/>
                         <constraint firstItem="TrQ-VA-iHE" firstAttribute="width" secondItem="VxT-D1-iPE" secondAttribute="width" id="6It-fq-gCS"/>

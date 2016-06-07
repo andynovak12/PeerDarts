@@ -48,6 +48,13 @@
     [self.imageView.topAnchor constraintEqualToAnchor:self.topAnchor].active = YES;
     [self.imageView.leftAnchor constraintEqualToAnchor:self.leftAnchor].active = YES;
     self.imageView.userInteractionEnabled = YES;
+    
+    
+//    CGFloat frameWidth = self.frame.size.width;
+//    CGFloat frameHeight = self.frame.size.height;
+    self.spinner = [[UIActivityIndicatorView alloc]initWithFrame:CGRectMake(0,0,40,40)];
+    self.spinner.color = [UIColor blueColor];
+    [self addSubview:self.spinner];
 }
 
 -(void)setPeerID:(MCPeerID *)peerID {
