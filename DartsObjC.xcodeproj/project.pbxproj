@@ -10,6 +10,7 @@
 		A144A65E1CFE0FA400EBD276 /* ASNPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = A144A65D1CFE0FA400EBD276 /* ASNPlayer.m */; };
 		A144A6611CFE103700EBD276 /* ASNTurn.m in Sources */ = {isa = PBXBuildFile; fileRef = A144A6601CFE103700EBD276 /* ASNTurn.m */; };
 		A17BE2491D0602EA009995B1 /* ASNHitsContainerViews.m in Sources */ = {isa = PBXBuildFile; fileRef = A17BE2481D0602EA009995B1 /* ASNHitsContainerViews.m */; };
+		A17BE24B1D089830009995B1 /* PSPDFUIKitMainThreadGuard.m in Sources */ = {isa = PBXBuildFile; fileRef = A17BE24A1D089830009995B1 /* PSPDFUIKitMainThreadGuard.m */; };
 		A1BC22DF1CDA7FE600C714C2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BC22DE1CDA7FE600C714C2 /* main.m */; };
 		A1BC22E21CDA7FE600C714C2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BC22E11CDA7FE600C714C2 /* AppDelegate.m */; };
 		A1BC22E81CDA7FE600C714C2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A1BC22E61CDA7FE600C714C2 /* Main.storyboard */; };
@@ -51,6 +52,7 @@
 		A144A6601CFE103700EBD276 /* ASNTurn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNTurn.m; sourceTree = "<group>"; };
 		A17BE2471D0602EA009995B1 /* ASNHitsContainerViews.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASNHitsContainerViews.h; sourceTree = "<group>"; };
 		A17BE2481D0602EA009995B1 /* ASNHitsContainerViews.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNHitsContainerViews.m; sourceTree = "<group>"; };
+		A17BE24A1D089830009995B1 /* PSPDFUIKitMainThreadGuard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSPDFUIKitMainThreadGuard.m; path = "../../../../Downloads/5664345-27e903427a070c0f51e5360249b341bca8aeede5/PSPDFUIKitMainThreadGuard.m"; sourceTree = "<group>"; };
 		A1BC22DA1CDA7FE600C714C2 /* DartsObjC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DartsObjC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1BC22DE1CDA7FE600C714C2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		A1BC22E01CDA7FE600C714C2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -199,6 +201,7 @@
 				A1BC22E11CDA7FE600C714C2 /* AppDelegate.m */,
 				A1EE7FD71CF79E790018ECD3 /* MCManager.h */,
 				A1EE7FD81CF79E790018ECD3 /* MCManager.m */,
+				A17BE24A1D089830009995B1 /* PSPDFUIKitMainThreadGuard.m */,
 				A144A6621CFE17F600EBD276 /* Model Classes */,
 				A144A6631CFE181200EBD276 /* Views and View Controllers */,
 				A1BC22EC1CDA7FE600C714C2 /* Assets.xcassets */,
@@ -348,6 +351,7 @@
 				A1BC230D1CDA840900C714C2 /* Turn+CoreDataProperties.m in Sources */,
 				A1EE7FDC1CF88E0E0018ECD3 /* ASNAvailableGamesView.m in Sources */,
 				A1EE7FDF1CF8AAF60018ECD3 /* ASNAvailablePlayerView.m in Sources */,
+				A17BE24B1D089830009995B1 /* PSPDFUIKitMainThreadGuard.m in Sources */,
 				A144A65E1CFE0FA400EBD276 /* ASNPlayer.m in Sources */,
 				A1BC231E1CDAED4500C714C2 /* ASNMainGameViewController.m in Sources */,
 				A1BC23161CDA98CF00C714C2 /* ASNTeam.m in Sources */,

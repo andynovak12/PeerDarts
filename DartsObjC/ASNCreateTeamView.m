@@ -59,38 +59,46 @@
 -(void)updateUI {
     dispatch_async(dispatch_get_main_queue(), ^{
         self.teamNameTextField.text = self.team.teamName;
-        if (self.team.players.count > 0) {
+    });
+    if (self.team.players.count > 0) {
+        dispatch_async(dispatch_get_main_queue(), ^{
             self.p1Label.hidden = NO;
             self.p1Label.text = ((ASNPlayer *)self.team.players[0]).name;
             self.p1Label.minimumScaleFactor = 8./self.p1Label.font.pointSize;
             self.p1Label.adjustsFontSizeToFitWidth = YES;
             self.p1AddButton.hidden = YES;
             self.p2AddButton.hidden = NO;
-        }
-        if (self.team.players.count > 1) {
+        });
+    }
+    if (self.team.players.count > 1) {
+        dispatch_async(dispatch_get_main_queue(), ^{
             self.p2Label.text = ((ASNPlayer *)self.team.players[1]).name;
             self.p2Label.hidden = NO;
             self.p2Label.minimumScaleFactor = 8./self.p2Label.font.pointSize;
             self.p2Label.adjustsFontSizeToFitWidth = YES;
             self.p2AddButton.hidden = YES;
             self.p3AddButton.hidden = NO;
-        }
-        if (self.team.players.count > 2) {
+        });
+    }
+    if (self.team.players.count > 2) {
+        dispatch_async(dispatch_get_main_queue(), ^{
             self.p3Label.text = ((ASNPlayer *)self.team.players[2]).name;
             self.p3Label.hidden = NO;
             self.p3Label.minimumScaleFactor = 8./self.p3Label.font.pointSize;
             self.p3Label.adjustsFontSizeToFitWidth = YES;
             self.p3AddButton.hidden = YES;
             self.p4AddButton.hidden = NO;
-        }
-        if (self.team.players.count > 3) {
+        });
+    }
+    if (self.team.players.count > 3) {
+        dispatch_async(dispatch_get_main_queue(), ^{
             self.p4Label.text = ((ASNPlayer *)self.team.players[3]).name;
             self.p4Label.hidden = NO;
             self.p4Label.minimumScaleFactor = 8./self.p4Label.font.pointSize;
             self.p4Label.adjustsFontSizeToFitWidth = YES;
             self.p4AddButton.hidden = YES;
-        }
-    });
+        });
+    }
 }
 
 - (IBAction)p1AddButtonTapped:(id)sender {

@@ -18,26 +18,6 @@
 @property (nonatomic, strong) AppDelegate *appDelegate;
 
 @property (strong, nonatomic) NSMutableArray *teamContainersArray;
-//
-//@property (strong, nonatomic) ASNHitsContainerViews *team120;
-//@property (strong, nonatomic) ASNHitsContainerViews *team119;
-//@property (strong, nonatomic) ASNHitsContainerViews *team118;
-//@property (strong, nonatomic) ASNHitsContainerViews *team117;
-//@property (strong, nonatomic) ASNHitsContainerViews *team116;
-//@property (strong, nonatomic) ASNHitsContainerViews *team115;
-//@property (strong, nonatomic) ASNHitsContainerViews *team1Bull;
-//
-//@property (strong, nonatomic) ASNHitsContainerViews *team220;
-//@property (strong, nonatomic) ASNHitsContainerViews *team219;
-//@property (strong, nonatomic) ASNHitsContainerViews *team218;
-//@property (strong, nonatomic) ASNHitsContainerViews *team217;
-//@property (strong, nonatomic) ASNHitsContainerViews *team216;
-//@property (strong, nonatomic) ASNHitsContainerViews *team215;
-//@property (strong, nonatomic) ASNHitsContainerViews *team2Bull;
-//@property (strong, nonatomic) NSArray *team1ImageViewsArray;
-//@property (strong, nonatomic) NSArray *team2ImageViewsArray;
-
-//@property (strong, nonatomic) UILabel *currentPlayerLabel;
 
 @property (strong, nonatomic) UILabel *team1NameLabel;
 @property (strong, nonatomic) UILabel *team2NameLabel;
@@ -51,12 +31,15 @@
 
 @property (strong, nonatomic) ASNGame *currentGame;
 
+@property (nonatomic) BOOL isAlertControllerPresented;
+
 @end
 
 @implementation ASNMainGameViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.isAlertControllerPresented = NO;
 
     self.appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 
@@ -92,19 +75,13 @@
     [self setupGameVisuals];
 }
 
--(void)newGame {
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
     
-    self.currentGame = [[ASNGame alloc] initWithTeams:self.teamsArray];
-
-    for (ASNTeam *team in self.currentGame.teams) {
-        [self updateTeamNameAndWins:team];
-        [self updatePlayerNamesLabelsOfPreviousTeam:team];
-    }
-    for (ASNTeam *team in self.currentGame.teams) {
-        for (ASNHitsContainerViews *view in team.arrayOfNumberViews) {
-            view.alpha = 0.1;
-        }
-    }
+    // leave session
+//    if (self.appDelegate.mcManager.session) {
+        [self.appDelegate.mcManager.session disconnect];
+//    }
 }
 
 # pragma mark -- Setup View Programatically
@@ -388,24 +365,6 @@
 }
 
 -(void)enableTouchingForTeam:(ASNTeam *)team {
-//    NSUInteger indexOfTeam = [self.currentGame.teams indexOfObject:team];
-//    if (indexOfTeam == 0) {
-//        for (UIImageView *imageView in self.team1ImageViewsArray) {
-//            imageView.userInteractionEnabled = YES;
-//        }
-//        for (UIImageView *imageView in self.team2ImageViewsArray) {
-//            imageView.userInteractionEnabled = NO;
-//        }
-//    }
-//    else if (indexOfTeam == 1) {
-//        for (UIImageView *imageView in self.team1ImageViewsArray) {
-//            imageView.userInteractionEnabled = NO;
-//        }
-//        for (UIImageView *imageView in self.team2ImageViewsArray) {
-//            imageView.userInteractionEnabled = YES;
-//        }
-//    }
-    
     for (ASNTeam *allTeam in self.currentGame.teams) {
         if (allTeam == team) {
             for (ASNHitsContainerViews *view in allTeam.arrayOfNumberViews) {
@@ -455,19 +414,23 @@
     // make all labels small
     for (NSArray *teamPlayerLabelArray in self.playerNamesLabelsArray) {
         for (UILabel *playerNameLabel in teamPlayerLabelArray) {
-            playerNameLabel.font = [UIFont systemFontOfSize:15];
-            playerNameLabel.textColor = [UIColor whiteColor];
-            playerNameLabel.transform = CGAffineTransformIdentity;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                playerNameLabel.font = [UIFont systemFontOfSize:15];
+                playerNameLabel.textColor = [UIColor whiteColor];
+                playerNameLabel.transform = CGAffineTransformIdentity;
+            });
         }
     }
     // make current player's label bigger
     NSUInteger teamIndex = [self.currentGame.teams indexOfObject:self.currentGame.currentTeam];
     UILabel *playerLabel = ((UILabel *)self.playerNamesLabelsArray[teamIndex][0]);
-    playerLabel.font = [UIFont systemFontOfSize:18];
-    playerLabel.textColor = [UIColor colorWithRed:255.0/255 green:239.0/255 blue:129.0/255 alpha:1];
-    [UIView animateWithDuration:0.25 animations:^{
-        playerLabel.transform = CGAffineTransformScale(playerLabel.transform, 1.25, 1.25);
-    }];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        playerLabel.font = [UIFont systemFontOfSize:18];
+        playerLabel.textColor = [UIColor colorWithRed:255.0/255 green:239.0/255 blue:129.0/255 alpha:1];
+        [UIView animateWithDuration:0.25 animations:^{
+            playerLabel.transform = CGAffineTransformScale(playerLabel.transform, 1.25, 1.25);
+        }];
+    });
 }
 
 -(void)updateCurrentPlayerLabel {
@@ -481,7 +444,9 @@
     }
     NSUInteger teamIndex = [self.currentGame.teams indexOfObject:self.currentGame.currentTeam];
     UILabel *playerLabel = ((UILabel *)self.playerNamesLabelsArray[teamIndex][0]);
-    playerLabel.text = [NSString stringWithFormat:@"%@ : %@", self.currentGame.currentPlayer.name, playersCurrentHits];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        playerLabel.text = [NSString stringWithFormat:@"%@ : %@", self.currentGame.currentPlayer.name, playersCurrentHits];        
+    });
 }
 
 
@@ -504,24 +469,7 @@
     }
 
     [self recordNumberHit:hit andView:((ASNHitsContainerViews *)recognizer.view)];
-    
-    
-    if (self.appDelegate.mcManager.session.connectedPeers.count > 0) {
-        // send data to everyone in session
-        NSData *dataToSend = [hit dataUsingEncoding:NSUTF8StringEncoding];
-        NSArray *allPeers = self.appDelegate.mcManager.session.connectedPeers;
-        NSError *error;
-        
-        [self.appDelegate.mcManager.session sendData:dataToSend
-                                             toPeers:allPeers
-                                            withMode:MCSessionSendDataReliable
-                                               error:&error];
-        if (error) {
-            NSLog(@"%@", [error localizedDescription]);
-        }
-        NSLog(@"sent a hit %@ to peers %@", hit, allPeers);
-    }
-
+    [self sendToAllConnectedPeersString:hit];
 }
 
 -(void)recordNumberHit:(NSString *)hit andView:(ASNHitsContainerViews *)associatedView {
@@ -535,7 +483,7 @@
     if (winner) {
         //update wins/losses for each team
         for (ASNTeam *team in self.currentGame.teams) {
-            if (winner == team) {
+            if (team == winner) {
                 team.wins++;
             }
             else {
@@ -543,13 +491,15 @@
             }
         }
         
-        // present alert
+        // present alert if there is a winner
         UIAlertController *gameOverAlert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"%@ wins!", winner.teamName] message:@"Play Again?" preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *yes = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [self newGame];
+            [self handleNewGameTapped];
+            self.isAlertControllerPresented = NO;
         }];
         UIAlertAction *no = [UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-            // TODO: take me to the welcome page
+            [self handleEndGameTapped];
+            self.isAlertControllerPresented = NO;
         }];
         
         [gameOverAlert addAction:no];
@@ -557,20 +507,64 @@
         [gameOverAlert.view setNeedsLayout];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self presentViewController:gameOverAlert animated:YES completion:nil];
+            self.isAlertControllerPresented = YES;
         });
-        
     };
-
 }
 
 
 
 -(void)handleLogButtonTapped:(id)sender {
     [self logTurn];
+    [self sendToAllConnectedPeersString:@"logTurn"];
+}
+
+-(void)logTurn {
+    [self.currentGame logTurnOfCurrentPlayer];
+    [self updatePlayerNamesLabelsOfPreviousTeam:self.currentGame.previousTeam];
+    [self makeCurrentPlayerNameBig];
+    [self enableTouchingForTeam:self.currentGame.currentTeam];
+    [self updateCurrentPlayerLabel];
+}
+
+-(void)handleNewGameTapped {
+    [self sendToAllConnectedPeersString:@"newGame"];
+    [self newGame];
+}
+
+-(void)newGame {
+    self.currentGame = [[ASNGame alloc] initWithTeams:self.teamsArray];
     
+    for (ASNTeam *team in self.currentGame.teams) {
+        [self updateTeamNameAndWins:team];
+        [self updatePlayerNamesLabelsOfPreviousTeam:team];
+    }
+    for (ASNTeam *team in self.currentGame.teams) {
+        for (ASNHitsContainerViews *view in team.arrayOfNumberViews) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                view.alpha = 0.1;
+            });
+        }
+    }
+}
+
+-(void)handleEndGameTapped {
+    [self sendToAllConnectedPeersString:@"endGame"];
+    [self endGame];
+}
+
+-(void)endGame {
+    // go to welcome page
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[self navigationController] popToRootViewControllerAnimated:YES];
+    });
+}
+
+
+-(void)sendToAllConnectedPeersString:(NSString *)string {
     // tell everyone turn logged
     if (self.appDelegate.mcManager.session.connectedPeers.count > 0) {
-        NSData *dataToSend = [@"logTurn" dataUsingEncoding:NSUTF8StringEncoding];
+        NSData *dataToSend = [string dataUsingEncoding:NSUTF8StringEncoding];
         NSArray *allPeers = self.appDelegate.mcManager.session.connectedPeers;
         NSError *error;
         
@@ -583,14 +577,7 @@
         }
         NSLog(@"sent log Turn to peers %@", allPeers);
     }
-}
 
--(void)logTurn {
-    [self.currentGame logTurnOfCurrentPlayer];
-    [self updatePlayerNamesLabelsOfPreviousTeam:self.currentGame.previousTeam];
-    [self makeCurrentPlayerNameBig];
-    [self enableTouchingForTeam:self.currentGame.currentTeam];
-    [self updateCurrentPlayerLabel];
 }
 
 -(void)didReceiveDataNotification:(NSNotification *)notification {
@@ -609,6 +596,32 @@
     }
     else if ([receivedDataUnarchived isEqualToString:@"Bull"]) {
         [self recordNumberHit:receivedDataUnarchived andView:self.currentGame.currentTeam.arrayOfNumberViews[6]];
+    }
+    else if ([receivedDataUnarchived isEqualToString:@"endGame"]) {
+        // dismiss presented view controller
+        if (self.isAlertControllerPresented) {
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }
+        // present alert
+        UIAlertController *peerEndedGameAlert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"%@ ended the game", peerDisplayName] message:nil preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK, I guess..." style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self endGame];
+            self.isAlertControllerPresented = NO;
+        }];
+        
+        [peerEndedGameAlert addAction:ok];
+        [peerEndedGameAlert.view setNeedsLayout];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self presentViewController:peerEndedGameAlert animated:YES completion:nil];
+            self.isAlertControllerPresented = YES;
+        });
+    }
+    else if ([receivedDataUnarchived isEqualToString:@"newGame"]) {
+        // dismiss presented view controller
+        if (self.isAlertControllerPresented) {
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }
+        [self newGame];
     }
 }
 

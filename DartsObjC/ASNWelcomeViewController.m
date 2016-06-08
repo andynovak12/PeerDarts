@@ -82,8 +82,8 @@
 
 
 -(void)browser:(MCNearbyServiceBrowser *)browser foundPeer:(MCPeerID *)peerID withDiscoveryInfo:(NSDictionary<NSString *,NSString *> *)info {
+    NSLog(@"Found a nearby advertising peer %@ withDiscoveryInfo %@", peerID, info);
     if (([info[@"isGame"] isEqualToString:@"yes"]) && (![peerID isEqual:self.appDelegate.mcManager.peerID])) {
-        NSLog(@"Found a nearby advertising peer %@ withDiscoveryInfo %@", peerID, info);
         [self.availableGamesArray addObject:peerID];
         [self reloadAvailableGamesUI];
     }
@@ -181,7 +181,9 @@
         
         BOOL peersExist = ([[_appDelegate.mcManager.session connectedPeers] count] == 0);
 //        [_btnDisconnect setEnabled:!peersExist];
-        [self.displayNameTextField setEnabled:peersExist];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.displayNameTextField setEnabled:peersExist];
+        });
     }
 }
 

@@ -10,8 +10,7 @@
 #import "ASNCreateTeamView.h"
 #import <MultipeerConnectivity/MultipeerConnectivity.h>
 
-@interface ASNCreateNewGameViewController : UIViewController <UITextFieldDelegate, MCNearbyServiceBrowserDelegate, ASNCreateTeamViewDelegate>
+@interface ASNCreateNewGameViewController : UIViewController <MCNearbyServiceBrowserDelegate, ASNCreateTeamViewDelegate>
 @property (weak, nonatomic) IBOutlet UISwitch *visibilityToggle;
-@property (weak, nonatomic) IBOutlet UITextField *displayNameTextField;
 @property (strong, nonatomic) NSMutableArray *teamsArray;
 @end
