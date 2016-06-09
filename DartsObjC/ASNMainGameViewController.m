@@ -79,9 +79,10 @@
     [super viewWillDisappear:animated];
     
     // leave session
-//    if (self.appDelegate.mcManager.session) {
-        [self.appDelegate.mcManager.session disconnect];
-//    }
+    [self.appDelegate.mcManager.session disconnect];
+    [self.appDelegate.mcManager.advertiser stopAdvertisingPeer];
+    [self.appDelegate.mcManager.serviceBrowser  stopBrowsingForPeers];
+
 }
 
 # pragma mark -- Setup View Programatically
@@ -243,6 +244,31 @@
         
         CGFloat outsideLineConstant = 120;
         CGFloat insideLineConstant = 25;
+        
+        // End Game and New Game Buttons
+        UIButton *newGameButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.view addSubview:newGameButton];
+        [newGameButton addTarget:self action:@selector(handleNewGameButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [newGameButton setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [newGameButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant:-80].active = YES;
+        [newGameButton.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor].active = YES;
+        [newGameButton.widthAnchor constraintEqualToConstant:150].active = YES;
+        [newGameButton.heightAnchor constraintEqualToConstant:30].active = YES;
+        [newGameButton setTitle:@"New Game" forState:UIControlStateNormal];
+        newGameButton.titleLabel.font = [UIFont fontWithName:self.fontName size:20];
+        [newGameButton setTitleColor:[UIColor colorWithRed:255.0/255 green:239.0/255 blue:129.0/255 alpha:0.8] forState:UIControlStateNormal];
+        
+        UIButton *endGameButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.view addSubview:endGameButton];
+        [endGameButton addTarget:self action:@selector(handleEndGameButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [endGameButton setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [endGameButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant:80].active = YES;
+        [endGameButton.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor].active = YES;
+        [endGameButton.widthAnchor constraintEqualToConstant:150].active = YES;
+        [endGameButton.heightAnchor constraintEqualToConstant:30].active = YES;
+        [endGameButton setTitle:@"End Game" forState:UIControlStateNormal];
+        endGameButton.titleLabel.font = [UIFont fontWithName:self.fontName size:20];
+        [endGameButton setTitleColor:[UIColor colorWithRed:255.0/255 green:239.0/255 blue:129.0/255 alpha:0.8] forState:UIControlStateNormal];
         
         // vertical lines
         for (NSUInteger i = 0; i<4; i++) {
@@ -494,7 +520,7 @@
         // present alert if there is a winner
         UIAlertController *gameOverAlert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"%@ wins!", winner.teamName] message:@"Play Again?" preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *yes = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [self handleNewGameTapped];
+            [self handleNewGameTappedAtEndOfGame];
             self.isAlertControllerPresented = NO;
         }];
         UIAlertAction *no = [UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
@@ -527,7 +553,27 @@
     [self updateCurrentPlayerLabel];
 }
 
--(void)handleNewGameTapped {
+-(void)handleNewGameButtonTapped:(id)sender {
+    // present alert
+    UIAlertController *newGameAlert = [UIAlertController alertControllerWithTitle:@"New Game" message:@"Are you sure?" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *yes = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self handleNewGameTappedAtEndOfGame];
+        self.isAlertControllerPresented = NO;
+    }];
+    UIAlertAction *no = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        self.isAlertControllerPresented = NO;
+    }];
+    
+    [newGameAlert addAction:no];
+    [newGameAlert addAction:yes];
+    [newGameAlert.view setNeedsLayout];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:newGameAlert animated:YES completion:nil];
+        self.isAlertControllerPresented = YES;
+    });
+}
+
+-(void)handleNewGameTappedAtEndOfGame {
     [self sendToAllConnectedPeersString:@"newGame"];
     [self newGame];
 }
@@ -546,6 +592,25 @@
             });
         }
     }
+}
+-(void)handleEndGameButtonTapped:(id)sender {
+    // present alert
+    UIAlertController *endGameAlert = [UIAlertController alertControllerWithTitle:@"End Game" message:@"Are you sure?" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *yes = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self handleEndGameTapped];
+        self.isAlertControllerPresented = NO;
+    }];
+    UIAlertAction *no = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        self.isAlertControllerPresented = NO;
+    }];
+    
+    [endGameAlert addAction:no];
+    [endGameAlert addAction:yes];
+    [endGameAlert.view setNeedsLayout];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:endGameAlert animated:YES completion:nil];
+        self.isAlertControllerPresented = YES;
+    });
 }
 
 -(void)handleEndGameTapped {

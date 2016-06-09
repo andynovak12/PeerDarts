@@ -18,6 +18,7 @@
         self.currentHits = [coder decodeObjectForKey:@"currentHits"];
         self.name = [coder decodeObjectForKey:@"name"];
         self.turnsOfPlayer = [coder decodeObjectForKey:@"turnsOfPlayer"];
+        self.playersPeerID = [coder decodeObjectForKey:@"playersPeerID"];
     }
     return self;
 }
@@ -25,6 +26,7 @@
     [aCoder encodeObject:self.currentHits forKey:@"currentHits"];
     [aCoder encodeObject:self.name forKey:@"name"];
     [aCoder encodeObject:self.turnsOfPlayer forKey:@"turnsOfPlayer"];
+    [aCoder encodeObject:self.playersPeerID forKey:@"playersPeerID"];
 }
 
 
@@ -40,7 +42,9 @@
                            @"20" : @0 ,
                            @"Bull" : @0
                            } mutableCopy];
+        _playersPeerID = nil;
     }
+    
     return self;
 }
 

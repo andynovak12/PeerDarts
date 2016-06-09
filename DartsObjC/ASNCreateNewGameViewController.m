@@ -25,18 +25,23 @@
 @property (nonatomic, strong) NSMutableArray *connectedPlayerArray;
 @property (nonatomic, strong) NSMutableArray *availablePlayerViewsArray;
 @property (nonatomic, strong) NSMutableArray *pendingInvites;
-@property (nonatomic, strong) NSMutableArray *addTeamButtonConstraints;
 @property (nonatomic, strong) NSMutableArray *createNewTeamViewsArray;
 
 @property (nonatomic) float distanceToCenterFromFirstRow;
 @property (nonatomic) float distanceToCenterFromSecondRow;
 
+@property (strong, nonatomic) NSLayoutConstraint *addTeamButtonX1;
+@property (strong, nonatomic) NSLayoutConstraint *addTeamButtonX2;
+@property (strong, nonatomic) NSLayoutConstraint *addTeamButtonY1;
+@property (strong, nonatomic) NSLayoutConstraint *addTeamButtonY2;
+
+
 @end
 
 @implementation ASNCreateNewGameViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden = NO;
     
     self.availablePlayerArray = [NSMutableArray new];
@@ -44,7 +49,6 @@
     self.availablePlayerViewsArray = [NSMutableArray new];
     self.teamsArray = [NSMutableArray new];
     self.pendingInvites = [NSMutableArray new];
-    self.addTeamButtonConstraints = [NSMutableArray new];
     self.createNewTeamViewsArray = [NSMutableArray new];
     
     self.appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -65,51 +69,68 @@
     
 //    self.dataStore = [ASNDataStore sharedDataStore];
 
-    // create a team initially
-    if (self.teamsArray.count == 0) {
-        [self addTeam];
-        [self addPlayerWithName:self.appDelegate.mcManager.peerID.displayName toTeam:self.teamsArray[0]];
-//        [self reloadViewForTeam:self.teamsArray[0]];
-    }
     
-    [self moveAddTeamButton];
-}
-
-
--(void)moveAddTeamButton{
+    // this is for the position of the createNewTeamVCs and the addTeamButton
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     CGFloat screenWidth = screenRect.size.width;
     CGFloat screenHeight = screenRect.size.height;
     self.distanceToCenterFromFirstRow = -screenHeight/5;
     self.distanceToCenterFromSecondRow = screenHeight/15;
+    self.addTeamButtonX1 = [self.addTeamButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant:screenWidth*0.25];
+    self.addTeamButtonX2 = [self.addTeamButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant:-screenWidth*0.25];
+    self.addTeamButtonY1 = [self.addTeamButton.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor constant:self.distanceToCenterFromFirstRow];
+    self.addTeamButtonY2 = [self.addTeamButton.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor constant:self.distanceToCenterFromSecondRow];
+    
+    
+    // create a team initially
+    if (self.teamsArray.count == 0) {
+        [self addTeam];
+        [self addPlayerWithName:self.appDelegate.mcManager.peerID.displayName withPeerID:self.appDelegate.mcManager.peerID toTeam:self.teamsArray[0]];
+//        [self reloadViewForTeam:self.teamsArray[0]];
+    }
+    
 
+    
+}
+
+-(void)viewDidLayoutSubviews{
+
+    [self moveAddTeamButton];
+
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    [self.appDelegate.mcManager.advertiser stopAdvertisingPeer];
+    [self.appDelegate.mcManager.serviceBrowser stopBrowsingForPeers];
+
+}
+
+
+-(void)moveAddTeamButton{
     NSUInteger numberOfTeams = self.teamsArray.count;
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.addTeamButton setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [self.view removeConstraints:self.addTeamButtonConstraints];
-        self.addTeamButtonConstraints = [NSMutableArray new];
+        
         
         if (numberOfTeams == 1 || numberOfTeams == 3) {
-            NSLayoutConstraint *constraintX = [self.addTeamButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant:screenWidth*0.25];
-            constraintX.active = YES;
-            [self.addTeamButtonConstraints addObject:constraintX];
+            self.addTeamButtonX2.active = NO;
+            self.addTeamButtonX1.active = YES;
         }
         else {
-            NSLayoutConstraint *constraintX = [self.addTeamButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant:-screenWidth*0.25];
-            constraintX.active = YES;
-            [self.addTeamButtonConstraints addObject:constraintX];
+            self.addTeamButtonX1.active = NO;
+            self.addTeamButtonX2.active = YES;
         }
         
         if (numberOfTeams == 1) {
-            NSLayoutConstraint *constraintY = [self.addTeamButton.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor constant:self.distanceToCenterFromFirstRow];
-            constraintY.active = YES;
-            [self.addTeamButtonConstraints addObject:constraintY];
+            self.addTeamButtonY2.active = NO;
+            self.addTeamButtonY1.active = YES;
         }
         else {
-            NSLayoutConstraint *constraintY = [self.addTeamButton.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor constant:self.distanceToCenterFromSecondRow];
-            constraintY.active = YES;
-            [self.addTeamButtonConstraints addObject:constraintY];
+            self.addTeamButtonY1.active = NO;
+            self.addTeamButtonY2.active = YES;
         }
     });
 }
@@ -162,6 +183,7 @@
         });
         
         newTeamView.delegate = self;
+        [newTeamView updateUI];
     }
     else {
         for (ASNCreateTeamView *view in self.createNewTeamViewsArray) {
@@ -171,7 +193,7 @@
         }
     }
     
-
+    
 }
 
 
@@ -322,10 +344,10 @@
             if (matchingObjects.count > 0) {
                 if ([((ASNTeam *)matchingObjects[0][@"team"]).teamName isEqualToString:@"placeholderTeam"]) {
                     [self addTeam];
-                    [self addPlayerWithName:peerDisplayName toTeam:self.teamsArray.lastObject];
+                    [self addPlayerWithName:peerDisplayName withPeerID:peerID toTeam:self.teamsArray.lastObject];
                 }
                 else {
-                    [self addPlayerWithName:peerDisplayName toTeam:matchingObjects[0][@"team"]];
+                    [self addPlayerWithName:peerDisplayName withPeerID:peerID toTeam:matchingObjects[0][@"team"]];
                 }
                 [self.pendingInvites removeObjectsInArray:matchingObjects];
             }
@@ -364,8 +386,32 @@
             
             if ([self.connectedPlayerArray containsObject:peerID]) {
                 NSUInteger indexOfPeer = [self.connectedPlayerArray indexOfObject:peerID];
-                [self.connectedPlayerArray removeObjectAtIndex:indexOfPeer];
+                NSMutableArray *newConnectedPlayerArray = self.connectedPlayerArray;
+                [newConnectedPlayerArray removeObjectAtIndex:indexOfPeer];
+                // user left -- take out from list of teams
+                for (ASNTeam *team in self.teamsArray) {
+                    for (ASNPlayer *player in team.players) {
+                        if (player.playersPeerID == peerID) {
+                            [team removePlayerFromTeam:player];
+                            // if the team now has no players, remove this team
+//                            if (team.players.count == 0) {
+//                                 remove team from array
+//                                [self.teamsArray removeObject:team];
+//                                for (ASNCreateTeamView *view in self.createNewTeamViewsArray) {
+//                                    if (view.team == team) {
+//                                        [self.createNewTeamViewsArray removeObject:view];
+//                                        break;
+//                                        
+//                                    }
+//                                }
+//                            }
+                            [self reloadViewForTeam:team];
+                        }
+                    }
+                }
+                self.connectedPlayerArray = newConnectedPlayerArray;
             }
+            
         }
         
 //        BOOL peersExist = ([[_appDelegate.mcManager.session connectedPeers] count] == 0);
@@ -399,7 +445,7 @@
     UIAlertAction *submit = [UIAlertAction actionWithTitle:@"Submit" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         UITextField *nameField = addPlayerAlert.textFields.firstObject;
         
-        [self addPlayerWithName:nameField.text toTeam:view.team];
+        [self addPlayerWithName:nameField.text withPeerID:nil toTeam:view.team];
         // this is too slow
 //        [view updateUI];
     }];
@@ -414,9 +460,10 @@
     });
 }
 
--(void)addPlayerWithName:(NSString *)playerName toTeam:(ASNTeam *)team {
+-(void)addPlayerWithName:(NSString *)playerName withPeerID:(MCPeerID *)peerID toTeam:(ASNTeam *)team {
     ASNPlayer *player = [ASNPlayer new];
     player.name = playerName;
+    player.playersPeerID = peerID;
     [team.players addObject:player];
     
     [self reloadViewForTeam:team];
