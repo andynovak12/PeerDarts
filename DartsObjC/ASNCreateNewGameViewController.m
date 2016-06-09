@@ -25,7 +25,7 @@
 @property (nonatomic, strong) NSMutableArray *connectedPlayerArray;
 @property (nonatomic, strong) NSMutableArray *availablePlayerViewsArray;
 @property (nonatomic, strong) NSMutableArray *pendingInvites;
-@property (nonatomic, strong) NSMutableArray *createNewTeamViewsArray;
+//@property (nonatomic, strong) NSMutableArray *createNewTeamViewsArray;
 
 @property (nonatomic) float distanceToCenterFromFirstRow;
 @property (nonatomic) float distanceToCenterFromSecondRow;
@@ -35,24 +35,24 @@
 @property (strong, nonatomic) NSLayoutConstraint *addTeamButtonY1;
 @property (strong, nonatomic) NSLayoutConstraint *addTeamButtonY2;
 
+@property (weak, nonatomic) IBOutlet UITableView *team1TableView;
+@property (weak, nonatomic) IBOutlet UITableView *team2TableView;
+@property (weak, nonatomic) IBOutlet UITableView *team3TableView;
+@property (weak, nonatomic) IBOutlet UITableView *team4TableView;
+@property (nonatomic, strong) NSMutableArray *tableViewArray;
+
+
+@property (strong, nonatomic) NSString *fontName;
 
 @end
 
 @implementation ASNCreateNewGameViewController
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    self.navigationController.navigationBarHidden = NO;
+-(void)viewDidLoad {
+    [super viewDidLoad];
     
-    self.availablePlayerArray = [NSMutableArray new];
-    self.connectedPlayerArray = [NSMutableArray new];
-    self.availablePlayerViewsArray = [NSMutableArray new];
-    self.teamsArray = [NSMutableArray new];
-    self.pendingInvites = [NSMutableArray new];
-    self.createNewTeamViewsArray = [NSMutableArray new];
-    
-    self.appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [self.appDelegate.mcManager advertiseGame:self.visibilityToggle.isOn];
+    self.fontName = @"Copperplate";
+
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(peerDidChangeStateWithNotification:)
@@ -63,6 +63,36 @@
                                              selector:@selector(didReceiveDataNotification:)
                                                  name:@"MCDidReceiveDataNotification"
                                                object:nil];
+    
+    self.appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    // tableviews
+    self.team1TableView.dataSource = self;
+    self.team1TableView.delegate = self;
+    self.team2TableView.dataSource = self;
+    self.team2TableView.delegate = self;
+    self.team3TableView.dataSource = self;
+    self.team3TableView.delegate = self;
+    self.team4TableView.dataSource = self;
+    self.team4TableView.delegate = self;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBarHidden = NO;
+    
+    self.availablePlayerArray = [NSMutableArray new];
+    self.connectedPlayerArray = [NSMutableArray new];
+    self.availablePlayerViewsArray = [NSMutableArray new];
+    self.teamsArray = [NSMutableArray new];
+    self.pendingInvites = [NSMutableArray new];
+//    self.createNewTeamViewsArray = [NSMutableArray new];
+    self.tableViewArray = [@[self.team1TableView, self.team2TableView, self.team3TableView, self.team4TableView] mutableCopy];
+
+ 
+    [self.appDelegate.mcManager advertiseGame:self.visibilityToggle.isOn];
+    
+    
     
     // added this to automatically start looking for available games
     [self searchForAvailablePlayers];
@@ -93,6 +123,7 @@
 
 -(void)viewDidLayoutSubviews{
     [self moveAddTeamButton];
+    [self updateTableViews];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -100,8 +131,39 @@
     
     [self.appDelegate.mcManager.advertiser stopAdvertisingPeer];
     [self.appDelegate.mcManager.serviceBrowser stopBrowsingForPeers];
-
 }
+
+-(void)updateTableViews {
+    if (self.teamsArray.count == 0) {
+        self.team1TableView.hidden = YES;
+        self.team2TableView.hidden = YES;
+        self.team3TableView.hidden = YES;
+        self.team4TableView.hidden = YES;
+    }
+    else if (self.teamsArray.count == 1) {
+        self.team1TableView.hidden = NO;
+        self.team2TableView.hidden = YES;
+        self.team3TableView.hidden = YES;
+        self.team4TableView.hidden = YES;
+    }
+    else if (self.teamsArray.count == 2) {
+        self.team1TableView.hidden = NO;
+        self.team2TableView.hidden = NO;
+        self.team3TableView.hidden = YES;
+        self.team4TableView.hidden = YES;
+    }
+    else if (self.teamsArray.count == 3) {
+        self.team1TableView.hidden = NO;
+        self.team2TableView.hidden = NO;
+        self.team3TableView.hidden = NO;
+        self.team4TableView.hidden = YES;
+    }
+    else if (self.teamsArray.count == 4) {
+        self.team1TableView.hidden = NO;
+        self.team2TableView.hidden = NO;
+        self.team3TableView.hidden = NO;
+        self.team4TableView.hidden = NO;
+    }}
 
 
 -(void)moveAddTeamButton{
@@ -131,66 +193,66 @@
     });
 }
 
--(BOOL)viewExistsForTeam:(ASNTeam *)team {
-    for (ASNCreateTeamView *view in self.createNewTeamViewsArray) {
-        if (view.team == team) {
-            return YES;
-        }
-    }
-    return NO;
-}
+//-(BOOL)viewExistsForTeam:(ASNTeam *)team {
+//    for (ASNCreateTeamView *view in self.createNewTeamViewsArray) {
+//        if (view.team == team) {
+//            return YES;
+//        }
+//    }
+//    return NO;
+//}
 
--(void)reloadViewForTeam:(ASNTeam *)team {
-    if (![self viewExistsForTeam:team]) {
-        ASNCreateTeamView *newTeamView = [[ASNCreateTeamView alloc] init];
-        // border and rounded corners
-        newTeamView.layer.cornerRadius = 10.0;
-        newTeamView.layer.masksToBounds = YES;
-        [newTeamView.layer setBorderWidth:2.0];
-        [newTeamView.layer setBorderColor:[[UIColor colorWithPatternImage:[UIImage imageNamed:@"dash.png"]] CGColor]];///just add image name and create image with dashed or doted drawing and add here
-        
-        newTeamView.team = team;
-        [self.createNewTeamViewsArray addObject:newTeamView];
-        NSUInteger teamIndex = [self.teamsArray indexOfObject:team];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.view addSubview:newTeamView];
-            [newTeamView setTranslatesAutoresizingMaskIntoConstraints:NO];
-            newTeamView.userInteractionEnabled = YES;
-            [newTeamView.widthAnchor constraintEqualToAnchor:self.view.widthAnchor multiplier:0.4].active = YES;
-            [newTeamView.heightAnchor constraintEqualToAnchor:self.view.heightAnchor multiplier:0.23].active = YES;
-            
-            if (teamIndex == 0) {
-                [newTeamView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor constant:self.distanceToCenterFromFirstRow].active = YES;
-                [newTeamView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor constant:20].active  = YES;
-            }
-            else if (teamIndex == 1) {
-                [newTeamView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor constant:self.distanceToCenterFromFirstRow].active = YES;
-                [newTeamView.rightAnchor constraintEqualToAnchor:self.view.rightAnchor constant:-20].active  = YES;
-            }
-            else if (teamIndex == 2) {
-                [newTeamView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor constant:self.distanceToCenterFromSecondRow].active = YES;
-                [newTeamView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor constant:20].active  = YES;
-            }
-            else if (teamIndex == 3) {
-                [newTeamView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor constant:self.distanceToCenterFromSecondRow].active = YES;
-                [newTeamView.rightAnchor constraintEqualToAnchor:self.view.rightAnchor constant:-20].active  = YES;
-            }
-        });
-        
-        newTeamView.delegate = self;
-        [newTeamView updateUI];
-    }
-    else {
-        for (ASNCreateTeamView *view in self.createNewTeamViewsArray) {
-            if (view.team == team) {
-                [view updateUI];
-            }
-        }
-    }
-    self.startGameButton.enabled = (team.players.count > 0);
-    
-}
+//-(void)reloadViewForTeam:(ASNTeam *)team {
+//    if (![self viewExistsForTeam:team]) {
+//        ASNCreateTeamView *newTeamView = [[ASNCreateTeamView alloc] init];
+//        // border and rounded corners
+//        newTeamView.layer.cornerRadius = 10.0;
+//        newTeamView.layer.masksToBounds = YES;
+//        [newTeamView.layer setBorderWidth:2.0];
+//        [newTeamView.layer setBorderColor:[[UIColor colorWithPatternImage:[UIImage imageNamed:@"dash.png"]] CGColor]];///just add image name and create image with dashed or doted drawing and add here
+//        
+//        newTeamView.team = team;
+//        [self.createNewTeamViewsArray addObject:newTeamView];
+//        NSUInteger teamIndex = [self.teamsArray indexOfObject:team];
+//        
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [self.view addSubview:newTeamView];
+//            [newTeamView setTranslatesAutoresizingMaskIntoConstraints:NO];
+//            newTeamView.userInteractionEnabled = YES;
+//            [newTeamView.widthAnchor constraintEqualToAnchor:self.view.widthAnchor multiplier:0.4].active = YES;
+//            [newTeamView.heightAnchor constraintEqualToAnchor:self.view.heightAnchor multiplier:0.23].active = YES;
+//            
+//            if (teamIndex == 0) {
+//                [newTeamView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor constant:self.distanceToCenterFromFirstRow].active = YES;
+//                [newTeamView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor constant:20].active  = YES;
+//            }
+//            else if (teamIndex == 1) {
+//                [newTeamView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor constant:self.distanceToCenterFromFirstRow].active = YES;
+//                [newTeamView.rightAnchor constraintEqualToAnchor:self.view.rightAnchor constant:-20].active  = YES;
+//            }
+//            else if (teamIndex == 2) {
+//                [newTeamView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor constant:self.distanceToCenterFromSecondRow].active = YES;
+//                [newTeamView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor constant:20].active  = YES;
+//            }
+//            else if (teamIndex == 3) {
+//                [newTeamView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor constant:self.distanceToCenterFromSecondRow].active = YES;
+//                [newTeamView.rightAnchor constraintEqualToAnchor:self.view.rightAnchor constant:-20].active  = YES;
+//            }
+//        });
+//        
+//        newTeamView.delegate = self;
+//        [newTeamView updateUI];
+//    }
+//    else {
+//        for (ASNCreateTeamView *view in self.createNewTeamViewsArray) {
+//            if (view.team == team) {
+//                [view updateUI];
+//            }
+//        }
+//    }
+//    self.startGameButton.enabled = (team.players.count > 0);
+//    
+//}
 
 
 
@@ -401,7 +463,7 @@
 //                                    }
 //                                }
 //                            }
-                            [self reloadViewForTeam:team];
+//                            [self reloadViewForTeam:team];
                         }
                     }
                 }
@@ -424,45 +486,48 @@
     NSUInteger numberOfTeams = self.teamsArray.count;
     ASNTeam *team = [[ASNTeam alloc] initWithName:[NSString stringWithFormat:@"Team %lu", numberOfTeams+1]];
     [self.teamsArray addObject:team];
-    [self reloadViewForTeam:team];
+//    [self reloadViewForTeam:team];
     [self moveAddTeamButton];
+    NSUInteger teamIndex = [self.teamsArray indexOfObject:team];
+    [self.tableViewArray[teamIndex] reloadData];
 }
 
--(void)addPlayerButtonTappedInView:(ASNCreateTeamView *)view{
-    UIAlertController *addPlayerAlert = [UIAlertController alertControllerWithTitle:@"Add Player" message:nil preferredStyle:UIAlertControllerStyleAlert];
-    [addPlayerAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.placeholder = @"Player Name";
-        textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
-        [textField addTarget:self
-                      action:@selector(alertTextFieldDidChange:)
-            forControlEvents:UIControlEventEditingChanged];
-    }];
-    
-    UIAlertAction *submit = [UIAlertAction actionWithTitle:@"Submit" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        UITextField *nameField = addPlayerAlert.textFields.firstObject;
-        
-        [self addPlayerWithName:nameField.text withPeerID:nil toTeam:view.team];
-        // this is too slow
-//        [view updateUI];
-    }];
-    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDestructive handler:nil];
-    
-    [addPlayerAlert addAction:cancel];
-    [addPlayerAlert addAction:submit];
-    [addPlayerAlert.view setNeedsLayout];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        submit.enabled = NO;
-        [self presentViewController:addPlayerAlert animated:YES completion:nil];
-    });
-}
+//-(void)addPlayerButtonTappedInView:(ASNCreateTeamView *)view{
+//    UIAlertController *addPlayerAlert = [UIAlertController alertControllerWithTitle:@"Add Player" message:nil preferredStyle:UIAlertControllerStyleAlert];
+//    [addPlayerAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+//        textField.placeholder = @"Player Name";
+//        textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
+//        [textField addTarget:self
+//                      action:@selector(alertTextFieldDidChange:)
+//            forControlEvents:UIControlEventEditingChanged];
+//    }];
+//    
+//    UIAlertAction *submit = [UIAlertAction actionWithTitle:@"Submit" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//        UITextField *nameField = addPlayerAlert.textFields.firstObject;
+//        
+//        [self addPlayerWithName:nameField.text withPeerID:nil toTeam:view.team];
+//        // this is too slow
+////        [view updateUI];
+//    }];
+//    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDestructive handler:nil];
+//    
+//    [addPlayerAlert addAction:cancel];
+//    [addPlayerAlert addAction:submit];
+//    [addPlayerAlert.view setNeedsLayout];
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        submit.enabled = NO;
+//        [self presentViewController:addPlayerAlert animated:YES completion:nil];
+//    });
+//}
 
 -(void)addPlayerWithName:(NSString *)playerName withPeerID:(MCPeerID *)peerID toTeam:(ASNTeam *)team {
     ASNPlayer *player = [ASNPlayer new];
     player.name = playerName;
     player.playersPeerID = peerID;
     [team.players addObject:player];
-    
-    [self reloadViewForTeam:team];
+    NSUInteger teamIndex = [self.teamsArray indexOfObject:team];
+    [self.tableViewArray[teamIndex] reloadData];
+//    [self reloadViewForTeam:team];
 }
 
 -(void)teamNameEntered:(UITextField *)textField {
@@ -524,5 +589,194 @@
         submitAction.enabled = nameTextField.text.length > 0;
     }
 }
+
+# pragma mark - Table View methods
+
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 2;
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (section == 0) {
+        return 1;
+    }
+    else {
+        NSUInteger tableViewIndex = [self.tableViewArray indexOfObject:tableView];
+        if (self.teamsArray.count > tableViewIndex) {
+            if (((ASNTeam *)self.teamsArray[tableViewIndex]).players.count < 4) {
+                return ((ASNTeam *)self.teamsArray[tableViewIndex]).players.count + 1;
+            }
+            else {
+                return 4;
+            }
+        }
+        else {
+            return 0;
+        }
+
+        
+        
+//        if (tableView == self.team1TableView) {
+//            if (self.teamsArray.count > 0) {
+//                return ((ASNTeam *)self.teamsArray[0]).players.count + 1;
+//            }
+//            else {
+//                return 0;
+//            }
+//        }
+//        else if (tableView == self.team2TableView) {
+//            if (self.teamsArray.count > 1) {
+//                if (((ASNTeam *)self.teamsArray[1]).players.count < 4) {
+//                    return ((ASNTeam *)self.teamsArray[1]).players.count + 1;
+//                }
+//                else {
+//                    return 4;
+//                }
+//            }
+//            else {
+//                return 0;
+//            }
+//        }
+//        else if (tableView == self.team3TableView) {
+//            if (self.teamsArray.count > 2) {
+//                return ((ASNTeam *)self.teamsArray[2]).players.count + 1;
+//            }
+//            else {
+//                return 0;
+//            }
+//        }
+//        else if (tableView == self.team4TableView) {
+//            if (self.teamsArray.count > 3) {
+//                return ((ASNTeam *)self.teamsArray[3]).players.count + 1;
+//            }
+//            else {
+//                return 0;
+//            }
+//        }
+    }
+    return 0;
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"id"];
+    
+    
+    NSUInteger tableViewIndex = [self.tableViewArray indexOfObject:tableView];
+    if (self.teamsArray.count > tableViewIndex) {
+        ASNTeam *team = ((ASNTeam *)self.teamsArray[tableViewIndex]);
+        if (indexPath.section == 0) {
+            cell.textLabel.text = team.teamName;
+            cell.textLabel.font = [UIFont fontWithName:self.fontName size:22];
+        }
+        else {
+            NSUInteger numberOfPlayersOnTeam = team.players.count;
+            if (indexPath.row < numberOfPlayersOnTeam ) {
+                cell.textLabel.text = ((ASNPlayer *) team.players[indexPath.row]).name;
+            }
+            if (indexPath.row == numberOfPlayersOnTeam && numberOfPlayersOnTeam < 4) {
+                cell.textLabel.text = @"Add Player";
+                [cell.contentView setUserInteractionEnabled:YES];
+                // this determines what team the player is added to
+                cell.contentView.tag = tableViewIndex;
+                UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gestureHandler:)];
+                
+                [cell.contentView addGestureRecognizer:tapGestureRecognizer];
+            }
+        }
+    }
+        
+    
+
+    
+    
+//    if (tableView == self.team1TableView && self.teamsArray.count > 0) {
+//        ASNTeam *team = ((ASNTeam *)self.teamsArray[0]);
+//        if (indexPath.section == 0) {
+//            cell.textLabel.text = team.teamName;
+//            cell.textLabel.font = [UIFont fontWithName:self.fontName size:22];
+//        }
+//        else {
+//            NSUInteger numberOfPlayersOnTeam = team.players.count;
+//            if (indexPath.row <= numberOfPlayersOnTeam - 1) {
+//                cell.textLabel.text = ((ASNPlayer *) team.players[indexPath.row]).name;
+//            }
+//            if (indexPath.row == numberOfPlayersOnTeam && numberOfPlayersOnTeam < 4) {
+//                cell.textLabel.text = @"Add Player";
+//                [cell.contentView setUserInteractionEnabled:YES];
+//                // this determines what team the player is added to
+//                cell.contentView.tag = 0;
+//                UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gestureHandler:)];
+//
+//                [cell.contentView addGestureRecognizer:tapGestureRecognizer];
+//            }
+//        }
+//    }
+//    else if (tableView == self.team2TableView && self.teamsArray.count > 1) {
+//        if (indexPath.section == 0) {
+//            cell.textLabel.text = ((ASNTeam *)self.teamsArray[1]).teamName;
+//        }
+//        else {
+//            if (((ASNTeam *)self.teamsArray[1]).players[indexPath.row]) {
+//                cell.textLabel.text = ((ASNPlayer *) ((ASNTeam *)self.teamsArray[1]).players[indexPath.row]).name;
+//            }
+//        }
+//    }
+//    else if (tableView == self.team3TableView && self.teamsArray.count > 2) {
+//        if (indexPath.section == 0) {
+//            cell.textLabel.text = ((ASNTeam *)self.teamsArray[2]).teamName;
+//        }
+//        else {
+//            if (((ASNTeam *)self.teamsArray[2]).players[indexPath.row]) {
+//                cell.textLabel.text = ((ASNPlayer *) ((ASNTeam *)self.teamsArray[2]).players[indexPath.row]).name;
+//            }
+//        }
+//    }
+//    else if (tableView == self.team4TableView && self.teamsArray.count > 3) {
+//        if (indexPath.section == 0) {
+//            cell.textLabel.text = ((ASNTeam *)self.teamsArray[3]).teamName;
+//        }
+//        else {
+//            if (((ASNTeam *)self.teamsArray[3]).players[indexPath.row]) {
+//                cell.textLabel.text = ((ASNPlayer *) ((ASNTeam *)self.teamsArray[3]).players[indexPath.row]).name;
+//            }
+//        }
+//    }
+    
+    return cell;
+}
+
+-(void)gestureHandler:(UIGestureRecognizer *)recognizer {
+    UIAlertController *addPlayerAlert = [UIAlertController alertControllerWithTitle:@"Add Player" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    [addPlayerAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.placeholder = @"Player Name";
+        textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
+        [textField addTarget:self
+                      action:@selector(alertTextFieldDidChange:)
+            forControlEvents:UIControlEventEditingChanged];
+    }];
+    
+    UIAlertAction *submit = [UIAlertAction actionWithTitle:@"Submit" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        UITextField *nameField = addPlayerAlert.textFields.firstObject;
+        ASNTeam *team = self.teamsArray[recognizer.view.tag];
+        [self addPlayerWithName:nameField.text withPeerID:nil toTeam:team];
+        // this is too slow
+        //        [view updateUI];
+    }];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDestructive handler:nil];
+    
+    [addPlayerAlert addAction:cancel];
+    [addPlayerAlert addAction:submit];
+    [addPlayerAlert.view setNeedsLayout];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        submit.enabled = NO;
+        [self presentViewController:addPlayerAlert animated:YES completion:nil];
+    });
+}
+//-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+//    [tableView layoutIfNeeded];
+//    CGFloat tableHeight = tableView.contentSize.height;
+//    NSLog(@"height = %f", tableHeight);
+//    return (tableHeight / 4.0);
+//}
 
 @end
