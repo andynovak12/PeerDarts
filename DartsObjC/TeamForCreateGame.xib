@@ -122,10 +122,10 @@
                                 <constraint firstItem="VxT-D1-iPE" firstAttribute="centerX" secondItem="Rcv-1F-iwB" secondAttribute="centerX" id="sVG-br-nHB"/>
                             </constraints>
                         </view>
-                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Team Name" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uHd-zu-GdO">
+                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Team Name" textAlignment="center" minimumFontSize="9" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="uHd-zu-GdO">
                             <rect key="frame" x="8" y="14" width="114" height="30"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                            <textInputTraits key="textInputTraits"/>
+                            <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                             <connections>
                                 <outlet property="delegate" destination="-1" id="KYH-yn-v9D"/>
                             </connections>

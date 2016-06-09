@@ -89,14 +89,10 @@
 //        [self reloadViewForTeam:self.teamsArray[0]];
     }
     
-
-    
 }
 
 -(void)viewDidLayoutSubviews{
-
     [self moveAddTeamButton];
-
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -192,7 +188,7 @@
             }
         }
     }
-    
+    self.startGameButton.enabled = (team.players.count > 0);
     
 }
 
@@ -508,6 +504,15 @@
        
     }
 }
+
+//-(BOOL)doAllTeamsHavePlayers {
+//    for (ASNTeam *team in self.teamsArray) {
+//        if (team.players.count == 0) {
+//            return NO;
+//        }
+//    }
+//    return YES;
+//}
 
 // disable submit button on addPlayer to team, if no characters inputted
 -(void)alertTextFieldDidChange:(UITextField *)sender {

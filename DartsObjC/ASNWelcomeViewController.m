@@ -40,8 +40,6 @@
     
     self.displayNameTextField.delegate = self;
     
-    self.availableGamesArray = [[NSMutableArray alloc] init];
-    self.availableGameViewsArray = [[NSMutableArray alloc] init];
     
     self.appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 //    [self.appDelegate.mcManager setupPeerAndSessionWithDisplayName:[UIDevice currentDevice].name];
@@ -70,6 +68,10 @@
 }
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    self.availableGamesArray = [[NSMutableArray alloc] init];
+    self.availableGameViewsArray = [[NSMutableArray alloc] init];
+    
     self.inviterPeerID = nil;
 
     self.navigationController.navigationBarHidden = YES;
@@ -84,6 +86,8 @@
     self.connectingRetryButton.hidden = YES;
 
     self.isAttemptingToConnect = NO;
+    [self reloadAvailableGamesUI];
+
 }
 
 
