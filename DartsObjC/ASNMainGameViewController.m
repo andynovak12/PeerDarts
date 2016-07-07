@@ -11,6 +11,7 @@
 #import "ASNGame.h"
 #import "AppDelegate.h"
 #import "ASNHitsContainerViews.h"
+#import "ASNUIElements.h"
 
 @interface ASNMainGameViewController ()
 
@@ -27,7 +28,7 @@
 
 @property (strong, nonatomic) NSMutableArray *playerNamesLabelsArray;
 
-@property (strong,nonatomic) NSString *fontName;
+//@property (strong,nonatomic) NSString *fontName;
 
 @property (strong, nonatomic) ASNGame *currentGame;
 
@@ -43,7 +44,7 @@
 
     self.appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 
-    self.fontName = @"Copperplate";
+//    self.fontName = fontName;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(didReceiveDataNotification:)
@@ -111,7 +112,7 @@
         [logTurnButton.widthAnchor constraintEqualToConstant:150].active = YES;
         [logTurnButton.heightAnchor constraintEqualToConstant:30].active = YES;
         [logTurnButton setTitle:@"Log Turn" forState:UIControlStateNormal];
-        logTurnButton.titleLabel.font = [UIFont fontWithName:self.fontName size:20];
+        logTurnButton.titleLabel.font = [UIFont fontWithName:fontName size:20];
         [logTurnButton setTitleColor:[UIColor colorWithRed:255.0/255 green:239.0/255 blue:129.0/255 alpha:0.8] forState:UIControlStateNormal];
         
         [self makeCurrentPlayerNameBig];
@@ -127,7 +128,7 @@
         UILabel *currentLabel = [[UILabel alloc] init];
         [currentLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
         currentLabel.text = [NSString stringWithFormat:@"%@ : Didn't go", ((Player *)team.players[i]).name];
-        currentLabel.font = [UIFont fontWithName:self.fontName size:15];
+        currentLabel.font = [UIFont fontWithName:fontName size:15];
 //        currentLabel.text = ((Player *)team.players[(i+indexOfPlayer)%numberOfPlayersOnTeam]).name;
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -220,7 +221,7 @@
         for (NSString *number in @[@"20",@"19",@"18",@"17", @"16", @"15", @"Bull"]) {
             UILabel *numberLabel = [UILabel new];
             numberLabel.text = number;
-            numberLabel.font = [UIFont fontWithName:self.fontName size:24];
+            numberLabel.font = [UIFont fontWithName:fontName size:24];
             numberLabel.textColor = [UIColor whiteColor];
             [numberLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
             [numbersContainerView addSubview:numberLabel];
@@ -255,7 +256,7 @@
         [newGameButton.widthAnchor constraintEqualToConstant:150].active = YES;
         [newGameButton.heightAnchor constraintEqualToConstant:30].active = YES;
         [newGameButton setTitle:@"New Game" forState:UIControlStateNormal];
-        newGameButton.titleLabel.font = [UIFont fontWithName:self.fontName size:20];
+        newGameButton.titleLabel.font = [UIFont fontWithName:fontName size:20];
         [newGameButton setTitleColor:[UIColor colorWithRed:255.0/255 green:239.0/255 blue:129.0/255 alpha:0.8] forState:UIControlStateNormal];
         
         UIButton *endGameButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -267,7 +268,7 @@
         [endGameButton.widthAnchor constraintEqualToConstant:150].active = YES;
         [endGameButton.heightAnchor constraintEqualToConstant:30].active = YES;
         [endGameButton setTitle:@"End Game" forState:UIControlStateNormal];
-        endGameButton.titleLabel.font = [UIFont fontWithName:self.fontName size:20];
+        endGameButton.titleLabel.font = [UIFont fontWithName:fontName size:20];
         [endGameButton setTitleColor:[UIColor colorWithRed:255.0/255 green:239.0/255 blue:129.0/255 alpha:0.8] forState:UIControlStateNormal];
         
         // vertical lines
@@ -372,11 +373,11 @@
 
 -(void)updateTeamNameAndWins:(ASNTeam *)team {
     // team name and wins/loses
-    UIFont *largerFont = [UIFont fontWithName:self.fontName size:22.0];
+    UIFont *largerFont = [UIFont fontWithName:fontName size:22.0];
     NSDictionary *largerFontDict = [NSDictionary dictionaryWithObject: largerFont forKey:NSFontAttributeName];
     NSMutableAttributedString *firstLine = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n", team.teamName] attributes: largerFontDict];
     
-    UIFont *smallerFont = [UIFont fontWithName:self.fontName size:15.0];
+    UIFont *smallerFont = [UIFont fontWithName:fontName size:15.0];
     NSDictionary *smallerFontDict = [NSDictionary dictionaryWithObject:smallerFont forKey:NSFontAttributeName];
     NSMutableAttributedString *secondLine = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"W:%lu L:%lu", team.wins, team.loses] attributes:smallerFontDict];
     [firstLine appendAttributedString:secondLine];
@@ -555,7 +556,7 @@
 
 -(void)handleNewGameButtonTapped:(id)sender {
     // present alert
-    UIAlertController *newGameAlert = [UIAlertController alertControllerWithTitle:@"New Game" message:@"Are you sure?" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *newGameAlert = [UIAlertController alertControllerWithTitle:@"Restart?" message:@"New game with same teams" preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *yes = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self handleNewGameTappedAtEndOfGame];
         self.isAlertControllerPresented = NO;

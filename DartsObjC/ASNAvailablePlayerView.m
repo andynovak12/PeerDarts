@@ -27,10 +27,11 @@
 }
 
 -(void)commonInit {
-    self.backgroundColor = [UIColor lightGrayColor];
+//    self.backgroundColor = [UIColor lightGrayColor];
     self.label = [UILabel new];
     self.label.text = @"Loading";
-    
+    self.label.adjustsFontSizeToFitWidth = YES;
+
     [self addSubview:self.label];
     [self.label setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.label.heightAnchor constraintEqualToAnchor:self.heightAnchor multiplier:0.3].active = YES;
@@ -40,7 +41,8 @@
     
     
     self.imageView = [UIImageView new];
-    self.imageView.image = [UIImage imageNamed:@"dart"];
+    self.imageView.image = [UIImage imageNamed:@"defaultUserImage"];
+    self.imageView.contentMode = UIViewContentModeScaleAspectFit;
     [self addSubview:self.imageView];
     [self.imageView setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.imageView.heightAnchor constraintEqualToAnchor:self.heightAnchor multiplier:0.7].active = YES;

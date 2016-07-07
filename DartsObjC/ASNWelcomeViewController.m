@@ -24,6 +24,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *connectingCancelButton;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *connectingSpinner;
 @property (weak, nonatomic) IBOutlet UIButton *connectingRetryButton;
+@property (weak, nonatomic) IBOutlet UILabel *joinGameLabel;
 
 @property (nonatomic) BOOL isAttemptingToConnect;
 
@@ -39,7 +40,6 @@
     self.receivedDataUnarchived = [NSMutableArray new];
     
     self.displayNameTextField.delegate = self;
-    
     
     self.appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 //    [self.appDelegate.mcManager setupPeerAndSessionWithDisplayName:[UIDevice currentDevice].name];
@@ -88,6 +88,10 @@
     self.isAttemptingToConnect = NO;
     [self reloadAvailableGamesUI];
 
+    self.displayNameTextField.placeholder = self.appDelegate.mcManager.peerID.displayName;
+    self.displayNameTextField.textAlignment = NSTextAlignmentCenter;
+    
+    NSLog(@"This is my name: %@ and peerID: %@ and my sessionID: %@", self.appDelegate.mcManager.peerID.displayName, self.appDelegate.mcManager.peerID, self.appDelegate.mcManager.session.myPeerID);
 }
 
 
@@ -143,11 +147,13 @@
         ASNAvailableGamesView *newGame = [ASNAvailableGamesView new];
         newGame.peerID = peerID;
         
+        // available games layout
         [self.view insertSubview:newGame belowSubview:self.blurView];
         [newGame setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [newGame.topAnchor constraintEqualToAnchor:self.joinGameLabel.bottomAnchor constant:20].active = YES;
         [newGame.heightAnchor constraintEqualToConstant:130].active = YES;
         [newGame.widthAnchor constraintEqualToConstant:100].active = YES;
-        [newGame.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:250].active = YES;
+//        [newGame.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:250].active = YES;
         [newGame.leftAnchor constraintEqualToAnchor:self.view.leftAnchor constant:(20+(counter*110))].active = YES;
         newGame.userInteractionEnabled = YES;
         UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];

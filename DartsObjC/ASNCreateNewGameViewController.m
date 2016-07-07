@@ -13,6 +13,7 @@
 #import "ASNAvailablePlayerView.h"
 #import "ASNMainGameViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "ASNUIElements.h"
 
 @interface ASNCreateNewGameViewController ()
 @property (weak, nonatomic) IBOutlet UIButton *addTeamButton;
@@ -42,7 +43,7 @@
 @property (nonatomic, strong) NSMutableArray *tableViewArray;
 
 
-@property (strong, nonatomic) NSString *fontName;
+//@property (strong, nonatomic) NSString *fontName;
 
 @end
 
@@ -51,7 +52,7 @@
 -(void)viewDidLoad {
     [super viewDidLoad];
     
-    self.fontName = @"Copperplate";
+//    self.fontName = @"Copperplate";
 
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -75,6 +76,17 @@
     self.team3TableView.delegate = self;
     self.team4TableView.dataSource = self;
     self.team4TableView.delegate = self;
+    
+    // tableviews borders
+    self.team1TableView.layer.borderWidth = 2;
+    self.team2TableView.layer.borderWidth = 2;
+    self.team3TableView.layer.borderWidth = 2;
+    self.team4TableView.layer.borderWidth = 2;
+    self.team1TableView.layer.cornerRadius = 10;
+    self.team2TableView.layer.cornerRadius = 10;
+    self.team3TableView.layer.cornerRadius = 10;
+    self.team4TableView.layer.cornerRadius = 10;
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -122,6 +134,8 @@
 }
 
 -(void)viewDidLayoutSubviews{
+    NSLog(@"This is my name: %@ and peerID: %@ and my sessionID: %@", self.appDelegate.mcManager.peerID.displayName, self.appDelegate.mcManager.peerID, self.appDelegate.mcManager.session.myPeerID);
+    
     [self moveAddTeamButton];
     [self updateTableViews];
 }
@@ -319,7 +333,8 @@
     ASNAvailablePlayerView *playerView = (ASNAvailablePlayerView *) recognizer.view;
     // invite this peer to the game
     MCPeerID *receivedPeerID = playerView.peerID;
-    
+    NSLog(@"Inviting player: %@ with peerID: %@", receivedPeerID.displayName, receivedPeerID);
+
     // start loading indicator
     playerView.spinner.frame = CGRectMake(0,0,recognizer.view.frame.size.width,recognizer.view.frame.size.height);
     [playerView.spinner startAnimating];
@@ -332,10 +347,13 @@
     [alertController addAction:cancelAction];
     
     for (ASNTeam *team in self.teamsArray) {
-        UIAlertAction *teamAction = [UIAlertAction actionWithTitle:[NSString stringWithFormat:@"%@",team.teamName] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        if (team.players.count < 4) {
+                    UIAlertAction *teamAction = [UIAlertAction actionWithTitle:[NSString stringWithFormat:@"%@",team.teamName] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [self invitePeer:receivedPeerID toTeam:team];
         }];
         [alertController addAction:teamAction];
+        }
+
     }
     if (self.teamsArray.count < 4) {
         UIAlertAction *newTeamAction = [UIAlertAction actionWithTitle:@"New Team" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -489,7 +507,9 @@
 //    [self reloadViewForTeam:team];
     [self moveAddTeamButton];
     NSUInteger teamIndex = [self.teamsArray indexOfObject:team];
-    [self.tableViewArray[teamIndex] reloadData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableViewArray[teamIndex] reloadData];
+    });
 }
 
 //-(void)addPlayerButtonTappedInView:(ASNCreateTeamView *)view{
@@ -526,7 +546,10 @@
     player.playersPeerID = peerID;
     [team.players addObject:player];
     NSUInteger teamIndex = [self.teamsArray indexOfObject:team];
-    [self.tableViewArray[teamIndex] reloadData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableViewArray[teamIndex] reloadData];
+    });
+
 //    [self reloadViewForTeam:team];
 }
 
@@ -613,46 +636,6 @@
         else {
             return 0;
         }
-
-        
-        
-//        if (tableView == self.team1TableView) {
-//            if (self.teamsArray.count > 0) {
-//                return ((ASNTeam *)self.teamsArray[0]).players.count + 1;
-//            }
-//            else {
-//                return 0;
-//            }
-//        }
-//        else if (tableView == self.team2TableView) {
-//            if (self.teamsArray.count > 1) {
-//                if (((ASNTeam *)self.teamsArray[1]).players.count < 4) {
-//                    return ((ASNTeam *)self.teamsArray[1]).players.count + 1;
-//                }
-//                else {
-//                    return 4;
-//                }
-//            }
-//            else {
-//                return 0;
-//            }
-//        }
-//        else if (tableView == self.team3TableView) {
-//            if (self.teamsArray.count > 2) {
-//                return ((ASNTeam *)self.teamsArray[2]).players.count + 1;
-//            }
-//            else {
-//                return 0;
-//            }
-//        }
-//        else if (tableView == self.team4TableView) {
-//            if (self.teamsArray.count > 3) {
-//                return ((ASNTeam *)self.teamsArray[3]).players.count + 1;
-//            }
-//            else {
-//                return 0;
-//            }
-//        }
     }
     return 0;
 }
@@ -666,15 +649,18 @@
         ASNTeam *team = ((ASNTeam *)self.teamsArray[tableViewIndex]);
         if (indexPath.section == 0) {
             cell.textLabel.text = team.teamName;
-            cell.textLabel.font = [UIFont fontWithName:self.fontName size:22];
+            cell.textLabel.font = [UIFont fontWithName:fontName size:22];
         }
         else {
             NSUInteger numberOfPlayersOnTeam = team.players.count;
             if (indexPath.row < numberOfPlayersOnTeam ) {
+                cell.showsReorderControl = YES;
                 cell.textLabel.text = ((ASNPlayer *) team.players[indexPath.row]).name;
+                cell.textLabel.textColor = [UIColor blackColor];
             }
             if (indexPath.row == numberOfPlayersOnTeam && numberOfPlayersOnTeam < 4) {
                 cell.textLabel.text = @"Add Player";
+                cell.textLabel.textColor = [UIColor blueColor];
                 [cell.contentView setUserInteractionEnabled:YES];
                 // this determines what team the player is added to
                 cell.contentView.tag = tableViewIndex;
@@ -684,63 +670,6 @@
             }
         }
     }
-        
-    
-
-    
-    
-//    if (tableView == self.team1TableView && self.teamsArray.count > 0) {
-//        ASNTeam *team = ((ASNTeam *)self.teamsArray[0]);
-//        if (indexPath.section == 0) {
-//            cell.textLabel.text = team.teamName;
-//            cell.textLabel.font = [UIFont fontWithName:self.fontName size:22];
-//        }
-//        else {
-//            NSUInteger numberOfPlayersOnTeam = team.players.count;
-//            if (indexPath.row <= numberOfPlayersOnTeam - 1) {
-//                cell.textLabel.text = ((ASNPlayer *) team.players[indexPath.row]).name;
-//            }
-//            if (indexPath.row == numberOfPlayersOnTeam && numberOfPlayersOnTeam < 4) {
-//                cell.textLabel.text = @"Add Player";
-//                [cell.contentView setUserInteractionEnabled:YES];
-//                // this determines what team the player is added to
-//                cell.contentView.tag = 0;
-//                UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gestureHandler:)];
-//
-//                [cell.contentView addGestureRecognizer:tapGestureRecognizer];
-//            }
-//        }
-//    }
-//    else if (tableView == self.team2TableView && self.teamsArray.count > 1) {
-//        if (indexPath.section == 0) {
-//            cell.textLabel.text = ((ASNTeam *)self.teamsArray[1]).teamName;
-//        }
-//        else {
-//            if (((ASNTeam *)self.teamsArray[1]).players[indexPath.row]) {
-//                cell.textLabel.text = ((ASNPlayer *) ((ASNTeam *)self.teamsArray[1]).players[indexPath.row]).name;
-//            }
-//        }
-//    }
-//    else if (tableView == self.team3TableView && self.teamsArray.count > 2) {
-//        if (indexPath.section == 0) {
-//            cell.textLabel.text = ((ASNTeam *)self.teamsArray[2]).teamName;
-//        }
-//        else {
-//            if (((ASNTeam *)self.teamsArray[2]).players[indexPath.row]) {
-//                cell.textLabel.text = ((ASNPlayer *) ((ASNTeam *)self.teamsArray[2]).players[indexPath.row]).name;
-//            }
-//        }
-//    }
-//    else if (tableView == self.team4TableView && self.teamsArray.count > 3) {
-//        if (indexPath.section == 0) {
-//            cell.textLabel.text = ((ASNTeam *)self.teamsArray[3]).teamName;
-//        }
-//        else {
-//            if (((ASNTeam *)self.teamsArray[3]).players[indexPath.row]) {
-//                cell.textLabel.text = ((ASNPlayer *) ((ASNTeam *)self.teamsArray[3]).players[indexPath.row]).name;
-//            }
-//        }
-//    }
     
     return cell;
 }
@@ -759,8 +688,7 @@
         UITextField *nameField = addPlayerAlert.textFields.firstObject;
         ASNTeam *team = self.teamsArray[recognizer.view.tag];
         [self addPlayerWithName:nameField.text withPeerID:nil toTeam:team];
-        // this is too slow
-        //        [view updateUI];
+        recognizer.view.userInteractionEnabled = NO;
     }];
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDestructive handler:nil];
     
@@ -773,10 +701,103 @@
     });
 }
 //-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    [tableView layoutIfNeeded];
-//    CGFloat tableHeight = tableView.contentSize.height;
-//    NSLog(@"height = %f", tableHeight);
-//    return (tableHeight / 4.0);
+//    return 30;
 //}
+
+# pragma mark - Swipe to delete player
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSUInteger tableViewIndex = [self.tableViewArray indexOfObject:tableView];
+    if (self.teamsArray.count > tableViewIndex) {
+        NSUInteger numberOfPlayersOnTeam = ((ASNTeam *)self.teamsArray[tableViewIndex]).players.count;
+        // Do not allow deleting only player
+        if (tableViewIndex == 0 && numberOfPlayersOnTeam == 1) {
+            return NO;
+        }
+        // Do not give delete option on "Add Player" cell
+        else if (numberOfPlayersOnTeam == 4 || numberOfPlayersOnTeam > indexPath.row) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSUInteger tableViewIndex = [self.tableViewArray indexOfObject:tableView];
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [((ASNTeam *)self.teamsArray[tableViewIndex]).players removeObjectAtIndex:indexPath.row];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [tableView reloadData];
+        });
+    }
+}
+
+// make tableview show 5 cells
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return tableView.frame.size.height/5;
+}
+
+# pragma mark - Drag and Drop player
+//    // to allow reordering of cells, these must be turned on. This will disable swipe to delete
+//      http://stackoverflow.com/questions/31772419/reorder-table-view-cell-without-the-delete-button-and-implement-swipe-to-delete
+//    [self.team1TableView setEditing:YES animated:YES];
+//    [self.team2TableView setEditing:YES animated:YES];
+//    [self.team3TableView setEditing:YES animated:YES];
+//    [self.team4TableView setEditing:YES animated:YES];
+
+//- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+//    NSUInteger tableViewIndex = [self.tableViewArray indexOfObject:tableView];
+//    if (self.teamsArray.count > tableViewIndex && indexPath.section == 1) {
+//        NSUInteger numberOfPlayersOnTeam = ((ASNTeam *)self.teamsArray[tableViewIndex]).players.count;
+//        // Do not give drag option on "Add Player" cell, or if there is only 1 player on team
+//        if (numberOfPlayersOnTeam <= 1) {
+//            return NO;
+//        }
+//        else if (numberOfPlayersOnTeam == 4 || numberOfPlayersOnTeam > indexPath.row ) {
+//            return YES;
+//        }
+//    }
+//
+//    return NO;
+//}
+//- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+//    NSUInteger tableViewIndex = [self.tableViewArray indexOfObject:tableView];
+//    if (self.teamsArray.count > tableViewIndex) {
+//        NSMutableArray *playersArray = ((ASNTeam *)self.teamsArray[tableViewIndex]).players;
+//        ASNPlayer *player = [playersArray objectAtIndex:fromIndexPath.row];
+//        [playersArray removeObjectAtIndex:fromIndexPath.row];
+//        [playersArray insertObject:player atIndex:toIndexPath.row];
+//    }
+//}
+//
+//// these two methods hide the red circle created when implementing moverowatindexpath
+//- (BOOL)tableView:(UITableView *)tableview shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+//    return NO;
+//}
+//- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
+//    return UITableViewCellEditingStyleNone;
+//}
+//
+//// this prevents users from dragging past the "Add Player" cell
+//- (NSIndexPath *)tableView:(UITableView *)tableView targetIndexPathForMoveFromRowAtIndexPath:(NSIndexPath *)sourceIndexPath toProposedIndexPath:(NSIndexPath *)proposedDestinationIndexPath
+//{
+//    if( sourceIndexPath.section != proposedDestinationIndexPath.section )
+//    {
+//        return sourceIndexPath;
+//    }
+//    else
+//    {
+//        NSUInteger tableViewIndex = [self.tableViewArray indexOfObject:tableView];
+//        
+//
+//        if (proposedDestinationIndexPath.row == ((ASNTeam *)self.teamsArray[tableViewIndex]).players.count) {
+//            return sourceIndexPath;
+//        } else {
+//            return proposedDestinationIndexPath;
+//        }
+//    }
+//}
+
 
 @end

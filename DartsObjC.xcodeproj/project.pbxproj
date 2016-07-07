@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		A144A65E1CFE0FA400EBD276 /* ASNPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = A144A65D1CFE0FA400EBD276 /* ASNPlayer.m */; };
 		A144A6611CFE103700EBD276 /* ASNTurn.m in Sources */ = {isa = PBXBuildFile; fileRef = A144A6601CFE103700EBD276 /* ASNTurn.m */; };
+		A147700A1D2DDF2A005A5924 /* ASNUIElements.m in Sources */ = {isa = PBXBuildFile; fileRef = A14770091D2DDF2A005A5924 /* ASNUIElements.m */; };
 		A17BE2491D0602EA009995B1 /* ASNHitsContainerViews.m in Sources */ = {isa = PBXBuildFile; fileRef = A17BE2481D0602EA009995B1 /* ASNHitsContainerViews.m */; };
 		A17BE24B1D089830009995B1 /* PSPDFUIKitMainThreadGuard.m in Sources */ = {isa = PBXBuildFile; fileRef = A17BE24A1D089830009995B1 /* PSPDFUIKitMainThreadGuard.m */; };
 		A1BC22DF1CDA7FE600C714C2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BC22DE1CDA7FE600C714C2 /* main.m */; };
@@ -50,6 +51,8 @@
 		A144A65D1CFE0FA400EBD276 /* ASNPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNPlayer.m; sourceTree = "<group>"; };
 		A144A65F1CFE103700EBD276 /* ASNTurn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASNTurn.h; sourceTree = "<group>"; };
 		A144A6601CFE103700EBD276 /* ASNTurn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNTurn.m; sourceTree = "<group>"; };
+		A14770081D2DDF2A005A5924 /* ASNUIElements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASNUIElements.h; sourceTree = "<group>"; };
+		A14770091D2DDF2A005A5924 /* ASNUIElements.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNUIElements.m; sourceTree = "<group>"; };
 		A17BE2471D0602EA009995B1 /* ASNHitsContainerViews.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASNHitsContainerViews.h; sourceTree = "<group>"; };
 		A17BE2481D0602EA009995B1 /* ASNHitsContainerViews.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNHitsContainerViews.m; sourceTree = "<group>"; };
 		A17BE24A1D089830009995B1 /* PSPDFUIKitMainThreadGuard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSPDFUIKitMainThreadGuard.m; path = "../../../../Downloads/5664345-27e903427a070c0f51e5360249b341bca8aeede5/PSPDFUIKitMainThreadGuard.m"; sourceTree = "<group>"; };
@@ -199,6 +202,8 @@
 			children = (
 				A1BC22E01CDA7FE600C714C2 /* AppDelegate.h */,
 				A1BC22E11CDA7FE600C714C2 /* AppDelegate.m */,
+				A14770081D2DDF2A005A5924 /* ASNUIElements.h */,
+				A14770091D2DDF2A005A5924 /* ASNUIElements.m */,
 				A1EE7FD71CF79E790018ECD3 /* MCManager.h */,
 				A1EE7FD81CF79E790018ECD3 /* MCManager.m */,
 				A17BE24A1D089830009995B1 /* PSPDFUIKitMainThreadGuard.m */,
@@ -335,6 +340,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1BC23131CDA888400C714C2 /* ASNDataStore.m in Sources */,
+				A147700A1D2DDF2A005A5924 /* ASNUIElements.m in Sources */,
 				A1BC23101CDA840900C714C2 /* Player.m in Sources */,
 				A1BC230F1CDA840900C714C2 /* Player+CoreDataProperties.m in Sources */,
 				A144A6611CFE103700EBD276 /* ASNTurn.m in Sources */,

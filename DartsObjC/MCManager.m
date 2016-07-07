@@ -110,11 +110,23 @@
 
 
 -(void)setupPeerAndSessionWithDisplayName:(NSString *)displayName{
-    _peerID = [[MCPeerID alloc] initWithDisplayName:displayName];
+    if (!self.peerID) {
+        if (displayName.length == 0) {
+            _peerID = [[MCPeerID alloc] initWithDisplayName:[[UIDevice currentDevice] name]];
+        }
+        else {
+            _peerID = [[MCPeerID alloc] initWithDisplayName:displayName];
+        }
+        
+        _session = [[MCSession alloc] initWithPeer:_peerID];
+        _session.delegate = self;
+    }
+    else {
+        NSLog(@"peerIDAndSession not setup be it already exists");
+    }
     
-    _session = [[MCSession alloc] initWithPeer:_peerID];
-    _session.delegate = self;
 }
+
 
 
 //The serviceType defines the type of service that the browser should look for, and it’s a small text that describes it. This text should be the same for both the browser and the advertiser in order for the first one to be able to discover the second. There are two rules about its name: Must be 1–15 characters long.Can contain only ASCII lowercase letters, numbers, and hyphens.
