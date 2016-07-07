@@ -11,6 +11,6 @@
 #import <MultipeerConnectivity/MultipeerConnectivity.h>
 
 @interface ASNCreateNewGameViewController : UIViewController <MCNearbyServiceBrowserDelegate, ASNCreateTeamViewDelegate, UITableViewDelegate, UITableViewDataSource>
-@property (weak, nonatomic) IBOutlet UISwitch *visibilityToggle;
+
 @property (strong, nonatomic) NSMutableArray *teamsArray;
 @end

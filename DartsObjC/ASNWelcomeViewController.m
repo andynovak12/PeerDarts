@@ -8,11 +8,12 @@
 
 #import "ASNWelcomeViewController.h"
 #import "AppDelegate.h"
-#import "ASNAvailableGamesView.h"
+#import "ASNAvailableView.h"
 #import "ASNMainGameViewController.h"
 #import "ASNUIElements.h"
 #import "UIButton+ASNButtonStyle.h"
 #import "UILabel+ASNLabelStyle.h"
+#import "UISwitch+ASNSwitchStyle.h"
 
 @interface ASNWelcomeViewController ()
 @property (nonatomic, strong) AppDelegate *appDelegate;
@@ -27,7 +28,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *connectingCancelButton;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *connectingSpinner;
 @property (weak, nonatomic) IBOutlet UIButton *connectingRetryButton;
-@property (weak, nonatomic) IBOutlet UILabel *joinGameLabel;
 @property (weak, nonatomic) IBOutlet UIButton *refreshAvailableGamesButton;
 @property (weak, nonatomic) IBOutlet UILabel *visibleToOthersLabel;
 @property (weak, nonatomic) IBOutlet UISwitch *visibilitySwitch;
@@ -95,7 +95,6 @@
     [self.refreshAvailableGamesButton buttonWithMyStyleAndSizePriority:low];
     
     // Setup Labels
-    [self.joinGameLabel labelWithMyStyleAndSizePriority:high];
     [self.visibleToOthersLabel labelWithMyStyleAndSizePriority:low];
     [self.orLabel labelWithMyStyleAndSizePriority:medium];
     self.orLabel.textColor = ASNLightColor;
@@ -103,16 +102,16 @@
     [self.availableGamesLabel labelWithMyStyleAndSizePriority:medium];
     
     // Setup Switch
-    self.visibilitySwitch.onTintColor = ASNYellowColor;
-    self.visibilitySwitch.thumbTintColor = ASNLightestColor;
-    // shadow
-    [ASNUIElements applyShadowTo: self.visibilitySwitch];
+    [self.visibilitySwitch switchWithMyStyle];
     
     // Setup displayNameTextField
     self.displayNameTextField.backgroundColor = ASNLightestColor;
     self.displayNameTextField.tintColor = ASNMiddleColor;
+    self.displayNameTextField.font = [UIFont fontWithName:fontName size:15];
+    self.displayNameTextField.textColor = ASNDarkColor;
     // set placeholder text and color
-    self.displayNameTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:self.appDelegate.mcManager.peerID.displayName attributes:@{NSForegroundColorAttributeName: ASNDarkColor}];
+    self.displayNameTextField.text = self.appDelegate.mcManager.peerID.displayName;
+//    self.displayNameTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:self.appDelegate.mcManager.peerID.displayName attributes:@{NSForegroundColorAttributeName: ASNDarkColor, NSFontAttributeName : [UIFont fontWithName:fontName size:15.0]}];
     self.displayNameTextField.textAlignment = NSTextAlignmentRight;
 }
 
@@ -187,7 +186,7 @@
 
 -(void)reloadAvailableGamesUI {
     // remove the previous games
-    for (ASNAvailableGamesView *gameView in self.availableGameViewsArray) {
+    for (ASNAvailableView *gameView in self.availableGameViewsArray) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [gameView removeFromSuperview];
         });
@@ -196,7 +195,8 @@
     // add the new games
     NSUInteger counter = 0;
     for (MCPeerID *peerID in self.availableGamesArray) {
-        ASNAvailableGamesView *newGame = [ASNAvailableGamesView new];
+        ASNAvailableView *newGame = [ASNAvailableView new];
+        newGame.imageView.image = [UIImage imageNamed:@"dartboard"];
         newGame.peerID = peerID;
         
         // available games layout
@@ -217,7 +217,7 @@
 
 -(void)handleTap:(UITapGestureRecognizer *) recognizer {
     // invite this peer to the game
-    MCPeerID *receivedPeerID = ((ASNAvailableGamesView *) recognizer.view).peerID;
+    MCPeerID *receivedPeerID = ((ASNAvailableView *) recognizer.view).peerID;
     NSLog(@"tapped : %@", receivedPeerID.displayName);
 
     [self.appDelegate.mcManager.serviceBrowser invitePeer:receivedPeerID toSession:self.appDelegate.mcManager.session withContext:nil timeout:30];

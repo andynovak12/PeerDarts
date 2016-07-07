@@ -35,7 +35,7 @@
         self.titleLabel.font = [UIFont fontWithName:fontName size:25];
     }
     else {
-        self.titleLabel.font = [UIFont fontWithName:fontName size:15];
+        self.titleLabel.font = [UIFont fontWithName:fontName size:12];
     }
 }
 @end

@@ -12,6 +12,8 @@
 		A147700A1D2DDF2A005A5924 /* ASNUIElements.m in Sources */ = {isa = PBXBuildFile; fileRef = A14770091D2DDF2A005A5924 /* ASNUIElements.m */; };
 		A14770101D2EA5D5005A5924 /* UIButton+ASNButtonStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = A147700F1D2EA5D5005A5924 /* UIButton+ASNButtonStyle.m */; };
 		A14770131D2EABF3005A5924 /* UILabel+ASNLabelStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = A14770121D2EABF3005A5924 /* UILabel+ASNLabelStyle.m */; };
+		A14770171D2EE315005A5924 /* ASNAvailableView.m in Sources */ = {isa = PBXBuildFile; fileRef = A14770161D2EE315005A5924 /* ASNAvailableView.m */; };
+		A147701D1D2EF965005A5924 /* UISwitch+ASNSwitchStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = A147701C1D2EF965005A5924 /* UISwitch+ASNSwitchStyle.m */; };
 		A17BE2491D0602EA009995B1 /* ASNHitsContainerViews.m in Sources */ = {isa = PBXBuildFile; fileRef = A17BE2481D0602EA009995B1 /* ASNHitsContainerViews.m */; };
 		A17BE24B1D089830009995B1 /* PSPDFUIKitMainThreadGuard.m in Sources */ = {isa = PBXBuildFile; fileRef = A17BE24A1D089830009995B1 /* PSPDFUIKitMainThreadGuard.m */; };
 		A1BC22DF1CDA7FE600C714C2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BC22DE1CDA7FE600C714C2 /* main.m */; };
@@ -59,6 +61,10 @@
 		A147700F1D2EA5D5005A5924 /* UIButton+ASNButtonStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+ASNButtonStyle.m"; sourceTree = "<group>"; };
 		A14770111D2EABF3005A5924 /* UILabel+ASNLabelStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+ASNLabelStyle.h"; sourceTree = "<group>"; };
 		A14770121D2EABF3005A5924 /* UILabel+ASNLabelStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+ASNLabelStyle.m"; sourceTree = "<group>"; };
+		A14770151D2EE315005A5924 /* ASNAvailableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASNAvailableView.h; sourceTree = "<group>"; };
+		A14770161D2EE315005A5924 /* ASNAvailableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNAvailableView.m; sourceTree = "<group>"; };
+		A147701B1D2EF965005A5924 /* UISwitch+ASNSwitchStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UISwitch+ASNSwitchStyle.h"; sourceTree = "<group>"; };
+		A147701C1D2EF965005A5924 /* UISwitch+ASNSwitchStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UISwitch+ASNSwitchStyle.m"; sourceTree = "<group>"; };
 		A17BE2471D0602EA009995B1 /* ASNHitsContainerViews.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASNHitsContainerViews.h; sourceTree = "<group>"; };
 		A17BE2481D0602EA009995B1 /* ASNHitsContainerViews.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNHitsContainerViews.m; sourceTree = "<group>"; };
 		A17BE24A1D089830009995B1 /* PSPDFUIKitMainThreadGuard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSPDFUIKitMainThreadGuard.m; path = "../../../../Downloads/5664345-27e903427a070c0f51e5360249b341bca8aeede5/PSPDFUIKitMainThreadGuard.m"; sourceTree = "<group>"; };
@@ -178,6 +184,8 @@
 				A147700F1D2EA5D5005A5924 /* UIButton+ASNButtonStyle.m */,
 				A14770111D2EABF3005A5924 /* UILabel+ASNLabelStyle.h */,
 				A14770121D2EABF3005A5924 /* UILabel+ASNLabelStyle.m */,
+				A147701B1D2EF965005A5924 /* UISwitch+ASNSwitchStyle.h */,
+				A147701C1D2EF965005A5924 /* UISwitch+ASNSwitchStyle.m */,
 			);
 			name = UIFiles;
 			sourceTree = "<group>";
@@ -191,6 +199,8 @@
 				A1EE7FDB1CF88E0E0018ECD3 /* ASNAvailableGamesView.m */,
 				A1EE7FDD1CF8AAF60018ECD3 /* ASNAvailablePlayerView.h */,
 				A1EE7FDE1CF8AAF60018ECD3 /* ASNAvailablePlayerView.m */,
+				A14770151D2EE315005A5924 /* ASNAvailableView.h */,
+				A14770161D2EE315005A5924 /* ASNAvailableView.m */,
 				A1C58CD71CEBD398008E78A7 /* ASNCreateTeamView.h */,
 				A1C58CD81CEBD398008E78A7 /* ASNCreateTeamView.m */,
 				A1C58CD51CEBCE93008E78A7 /* TeamForCreateGame.xib */,
@@ -372,11 +382,13 @@
 				A1BC22DF1CDA7FE600C714C2 /* main.m in Sources */,
 				A1BC230E1CDA840900C714C2 /* Turn.m in Sources */,
 				A1EE7FD91CF79E790018ECD3 /* MCManager.m in Sources */,
+				A14770171D2EE315005A5924 /* ASNAvailableView.m in Sources */,
 				A1EE7FD61CF79D1A0018ECD3 /* ASNWelcomeViewController.m in Sources */,
 				A1BC230D1CDA840900C714C2 /* Turn+CoreDataProperties.m in Sources */,
 				A1EE7FDC1CF88E0E0018ECD3 /* ASNAvailableGamesView.m in Sources */,
 				A1EE7FDF1CF8AAF60018ECD3 /* ASNAvailablePlayerView.m in Sources */,
 				A17BE24B1D089830009995B1 /* PSPDFUIKitMainThreadGuard.m in Sources */,
+				A147701D1D2EF965005A5924 /* UISwitch+ASNSwitchStyle.m in Sources */,
 				A144A65E1CFE0FA400EBD276 /* ASNPlayer.m in Sources */,
 				A1BC231E1CDAED4500C714C2 /* ASNMainGameViewController.m in Sources */,
 				A14770131D2EABF3005A5924 /* UILabel+ASNLabelStyle.m in Sources */,

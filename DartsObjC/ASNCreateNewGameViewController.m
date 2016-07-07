@@ -10,13 +10,16 @@
 #import "ASNTeam.h"
 #import "ASNDataStore.h"
 #import "AppDelegate.h"
-#import "ASNAvailablePlayerView.h"
+#import "ASNAvailableView.h"
 #import "ASNMainGameViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "ASNUIElements.h"
+#import "UISwitch+ASNSwitchStyle.h"
+#import "UILabel+ASNLabelStyle.h"
+#import "UIButton+ASNButtonStyle.h"
 
 @interface ASNCreateNewGameViewController ()
-@property (weak, nonatomic) IBOutlet UIButton *addTeamButton;
+//@property (weak, nonatomic) IBOutlet UIButton *addTeamButton;
 
 @property (weak, nonatomic) IBOutlet UIButton *startGameButton;
 //@property (strong, nonatomic) ASNDataStore *dataStore;
@@ -31,17 +34,19 @@
 @property (nonatomic) float distanceToCenterFromFirstRow;
 @property (nonatomic) float distanceToCenterFromSecondRow;
 
-@property (strong, nonatomic) NSLayoutConstraint *addTeamButtonX1;
-@property (strong, nonatomic) NSLayoutConstraint *addTeamButtonX2;
-@property (strong, nonatomic) NSLayoutConstraint *addTeamButtonY1;
-@property (strong, nonatomic) NSLayoutConstraint *addTeamButtonY2;
-
 @property (weak, nonatomic) IBOutlet UITableView *team1TableView;
 @property (weak, nonatomic) IBOutlet UITableView *team2TableView;
 @property (weak, nonatomic) IBOutlet UITableView *team3TableView;
 @property (weak, nonatomic) IBOutlet UITableView *team4TableView;
 @property (nonatomic, strong) NSMutableArray *tableViewArray;
 
+@property (weak, nonatomic) IBOutlet UIView *team2CoverView;
+@property (weak, nonatomic) IBOutlet UIView *team3CoverView;
+@property (weak, nonatomic) IBOutlet UIView *team4CoverView;
+@property (weak, nonatomic) IBOutlet UIButton *refreshButton;
+@property (weak, nonatomic) IBOutlet UISwitch *visibilityToggle;
+@property (weak, nonatomic) IBOutlet UILabel *visibleToOthersLabel;
+@property (weak, nonatomic) IBOutlet UILabel *availablePlayersLabel;
 
 //@property (strong, nonatomic) NSString *fontName;
 
@@ -51,10 +56,7 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
-    
-//    self.fontName = @"Copperplate";
 
-    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(peerDidChangeStateWithNotification:)
                                                  name:@"MCDidChangeStateNotification"
@@ -76,18 +78,9 @@
     self.team3TableView.delegate = self;
     self.team4TableView.dataSource = self;
     self.team4TableView.delegate = self;
-    
-    // tableviews borders
-    self.team1TableView.layer.borderWidth = 2;
-    self.team2TableView.layer.borderWidth = 2;
-    self.team3TableView.layer.borderWidth = 2;
-    self.team4TableView.layer.borderWidth = 2;
-    self.team1TableView.layer.cornerRadius = 10;
-    self.team2TableView.layer.cornerRadius = 10;
-    self.team3TableView.layer.cornerRadius = 10;
-    self.team4TableView.layer.cornerRadius = 10;
 
 }
+
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -98,20 +91,16 @@
     self.availablePlayerViewsArray = [NSMutableArray new];
     self.teamsArray = [NSMutableArray new];
     self.pendingInvites = [NSMutableArray new];
-//    self.createNewTeamViewsArray = [NSMutableArray new];
     self.tableViewArray = [@[self.team1TableView, self.team2TableView, self.team3TableView, self.team4TableView] mutableCopy];
-
+    
+    [self setupUI];
  
     [self.appDelegate.mcManager advertiseGame:self.visibilityToggle.isOn];
-    
-
-
     
     // added this to automatically start looking for available games
     [self searchForAvailablePlayers];
     
 //    self.dataStore = [ASNDataStore sharedDataStore];
-
     
     // this is for the position of the createNewTeamVCs and the addTeamButton
     CGRect screenRect = [[UIScreen mainScreen] bounds];
@@ -119,11 +108,6 @@
     CGFloat screenHeight = screenRect.size.height;
     self.distanceToCenterFromFirstRow = -screenHeight/5;
     self.distanceToCenterFromSecondRow = screenHeight/15;
-    self.addTeamButtonX1 = [self.addTeamButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant:screenWidth*0.25];
-    self.addTeamButtonX2 = [self.addTeamButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant:-screenWidth*0.25];
-    self.addTeamButtonY1 = [self.addTeamButton.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor constant:self.distanceToCenterFromFirstRow];
-    self.addTeamButtonY2 = [self.addTeamButton.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor constant:self.distanceToCenterFromSecondRow];
-    
     
     // create a team initially
     if (self.teamsArray.count == 0) {
@@ -137,8 +121,7 @@
 -(void)viewDidLayoutSubviews{
     NSLog(@"This is my name: %@ and peerID: %@ and my sessionID: %@", self.appDelegate.mcManager.peerID.displayName, self.appDelegate.mcManager.peerID, self.appDelegate.mcManager.session.myPeerID);
     
-    [self moveAddTeamButton];
-    [self updateTableViews];
+    [self updateTeamTableViewsUI];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -148,64 +131,81 @@
     [self.appDelegate.mcManager.serviceBrowser stopBrowsingForPeers];
 }
 
--(void)updateTableViews {
-    if (self.teamsArray.count == 0) {
-        self.team1TableView.hidden = YES;
-        self.team2TableView.hidden = YES;
-        self.team3TableView.hidden = YES;
-        self.team4TableView.hidden = YES;
-    }
-    else if (self.teamsArray.count == 1) {
-        self.team1TableView.hidden = NO;
-        self.team2TableView.hidden = YES;
-        self.team3TableView.hidden = YES;
-        self.team4TableView.hidden = YES;
-    }
-    else if (self.teamsArray.count == 2) {
-        self.team1TableView.hidden = NO;
-        self.team2TableView.hidden = NO;
-        self.team3TableView.hidden = YES;
-        self.team4TableView.hidden = YES;
-    }
-    else if (self.teamsArray.count == 3) {
-        self.team1TableView.hidden = NO;
-        self.team2TableView.hidden = NO;
-        self.team3TableView.hidden = NO;
-        self.team4TableView.hidden = YES;
-    }
-    else if (self.teamsArray.count == 4) {
-        self.team1TableView.hidden = NO;
-        self.team2TableView.hidden = NO;
-        self.team3TableView.hidden = NO;
-        self.team4TableView.hidden = NO;
-    }}
-
-
--(void)moveAddTeamButton{
+-(void)updateTeamTableViewsUI{
     NSUInteger numberOfTeams = self.teamsArray.count;
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.addTeamButton setTranslatesAutoresizingMaskIntoConstraints:NO];
-        
-        
-        if (numberOfTeams == 1 || numberOfTeams == 3) {
-            self.addTeamButtonX2.active = NO;
-            self.addTeamButtonX1.active = YES;
-        }
-        else {
-            self.addTeamButtonX1.active = NO;
-            self.addTeamButtonX2.active = YES;
-        }
         
         if (numberOfTeams == 1) {
-            self.addTeamButtonY2.active = NO;
-            self.addTeamButtonY1.active = YES;
+            self.team2CoverView.hidden = NO;
+            self.team3CoverView.hidden = YES;
+            self.team4CoverView.hidden = YES;
+            
+            self.team1TableView.hidden = NO;
+            self.team2TableView.hidden = YES;
+            self.team3TableView.hidden = YES;
+            self.team4TableView.hidden = YES;
+        }
+        else if (numberOfTeams == 2) {
+            self.team2CoverView.hidden = YES;
+            self.team3CoverView.hidden = NO;
+            self.team4CoverView.hidden = YES;
+            
+            self.team1TableView.hidden = NO;
+            self.team2TableView.hidden = NO;
+            self.team3TableView.hidden = YES;
+            self.team4TableView.hidden = YES;
+        }
+        else if (numberOfTeams == 3) {
+            self.team2CoverView.hidden = YES;
+            self.team3CoverView.hidden = YES;
+            self.team4CoverView.hidden = NO;
+            
+            self.team1TableView.hidden = NO;
+            self.team2TableView.hidden = NO;
+            self.team3TableView.hidden = NO;
+            self.team4TableView.hidden = YES;
+        }
+        else if (numberOfTeams == 4) {
+            self.team2CoverView.hidden = YES;
+            self.team3CoverView.hidden = YES;
+            self.team4CoverView.hidden = YES;
+            
+            self.team1TableView.hidden = NO;
+            self.team2TableView.hidden = NO;
+            self.team3TableView.hidden = NO;
+            self.team4TableView.hidden = NO;
         }
         else {
-            self.addTeamButtonY1.active = NO;
-            self.addTeamButtonY2.active = YES;
+            NSLog(@"ERROR: There should not be more than 4, or less than 1 teams");
         }
     });
+}
+
+-(void)setupUI {
+    
+    [self.startGameButton buttonWithMyStyleAndSizePriority:high];
+    [self.visibilityToggle switchWithMyStyle];
+    [self.refreshButton buttonWithMyStyleAndSizePriority:low];
+    [self.availablePlayersLabel labelWithMyStyleAndSizePriority:medium];
+    [self.visibleToOthersLabel labelWithMyStyleAndSizePriority:low];
+    
+    // set borders and corner radii
+    for (UITableView *tableview in self.tableViewArray) {
+        [self setRadiusAndBorder:tableview];
+    }
+    
+    NSArray *coverViewsArray = @[self.team2CoverView, self.team3CoverView, self.team4CoverView];
+    for (UIView *coverView in coverViewsArray) {
+        [self setRadiusAndBorder:coverView];
+        coverView.backgroundColor = ASNDarkColor;
+        coverView.tintColor = ASNYellowColor;
+    }
+}
+-(void)setRadiusAndBorder:(UIView *)view {
+    view.layer.borderWidth = 2;
+    view.layer.cornerRadius = 10;
+    view.layer.borderColor = ASNLightestColor.CGColor;
 }
 
 //-(BOOL)viewExistsForTeam:(ASNTeam *)team {
@@ -301,24 +301,25 @@
 
 -(void)reloadAvailablePlayersUI {
     // remove the previous players
-    for (ASNAvailablePlayerView *playerView in self.availablePlayerViewsArray) {
+    for (ASNAvailableView *playerView in self.availablePlayerViewsArray) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [playerView removeFromSuperview];
         });
     }
     self.availablePlayerViewsArray = [NSMutableArray new];
     // add the new player views
+    // TODO make second row
     NSUInteger counter = 0;
     for (MCPeerID *peerID in self.availablePlayerArray) {
-        ASNAvailablePlayerView *newPlayerView = [ASNAvailablePlayerView new];
+        ASNAvailableView *newPlayerView = [ASNAvailableView new];
         newPlayerView.peerID = peerID;
-        
+        newPlayerView.imageView.image = [UIImage imageNamed:@"defaultUserImage"];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.view addSubview:newPlayerView];
             [newPlayerView setTranslatesAutoresizingMaskIntoConstraints:NO];
             [newPlayerView.heightAnchor constraintEqualToConstant:100].active = YES;
             [newPlayerView.widthAnchor constraintEqualToConstant:100].active = YES;
-            [newPlayerView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:525].active = YES;
+            [newPlayerView.topAnchor constraintEqualToAnchor:self.availablePlayersLabel.bottomAnchor constant:5].active = YES;
             [newPlayerView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor constant:(20+(counter*110))].active = YES;
             newPlayerView.userInteractionEnabled = YES;
             UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapOfAvailablePlayer:)];
@@ -331,7 +332,7 @@
 }
 
 -(void)handleTapOfAvailablePlayer:(UITapGestureRecognizer *) recognizer {
-    ASNAvailablePlayerView *playerView = (ASNAvailablePlayerView *) recognizer.view;
+    ASNAvailableView *playerView = (ASNAvailableView *) recognizer.view;
     // invite this peer to the game
     MCPeerID *receivedPeerID = playerView.peerID;
     NSLog(@"Inviting player: %@ with peerID: %@", receivedPeerID.displayName, receivedPeerID);
@@ -441,7 +442,7 @@
             NSArray *matchingObjects = [self.pendingInvites filteredArrayUsingPredicate:peerIDPredicate];
             if (matchingObjects.count > 0) {
                 // stop spinner
-                for (ASNAvailablePlayerView *playerView in self.availablePlayerViewsArray) {
+                for (ASNAvailableView *playerView in self.availablePlayerViewsArray) {
                     if (playerView.peerID == peerID) {
                         [playerView.spinner stopAnimating];
                         
@@ -506,7 +507,7 @@
     ASNTeam *team = [[ASNTeam alloc] initWithName:[NSString stringWithFormat:@"Team %lu", numberOfTeams+1]];
     [self.teamsArray addObject:team];
 //    [self reloadViewForTeam:team];
-    [self moveAddTeamButton];
+    [self updateTeamTableViewsUI];
     NSUInteger teamIndex = [self.teamsArray indexOfObject:team];
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableViewArray[teamIndex] reloadData];
@@ -621,6 +622,7 @@
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    tableView.backgroundColor = ASNDarkColor;
     if (section == 0) {
         return 1;
     }
@@ -643,25 +645,29 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"id"];
-    
+    cell.backgroundColor = ASNDarkColor;
+
     
     NSUInteger tableViewIndex = [self.tableViewArray indexOfObject:tableView];
     if (self.teamsArray.count > tableViewIndex) {
         ASNTeam *team = ((ASNTeam *)self.teamsArray[tableViewIndex]);
         if (indexPath.section == 0) {
             cell.textLabel.text = team.teamName;
-            cell.textLabel.font = [UIFont fontWithName:fontName size:22];
+            cell.textLabel.font = [UIFont fontWithName:fontNameBold size:22];
+            cell.textLabel.textColor = ASNLightestColor;
+            cell.backgroundColor = ASNMiddleColor;
         }
         else {
             NSUInteger numberOfPlayersOnTeam = team.players.count;
+            cell.textLabel.font = [UIFont fontWithName:fontName size:15];
             if (indexPath.row < numberOfPlayersOnTeam ) {
                 cell.showsReorderControl = YES;
                 cell.textLabel.text = ((ASNPlayer *) team.players[indexPath.row]).name;
-                cell.textLabel.textColor = [UIColor blackColor];
+                cell.textLabel.textColor = ASNLightestColor;
             }
             if (indexPath.row == numberOfPlayersOnTeam && numberOfPlayersOnTeam < 4) {
                 cell.textLabel.text = @"Add Player";
-                cell.textLabel.textColor = [UIColor blueColor];
+                cell.textLabel.textColor = ASNYellowColor;
                 [cell.contentView setUserInteractionEnabled:YES];
                 // this determines what team the player is added to
                 cell.contentView.tag = tableViewIndex;
