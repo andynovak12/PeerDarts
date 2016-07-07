@@ -10,6 +10,9 @@
 #import "AppDelegate.h"
 #import "ASNAvailableGamesView.h"
 #import "ASNMainGameViewController.h"
+#import "ASNUIElements.h"
+#import "UIButton+ASNButtonStyle.h"
+#import "UILabel+ASNLabelStyle.h"
 
 @interface ASNWelcomeViewController ()
 @property (nonatomic, strong) AppDelegate *appDelegate;
@@ -25,8 +28,16 @@
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *connectingSpinner;
 @property (weak, nonatomic) IBOutlet UIButton *connectingRetryButton;
 @property (weak, nonatomic) IBOutlet UILabel *joinGameLabel;
+@property (weak, nonatomic) IBOutlet UIButton *refreshAvailableGamesButton;
+@property (weak, nonatomic) IBOutlet UILabel *visibleToOthersLabel;
+@property (weak, nonatomic) IBOutlet UISwitch *visibilitySwitch;
+@property (weak, nonatomic) IBOutlet UITextField *displayNameTextField;
 
+@property (weak, nonatomic) IBOutlet UILabel *availableGamesLabel;
+@property (weak, nonatomic) IBOutlet UIButton *createGameButton;
 @property (nonatomic) BOOL isAttemptingToConnect;
+@property (weak, nonatomic) IBOutlet UILabel *orLabel;
+@property (weak, nonatomic) IBOutlet UILabel *displayNameLabel;
 
 @property (strong, nonatomic) MCPeerID *inviterPeerID;
 @end
@@ -46,6 +57,8 @@
 //    [self.appDelegate.mcManager advertiseSelf:self.visibilityToggle.isOn];
 //    self.appDelegate.mcManager.advertiser.delegate = self;
     
+    
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(peerDidChangeStateWithNotification:)
                                                  name:@"MCDidChangeStateNotification"
@@ -60,12 +73,49 @@
                                                  name:@"MCDidReceiveInvitationNotification"
                                                object:nil];
     
+    // sets text of back button in NavBar
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:nil action:nil];
 
     
 //    // added this to automatically start looking for available games
 //    [self searchForAvailableGames];
 
 }
+
+
+-(void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    
+    [self setupUIElements];
+}
+
+-(void)setupUIElements {
+    // Setup buttons
+    [self.createGameButton buttonWithMyStyleAndSizePriority:high];
+    [self.refreshAvailableGamesButton buttonWithMyStyleAndSizePriority:low];
+    
+    // Setup Labels
+    [self.joinGameLabel labelWithMyStyleAndSizePriority:high];
+    [self.visibleToOthersLabel labelWithMyStyleAndSizePriority:low];
+    [self.orLabel labelWithMyStyleAndSizePriority:medium];
+    self.orLabel.textColor = ASNLightColor;
+    [self.displayNameLabel labelWithMyStyleAndSizePriority:low];
+    [self.availableGamesLabel labelWithMyStyleAndSizePriority:medium];
+    
+    // Setup Switch
+    self.visibilitySwitch.onTintColor = ASNYellowColor;
+    self.visibilitySwitch.thumbTintColor = ASNLightestColor;
+    // shadow
+    [ASNUIElements applyShadowTo: self.visibilitySwitch];
+    
+    // Setup displayNameTextField
+    self.displayNameTextField.backgroundColor = ASNLightestColor;
+    self.displayNameTextField.tintColor = ASNMiddleColor;
+    // set placeholder text and color
+    self.displayNameTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:self.appDelegate.mcManager.peerID.displayName attributes:@{NSForegroundColorAttributeName: ASNDarkColor}];
+    self.displayNameTextField.textAlignment = NSTextAlignmentRight;
+}
+
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
@@ -74,10 +124,10 @@
     
     self.inviterPeerID = nil;
 
-    self.navigationController.navigationBarHidden = YES;
+//    self.navigationController.navigationBarHidden = YES;
     
     [self.appDelegate.mcManager setupPeerAndSessionWithDisplayName:[UIDevice currentDevice].name];
-    [self.appDelegate.mcManager advertiseSelf:self.visibilityToggle.isOn];
+    [self.appDelegate.mcManager advertiseSelf:self.visibilitySwitch.isOn];
     // added this to automatically start looking for available games
     [self searchForAvailableGames];
     
@@ -88,7 +138,7 @@
     self.isAttemptingToConnect = NO;
     [self reloadAvailableGamesUI];
 
-    self.displayNameTextField.placeholder = self.appDelegate.mcManager.peerID.displayName;
+//    self.displayNameTextField.placeholder = self.appDelegate.mcManager.peerID.displayName;
     self.displayNameTextField.textAlignment = NSTextAlignmentCenter;
     
     NSLog(@"This is my name: %@ and peerID: %@ and my sessionID: %@", self.appDelegate.mcManager.peerID.displayName, self.appDelegate.mcManager.peerID, self.appDelegate.mcManager.session.myPeerID);
@@ -138,7 +188,9 @@
 -(void)reloadAvailableGamesUI {
     // remove the previous games
     for (ASNAvailableGamesView *gameView in self.availableGameViewsArray) {
-        [gameView removeFromSuperview];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [gameView removeFromSuperview];
+        });
     }
     self.availableGameViewsArray = [NSMutableArray new];
     // add the new games
@@ -148,12 +200,12 @@
         newGame.peerID = peerID;
         
         // available games layout
+        // TODO: allow for second row
         [self.view insertSubview:newGame belowSubview:self.blurView];
         [newGame setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [newGame.topAnchor constraintEqualToAnchor:self.joinGameLabel.bottomAnchor constant:20].active = YES;
+        [newGame.topAnchor constraintEqualToAnchor:self.availableGamesLabel.bottomAnchor constant:5].active = YES;
         [newGame.heightAnchor constraintEqualToConstant:130].active = YES;
         [newGame.widthAnchor constraintEqualToConstant:100].active = YES;
-//        [newGame.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:250].active = YES;
         [newGame.leftAnchor constraintEqualToAnchor:self.view.leftAnchor constant:(20+(counter*110))].active = YES;
         newGame.userInteractionEnabled = YES;
         UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
@@ -172,7 +224,24 @@
 }
 
 - (IBAction)toggleVisibility:(id)sender {
-    [self.appDelegate.mcManager advertiseSelf:self.visibilityToggle.isOn];
+    [self.appDelegate.mcManager advertiseSelf:self.visibilitySwitch.isOn];
+    
+    // hide displayNameTextField if not visible
+    [UIView transitionWithView:self.displayNameTextField
+                      duration:0.25
+                       options:UIViewAnimationOptionTransitionCrossDissolve
+                    animations:^{
+                        self.displayNameTextField.hidden = !self.visibilitySwitch.isOn;
+                    }
+                    completion:NULL];
+    [UIView transitionWithView:self.displayNameLabel
+                      duration:0.25
+                       options:UIViewAnimationOptionTransitionCrossDissolve
+                    animations:^{
+                        self.displayNameLabel.hidden = !self.visibilitySwitch.isOn;
+                    }
+                    completion:NULL];
+
 }
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField{
@@ -184,7 +253,7 @@
     // added this
     self.appDelegate.mcManager.serviceBrowser = nil;
     
-    if ([self.visibilityToggle isOn]) {
+    if ([self.visibilitySwitch isOn]) {
         [self.appDelegate.mcManager.advertiser stopAdvertisingPeer];
     }
     self.appDelegate.mcManager.advertiser = nil;
@@ -194,7 +263,7 @@
     //    [_appDelegate.mcManager setupMCBrowser];
     // added this
     [self.appDelegate.mcManager setupMCServiceBrowser];
-    [self.appDelegate.mcManager advertiseSelf:self.visibilityToggle.isOn];
+    [self.appDelegate.mcManager advertiseSelf:self.visibilitySwitch.isOn];
     
     return YES;
 }
@@ -215,6 +284,7 @@
     self.connectingView.hidden = YES;
 }
 - (IBAction)connectingRetryButtonTapped:(id)sender {
+    // TODO: Fix this
     // this might cause problems with more than 2 people, cus the session is not the session of the peer creating hte game
        [self.appDelegate.mcManager.serviceBrowser invitePeer:self.inviterPeerID toSession:self.appDelegate.mcManager.session withContext:nil timeout:30];
     

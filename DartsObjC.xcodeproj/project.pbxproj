@@ -10,6 +10,8 @@
 		A144A65E1CFE0FA400EBD276 /* ASNPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = A144A65D1CFE0FA400EBD276 /* ASNPlayer.m */; };
 		A144A6611CFE103700EBD276 /* ASNTurn.m in Sources */ = {isa = PBXBuildFile; fileRef = A144A6601CFE103700EBD276 /* ASNTurn.m */; };
 		A147700A1D2DDF2A005A5924 /* ASNUIElements.m in Sources */ = {isa = PBXBuildFile; fileRef = A14770091D2DDF2A005A5924 /* ASNUIElements.m */; };
+		A14770101D2EA5D5005A5924 /* UIButton+ASNButtonStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = A147700F1D2EA5D5005A5924 /* UIButton+ASNButtonStyle.m */; };
+		A14770131D2EABF3005A5924 /* UILabel+ASNLabelStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = A14770121D2EABF3005A5924 /* UILabel+ASNLabelStyle.m */; };
 		A17BE2491D0602EA009995B1 /* ASNHitsContainerViews.m in Sources */ = {isa = PBXBuildFile; fileRef = A17BE2481D0602EA009995B1 /* ASNHitsContainerViews.m */; };
 		A17BE24B1D089830009995B1 /* PSPDFUIKitMainThreadGuard.m in Sources */ = {isa = PBXBuildFile; fileRef = A17BE24A1D089830009995B1 /* PSPDFUIKitMainThreadGuard.m */; };
 		A1BC22DF1CDA7FE600C714C2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BC22DE1CDA7FE600C714C2 /* main.m */; };
@@ -53,6 +55,10 @@
 		A144A6601CFE103700EBD276 /* ASNTurn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNTurn.m; sourceTree = "<group>"; };
 		A14770081D2DDF2A005A5924 /* ASNUIElements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASNUIElements.h; sourceTree = "<group>"; };
 		A14770091D2DDF2A005A5924 /* ASNUIElements.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNUIElements.m; sourceTree = "<group>"; };
+		A147700E1D2EA5D5005A5924 /* UIButton+ASNButtonStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+ASNButtonStyle.h"; sourceTree = "<group>"; };
+		A147700F1D2EA5D5005A5924 /* UIButton+ASNButtonStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+ASNButtonStyle.m"; sourceTree = "<group>"; };
+		A14770111D2EABF3005A5924 /* UILabel+ASNLabelStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+ASNLabelStyle.h"; sourceTree = "<group>"; };
+		A14770121D2EABF3005A5924 /* UILabel+ASNLabelStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+ASNLabelStyle.m"; sourceTree = "<group>"; };
 		A17BE2471D0602EA009995B1 /* ASNHitsContainerViews.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASNHitsContainerViews.h; sourceTree = "<group>"; };
 		A17BE2481D0602EA009995B1 /* ASNHitsContainerViews.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNHitsContainerViews.m; sourceTree = "<group>"; };
 		A17BE24A1D089830009995B1 /* PSPDFUIKitMainThreadGuard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSPDFUIKitMainThreadGuard.m; path = "../../../../Downloads/5664345-27e903427a070c0f51e5360249b341bca8aeede5/PSPDFUIKitMainThreadGuard.m"; sourceTree = "<group>"; };
@@ -163,6 +169,19 @@
 			name = "Views and View Controllers";
 			sourceTree = "<group>";
 		};
+		A14770141D2ED9D0005A5924 /* UIFiles */ = {
+			isa = PBXGroup;
+			children = (
+				A14770081D2DDF2A005A5924 /* ASNUIElements.h */,
+				A14770091D2DDF2A005A5924 /* ASNUIElements.m */,
+				A147700E1D2EA5D5005A5924 /* UIButton+ASNButtonStyle.h */,
+				A147700F1D2EA5D5005A5924 /* UIButton+ASNButtonStyle.m */,
+				A14770111D2EABF3005A5924 /* UILabel+ASNLabelStyle.h */,
+				A14770121D2EABF3005A5924 /* UILabel+ASNLabelStyle.m */,
+			);
+			name = UIFiles;
+			sourceTree = "<group>";
+		};
 		A17BE2431D05F6EF009995B1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -202,8 +221,7 @@
 			children = (
 				A1BC22E01CDA7FE600C714C2 /* AppDelegate.h */,
 				A1BC22E11CDA7FE600C714C2 /* AppDelegate.m */,
-				A14770081D2DDF2A005A5924 /* ASNUIElements.h */,
-				A14770091D2DDF2A005A5924 /* ASNUIElements.m */,
+				A14770141D2ED9D0005A5924 /* UIFiles */,
 				A1EE7FD71CF79E790018ECD3 /* MCManager.h */,
 				A1EE7FD81CF79E790018ECD3 /* MCManager.m */,
 				A17BE24A1D089830009995B1 /* PSPDFUIKitMainThreadGuard.m */,
@@ -347,6 +365,7 @@
 				A1C58CD41CEBC8DD008E78A7 /* ASNCreateNewGameViewController.m in Sources */,
 				A1BC22E21CDA7FE600C714C2 /* AppDelegate.m in Sources */,
 				A1BC23191CDACD1100C714C2 /* ASNGame.m in Sources */,
+				A14770101D2EA5D5005A5924 /* UIButton+ASNButtonStyle.m in Sources */,
 				A17BE2491D0602EA009995B1 /* ASNHitsContainerViews.m in Sources */,
 				A1BC22EB1CDA7FE600C714C2 /* DartsObjC.xcdatamodeld in Sources */,
 				A1C58CD91CEBD398008E78A7 /* ASNCreateTeamView.m in Sources */,
@@ -360,6 +379,7 @@
 				A17BE24B1D089830009995B1 /* PSPDFUIKitMainThreadGuard.m in Sources */,
 				A144A65E1CFE0FA400EBD276 /* ASNPlayer.m in Sources */,
 				A1BC231E1CDAED4500C714C2 /* ASNMainGameViewController.m in Sources */,
+				A14770131D2EABF3005A5924 /* UILabel+ASNLabelStyle.m in Sources */,
 				A1BC23161CDA98CF00C714C2 /* ASNTeam.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

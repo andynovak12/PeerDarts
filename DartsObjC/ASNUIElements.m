@@ -11,5 +11,12 @@
 @implementation ASNUIElements
 
 NSString * const fontName = @"Copperplate";
+NSString * const fontNameBold = @"Copperplate-Bold";
 
++(void)applyShadowTo:(UIView *)object {
+    object.layer.shadowColor = [UIColor blackColor].CGColor;
+    object.layer.shadowOpacity = 0.5;
+    object.layer.shadowRadius = 2;
+    object.layer.shadowOffset = CGSizeMake(3.0f,3.0f);
+}
 @end

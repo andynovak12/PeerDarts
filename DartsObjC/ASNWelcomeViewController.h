@@ -10,7 +10,5 @@
 #import <MultipeerConnectivity/MultipeerConnectivity.h>
 
 @interface ASNWelcomeViewController : UIViewController <UITextFieldDelegate, MCNearbyServiceBrowserDelegate>
-@property (weak, nonatomic) IBOutlet UITextField *displayNameTextField;
-@property (weak, nonatomic) IBOutlet UISwitch *visibilityToggle;
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "ASNAvailablePlayerView.h"
+#import "ASNUIElements.h"
 
 @implementation ASNAvailablePlayerView
 
@@ -27,8 +28,9 @@
 }
 
 -(void)commonInit {
-//    self.backgroundColor = [UIColor lightGrayColor];
+    self.backgroundColor = ASNDarkestColor;
     self.label = [UILabel new];
+    [ASNUIElements applyShadowTo:self];
     self.label.text = @"Loading";
     self.label.adjustsFontSizeToFitWidth = YES;
 

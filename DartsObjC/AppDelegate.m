@@ -10,6 +10,7 @@
 #import "ASNDataStore.h"
 #import "ASNTeam.h"
 #import "ASNGame.h"
+#import "ASNUIElements.h"
 
 @interface AppDelegate ()
 @property (strong, nonatomic) ASNDataStore *dataStore;
@@ -22,8 +23,22 @@
     
     self.mcManager = [[MCManager alloc] init];
 
+    // Setup NavBar
+    // changes color and font of title
+    [[UINavigationBar appearance]  setTitleTextAttributes:
+     @{NSForegroundColorAttributeName:ASNDarkColor,
+       NSFontAttributeName:[UIFont fontWithName:@"Copperplate-Bold" size:25]}];
+    // changes color of back button
+    [[UINavigationBar appearance] setTintColor:ASNDarkestColor];
+    // changes the bar's color
+    [[UINavigationBar appearance] setBarTintColor:ASNLightestColor];
+//    [[UINavigationBar appearance] setTranslucent:NO];
     
+    [[UIBarButtonItem appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:ASNDarkColor,
+                                                           NSFontAttributeName:[UIFont fontWithName:fontName size:15]} forState:normal];
     
+//    NSLog(@"%@", [UIFont fontNamesForFamilyName:fontName]);
+
 //    self.dataStore = [ASNDataStore sharedDataStore];
     
 //    Player *p1 = [NSEntityDescription insertNewObjectForEntityForName:@"Player" inManagedObjectContext:self.dataStore.managedObjectContext];

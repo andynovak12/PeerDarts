@@ -86,7 +86,7 @@
     self.team2TableView.layer.cornerRadius = 10;
     self.team3TableView.layer.cornerRadius = 10;
     self.team4TableView.layer.cornerRadius = 10;
-    
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -104,7 +104,8 @@
  
     [self.appDelegate.mcManager advertiseGame:self.visibilityToggle.isOn];
     
-    
+
+
     
     // added this to automatically start looking for available games
     [self searchForAvailablePlayers];

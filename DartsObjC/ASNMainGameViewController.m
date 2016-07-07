@@ -28,8 +28,6 @@
 
 @property (strong, nonatomic) NSMutableArray *playerNamesLabelsArray;
 
-//@property (strong,nonatomic) NSString *fontName;
-
 @property (strong, nonatomic) ASNGame *currentGame;
 
 @property (nonatomic) BOOL isAlertControllerPresented;
