@@ -36,8 +36,6 @@
 		A1C58CD91CEBD398008E78A7 /* ASNCreateTeamView.m in Sources */ = {isa = PBXBuildFile; fileRef = A1C58CD81CEBD398008E78A7 /* ASNCreateTeamView.m */; };
 		A1EE7FD61CF79D1A0018ECD3 /* ASNWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A1EE7FD51CF79D1A0018ECD3 /* ASNWelcomeViewController.m */; };
 		A1EE7FD91CF79E790018ECD3 /* MCManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A1EE7FD81CF79E790018ECD3 /* MCManager.m */; };
-		A1EE7FDC1CF88E0E0018ECD3 /* ASNAvailableGamesView.m in Sources */ = {isa = PBXBuildFile; fileRef = A1EE7FDB1CF88E0E0018ECD3 /* ASNAvailableGamesView.m */; };
-		A1EE7FDF1CF8AAF60018ECD3 /* ASNAvailablePlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = A1EE7FDE1CF8AAF60018ECD3 /* ASNAvailablePlayerView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,10 +103,6 @@
 		A1EE7FD51CF79D1A0018ECD3 /* ASNWelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNWelcomeViewController.m; sourceTree = "<group>"; };
 		A1EE7FD71CF79E790018ECD3 /* MCManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCManager.h; sourceTree = "<group>"; };
 		A1EE7FD81CF79E790018ECD3 /* MCManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCManager.m; sourceTree = "<group>"; };
-		A1EE7FDA1CF88E0E0018ECD3 /* ASNAvailableGamesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASNAvailableGamesView.h; sourceTree = "<group>"; };
-		A1EE7FDB1CF88E0E0018ECD3 /* ASNAvailableGamesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNAvailableGamesView.m; sourceTree = "<group>"; };
-		A1EE7FDD1CF8AAF60018ECD3 /* ASNAvailablePlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASNAvailablePlayerView.h; sourceTree = "<group>"; };
-		A1EE7FDE1CF8AAF60018ECD3 /* ASNAvailablePlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNAvailablePlayerView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -195,10 +189,6 @@
 			children = (
 				A17BE2471D0602EA009995B1 /* ASNHitsContainerViews.h */,
 				A17BE2481D0602EA009995B1 /* ASNHitsContainerViews.m */,
-				A1EE7FDA1CF88E0E0018ECD3 /* ASNAvailableGamesView.h */,
-				A1EE7FDB1CF88E0E0018ECD3 /* ASNAvailableGamesView.m */,
-				A1EE7FDD1CF8AAF60018ECD3 /* ASNAvailablePlayerView.h */,
-				A1EE7FDE1CF8AAF60018ECD3 /* ASNAvailablePlayerView.m */,
 				A14770151D2EE315005A5924 /* ASNAvailableView.h */,
 				A14770161D2EE315005A5924 /* ASNAvailableView.m */,
 				A1C58CD71CEBD398008E78A7 /* ASNCreateTeamView.h */,
@@ -385,8 +375,6 @@
 				A14770171D2EE315005A5924 /* ASNAvailableView.m in Sources */,
 				A1EE7FD61CF79D1A0018ECD3 /* ASNWelcomeViewController.m in Sources */,
 				A1BC230D1CDA840900C714C2 /* Turn+CoreDataProperties.m in Sources */,
-				A1EE7FDC1CF88E0E0018ECD3 /* ASNAvailableGamesView.m in Sources */,
-				A1EE7FDF1CF8AAF60018ECD3 /* ASNAvailablePlayerView.m in Sources */,
 				A17BE24B1D089830009995B1 /* PSPDFUIKitMainThreadGuard.m in Sources */,
 				A147701D1D2EF965005A5924 /* UISwitch+ASNSwitchStyle.m in Sources */,
 				A144A65E1CFE0FA400EBD276 /* ASNPlayer.m in Sources */,

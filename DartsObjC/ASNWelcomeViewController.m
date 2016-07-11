@@ -90,57 +90,65 @@
 }
 
 -(void)setupUIElements {
-    // Setup buttons
-    [self.createGameButton buttonWithMyStyleAndSizePriority:high];
-    [self.refreshAvailableGamesButton buttonWithMyStyleAndSizePriority:low];
-    
-    // Setup Labels
-    [self.visibleToOthersLabel labelWithMyStyleAndSizePriority:low];
-    [self.orLabel labelWithMyStyleAndSizePriority:medium];
-    self.orLabel.textColor = ASNLightColor;
-    [self.displayNameLabel labelWithMyStyleAndSizePriority:low];
-    [self.availableGamesLabel labelWithMyStyleAndSizePriority:medium];
-    
-    // Setup Switch
-    [self.visibilitySwitch switchWithMyStyle];
-    
-    // Setup displayNameTextField
-    self.displayNameTextField.backgroundColor = ASNLightestColor;
-    self.displayNameTextField.tintColor = ASNMiddleColor;
-    self.displayNameTextField.font = [UIFont fontWithName:fontName size:15];
-    self.displayNameTextField.textColor = ASNDarkColor;
-    // set placeholder text and color
-    self.displayNameTextField.text = self.appDelegate.mcManager.peerID.displayName;
-//    self.displayNameTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:self.appDelegate.mcManager.peerID.displayName attributes:@{NSForegroundColorAttributeName: ASNDarkColor, NSFontAttributeName : [UIFont fontWithName:fontName size:15.0]}];
-    self.displayNameTextField.textAlignment = NSTextAlignmentRight;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // Setup buttons
+        [self.createGameButton buttonWithMyStyleAndSizePriority:high];
+        [self.refreshAvailableGamesButton buttonWithMyStyleAndSizePriority:low];
+        
+        // Setup Labels
+        [self.visibleToOthersLabel labelWithMyStyleAndSizePriority:low];
+        [self.orLabel labelWithMyStyleAndSizePriority:medium];
+        self.orLabel.textColor = ASNLightColor;
+        [self.displayNameLabel labelWithMyStyleAndSizePriority:low];
+        [self.availableGamesLabel labelWithMyStyleAndSizePriority:medium];
+        
+        // Setup Switch
+        [self.visibilitySwitch switchWithMyStyle];
+        
+        // Setup displayNameTextField
+        self.displayNameTextField.backgroundColor = ASNLightestColor;
+        self.displayNameTextField.tintColor = ASNMiddleColor;
+        self.displayNameTextField.font = [UIFont fontWithName:fontName size:15];
+        self.displayNameTextField.textColor = ASNDarkColor;
+        // set placeholder text and color
+        self.displayNameTextField.text = self.appDelegate.mcManager.peerID.displayName;
+        self.displayNameTextField.textAlignment = NSTextAlignmentRight;
+
+    });
+
 }
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
     
     self.availableGamesArray = [[NSMutableArray alloc] init];
     self.availableGameViewsArray = [[NSMutableArray alloc] init];
     
     self.inviterPeerID = nil;
 
-//    self.navigationController.navigationBarHidden = YES;
     
     [self.appDelegate.mcManager setupPeerAndSessionWithDisplayName:[UIDevice currentDevice].name];
     [self.appDelegate.mcManager advertiseSelf:self.visibilitySwitch.isOn];
     // added this to automatically start looking for available games
     [self searchForAvailableGames];
     
-    self.blurView.hidden = YES;
-    self.connectingView.hidden = YES;
-    self.connectingRetryButton.hidden = YES;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.navigationController.navigationBarHidden = NO;
+        self.blurView.hidden = YES;
+        self.connectingView.hidden = YES;
+        self.connectingRetryButton.hidden = YES;
+    });
+
 
     self.isAttemptingToConnect = NO;
     [self reloadAvailableGamesUI];
 
-//    self.displayNameTextField.placeholder = self.appDelegate.mcManager.peerID.displayName;
-    self.displayNameTextField.textAlignment = NSTextAlignmentCenter;
     
-    NSLog(@"This is my name: %@ and peerID: %@ and my sessionID: %@", self.appDelegate.mcManager.peerID.displayName, self.appDelegate.mcManager.peerID, self.appDelegate.mcManager.session.myPeerID);
+//    NSLog(@"This is my name: %@ and peerID: %@ and my sessionID: %@", self.appDelegate.mcManager.peerID.displayName, self.appDelegate.mcManager.peerID, self.appDelegate.mcManager.session.myPeerID);
+    
+    
+
 }
 
 
@@ -185,6 +193,7 @@
 }
 
 -(void)reloadAvailableGamesUI {
+
     // remove the previous games
     for (ASNAvailableView *gameView in self.availableGameViewsArray) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -193,26 +202,31 @@
     }
     self.availableGameViewsArray = [NSMutableArray new];
     // add the new games
-    NSUInteger counter = 0;
+    __block NSUInteger counter = 0;
     for (MCPeerID *peerID in self.availableGamesArray) {
         ASNAvailableView *newGame = [ASNAvailableView new];
-        newGame.imageView.image = [UIImage imageNamed:@"dartboard"];
         newGame.peerID = peerID;
         
-        // available games layout
-        // TODO: allow for second row
-        [self.view insertSubview:newGame belowSubview:self.blurView];
-        [newGame setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [newGame.topAnchor constraintEqualToAnchor:self.availableGamesLabel.bottomAnchor constant:5].active = YES;
-        [newGame.heightAnchor constraintEqualToConstant:130].active = YES;
-        [newGame.widthAnchor constraintEqualToConstant:100].active = YES;
-        [newGame.leftAnchor constraintEqualToAnchor:self.view.leftAnchor constant:(20+(counter*110))].active = YES;
-        newGame.userInteractionEnabled = YES;
-        UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-        [newGame addGestureRecognizer:recognizer];
-        [self.availableGameViewsArray addObject:newGame];
-        counter++;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // available games layout
+            // TODO: allow for second row
+            newGame.imageView.image = [UIImage imageNamed:@"dartboard"];
+            [self.view insertSubview:newGame belowSubview:self.blurView];
+            [newGame setTranslatesAutoresizingMaskIntoConstraints:NO];
+            [newGame.topAnchor constraintEqualToAnchor:self.availableGamesLabel.bottomAnchor constant:5].active = YES;
+            [newGame.heightAnchor constraintEqualToConstant:130].active = YES;
+            [newGame.widthAnchor constraintEqualToConstant:100].active = YES;
+            [newGame.leftAnchor constraintEqualToAnchor:self.view.leftAnchor constant:(20+(counter*110))].active = YES;
+            newGame.userInteractionEnabled = YES;
+            UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+            [newGame addGestureRecognizer:recognizer];
+            [self.availableGameViewsArray addObject:newGame];
+            counter++;
+        });
+        
+
     }
+
 }
 
 -(void)handleTap:(UITapGestureRecognizer *) recognizer {

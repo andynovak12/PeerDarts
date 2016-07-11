@@ -28,7 +28,7 @@
     [ASNUIElements applyShadowTo:self];
     
     if (priority == high) {
-        self.titleLabel.font = [UIFont fontWithName:fontNameBold size:35];
+        self.titleLabel.font = [UIFont fontWithName:fontName size:35];
         
     }
     else if (priority == medium) {

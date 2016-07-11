@@ -12,6 +12,9 @@
 #import "AppDelegate.h"
 #import "ASNHitsContainerViews.h"
 #import "ASNUIElements.h"
+#import "UISwitch+ASNSwitchStyle.h"
+#import "UILabel+ASNLabelStyle.h"
+#import "UIButton+ASNButtonStyle.h"
 
 @interface ASNMainGameViewController ()
 
@@ -32,6 +35,10 @@
 
 @property (nonatomic) BOOL isAlertControllerPresented;
 
+@property (nonatomic) CGFloat heightOfScoreBoardArea;
+@property (nonatomic) CGFloat insideLineConstraint;
+@property (nonatomic) CGFloat outsideLineConstraint;
+
 @end
 
 @implementation ASNMainGameViewController
@@ -41,8 +48,6 @@
     self.isAlertControllerPresented = NO;
 
     self.appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-
-//    self.fontName = fontName;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(didReceiveDataNotification:)
@@ -54,7 +59,8 @@
     
     // set chalkboard background image
     UIImageView *chalkboardImageView = [[UIImageView alloc] init];
-    [chalkboardImageView setImage:[UIImage imageNamed:@"Chalkboard"]];
+    [chalkboardImageView setImage:[UIImage imageNamed:@"background"]];
+    chalkboardImageView.contentMode = UIViewContentModeScaleAspectFill;
     [chalkboardImageView setTranslatesAutoresizingMaskIntoConstraints:NO];
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.view addSubview:chalkboardImageView];
@@ -69,8 +75,37 @@
     }
     else{
         NSLog(@"there was an error receiving the TeamsArray from previous VC");
+        // alert user and go back to home page
+        UIAlertController *errorStartingGameAlertController = [UIAlertController alertControllerWithTitle:@"Error" message:@"You lost connection while game was being created" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *ok = [UIAlertAction actionWithTitle:@"That Sucks" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self endGame];
+            self.isAlertControllerPresented = NO;
+        }];
+        
+        [errorStartingGameAlertController addAction:ok];
+        [errorStartingGameAlertController.view setNeedsLayout];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self presentViewController:errorStartingGameAlertController animated:YES completion:nil];
+            self.isAlertControllerPresented = YES;
+        });
+
     }
 
+    // this controls the height of the scoreboard area
+    self.heightOfScoreBoardArea = 0.6;
+    
+    // this controls the x position of the vertical lines in the scoreboard area
+    if (self.currentGame.teams.count <= 2) {
+        self.outsideLineConstraint = self.view.frame.size.width/3.2;
+    }
+    else {
+        self.outsideLineConstraint = self.view.frame.size.width/3.6;
+    }
+    self.insideLineConstraint = self.view.frame.size.width/12;
+
+    
+    
+    
     [self setupGameVisuals];
 }
 
@@ -103,15 +138,15 @@
         [self.view addSubview:logTurnButton];
         
         [logTurnButton addTarget:self action:@selector(handleLogButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-//        logTurnButton.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0.7 alpha:0.2];
         [logTurnButton setTranslatesAutoresizingMaskIntoConstraints:NO];
         [logTurnButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
-        [logTurnButton.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor constant:-200].active = YES;
-        [logTurnButton.widthAnchor constraintEqualToConstant:150].active = YES;
-        [logTurnButton.heightAnchor constraintEqualToConstant:30].active = YES;
-        [logTurnButton setTitle:@"Log Turn" forState:UIControlStateNormal];
-        logTurnButton.titleLabel.font = [UIFont fontWithName:fontName size:20];
-        [logTurnButton setTitleColor:[UIColor colorWithRed:255.0/255 green:239.0/255 blue:129.0/255 alpha:0.8] forState:UIControlStateNormal];
+        [logTurnButton.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor constant:-self.view.frame.size.height/4].active = YES;
+        [logTurnButton.widthAnchor constraintEqualToConstant:80].active = YES;
+        [logTurnButton.heightAnchor constraintEqualToConstant:60].active = YES;
+        logTurnButton.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        logTurnButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+        [logTurnButton setTitle:@"Log\nTurn" forState:UIControlStateNormal];
+        [logTurnButton buttonWithMyStyleAndSizePriority:medium];
         
         [self makeCurrentPlayerNameBig];
     });
@@ -125,7 +160,7 @@
     for (NSUInteger i = 0; i < numberOfPlayersOnTeam; i++) {
         UILabel *currentLabel = [[UILabel alloc] init];
         [currentLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
-        currentLabel.text = [NSString stringWithFormat:@"%@ : Didn't go", ((Player *)team.players[i]).name];
+        currentLabel.text = [NSString stringWithFormat:@"%@ : Nil", ((Player *)team.players[i]).name];
         currentLabel.font = [UIFont fontWithName:fontName size:15];
 //        currentLabel.text = ((Player *)team.players[(i+indexOfPlayer)%numberOfPlayersOnTeam]).name;
         
@@ -152,23 +187,32 @@
     for (ASNTeam *team in teamsArray) {
         UIView *containerView = [[UIView alloc] init];
         [self.teamContainersArray addObject:containerView];
-
+        CGFloat containerWidth = (self.outsideLineConstraint-self.insideLineConstraint);
+        CGFloat containerBuffer = containerWidth / 10;
+        
         dispatch_async(dispatch_get_main_queue(), ^{
 
             [containerView setTranslatesAutoresizingMaskIntoConstraints:NO];
-//            containerView.backgroundColor = [UIColor redColor];
+            containerView.backgroundColor = [UIColor redColor];
             [self.view addSubview:containerView];
-            [containerView.heightAnchor constraintEqualToAnchor:self.view.heightAnchor multiplier:0.2].active = YES;
-            [containerView.widthAnchor constraintEqualToAnchor:self.view.widthAnchor multiplier:0.4].active = YES;
-            [containerView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:20].active = YES;
+            [containerView.heightAnchor constraintEqualToAnchor:self.view.heightAnchor multiplier:(1-self.heightOfScoreBoardArea-0.18)].active = YES;
+            [containerView.widthAnchor constraintEqualToConstant:containerWidth-containerBuffer].active = YES;
+            [containerView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor constant:-self.view.frame.size.height/2.8].active = YES;
             if (counter == 0) {
-                [containerView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor].active = YES;
+                [containerView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant:-(containerWidth-containerBuffer)].active = YES;
             }
             else if (counter == 1) {
-                [containerView.rightAnchor constraintEqualToAnchor:self.view.rightAnchor].active = YES;
+                [containerView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant:(containerWidth-containerBuffer)].active = YES;
+            }
+            else if (counter == 2) {
+                [containerView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant:-2.2*(containerWidth-containerBuffer)].active = YES;
+                
+            }
+            else if (counter == 3) {
+                [containerView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant:2.2*(containerWidth-containerBuffer)].active = YES;
             }
             else {
-                NSLog(@"Dont know how to deal with more than 2 teams layout yet");
+                NSLog(@"Dont know how to deal with more than 4 teams layout");
             }
             
             UILabel *teamNameLabel = self.teamNameLabelsArray[counter];
@@ -189,7 +233,7 @@
             teamNameLabel.textAlignment = NSTextAlignmentCenter;
             
 
-            teamNameLabel.textColor = [UIColor whiteColor];
+            teamNameLabel.textColor = ASNLightestColor;
             [containerView addSubview:teamNameLabel];
             [teamNameLabel.centerXAnchor constraintEqualToAnchor:containerView.centerXAnchor].active = YES;
             [teamNameLabel.topAnchor constraintEqualToAnchor:containerView.topAnchor].active = YES;
@@ -208,10 +252,10 @@
         [numbersContainerView setTranslatesAutoresizingMaskIntoConstraints:NO];
         [self.view addSubview:numbersContainerView];
         [numbersContainerView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
-        [numbersContainerView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor constant:self.view.frame.size.height/12].active = YES;
-        CGFloat heightMultiplier = 0.7;
-        CGFloat heightConstant = self.view.frame.size.height * heightMultiplier;
-        [numbersContainerView.heightAnchor constraintEqualToAnchor:self.view.heightAnchor multiplier:heightMultiplier].active = YES;
+        [numbersContainerView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor constant:self.view.frame.size.height/8].active = YES;
+        // this controls the height of the scoreboard
+        CGFloat heightConstant = self.view.frame.size.height * self.heightOfScoreBoardArea;
+        [numbersContainerView.heightAnchor constraintEqualToAnchor:self.view.heightAnchor multiplier:self.heightOfScoreBoardArea].active = YES;
         [numbersContainerView.widthAnchor constraintEqualToAnchor:self.view.widthAnchor multiplier:0.85].active = YES;
         
         // set up numbers
@@ -219,8 +263,8 @@
         for (NSString *number in @[@"20",@"19",@"18",@"17", @"16", @"15", @"Bull"]) {
             UILabel *numberLabel = [UILabel new];
             numberLabel.text = number;
-            numberLabel.font = [UIFont fontWithName:fontName size:24];
-            numberLabel.textColor = [UIColor whiteColor];
+            [numberLabel labelWithMyStyleAndSizePriority:low];
+            numberLabel.font = [UIFont fontWithName:fontName size:20];
             [numberLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
             [numbersContainerView addSubview:numberLabel];
             [numberLabel.centerXAnchor constraintEqualToAnchor:numbersContainerView.centerXAnchor].active = YES;
@@ -229,10 +273,10 @@
             // add bottom line
             if (counterForNumbers < 6) {
                 UIView *bottomLine = [UIView new];
-                bottomLine.backgroundColor = [UIColor whiteColor];
+                bottomLine.backgroundColor = ASNLightestColor;
                 [bottomLine setTranslatesAutoresizingMaskIntoConstraints:NO];
                 [numbersContainerView addSubview:bottomLine];
-                [bottomLine.widthAnchor constraintEqualToAnchor:numbersContainerView.widthAnchor].active = YES;
+                [bottomLine.widthAnchor constraintEqualToAnchor:numbersContainerView.widthAnchor constant:20].active = YES;
                 [bottomLine.heightAnchor constraintEqualToConstant:2].active = YES;
                 [bottomLine.centerYAnchor constraintEqualToAnchor:numbersContainerView.topAnchor constant:(heightConstant/7)*(counterForNumbers+1)].active = YES;
                 [bottomLine.centerXAnchor constraintEqualToAnchor:numbersContainerView.centerXAnchor].active = YES;
@@ -241,8 +285,7 @@
             counterForNumbers++;
         }
         
-        CGFloat outsideLineConstant = 120;
-        CGFloat insideLineConstant = 25;
+
         
         // End Game and New Game Buttons
         UIButton *newGameButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -253,9 +296,8 @@
         [newGameButton.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor].active = YES;
         [newGameButton.widthAnchor constraintEqualToConstant:150].active = YES;
         [newGameButton.heightAnchor constraintEqualToConstant:30].active = YES;
-        [newGameButton setTitle:@"New Game" forState:UIControlStateNormal];
-        newGameButton.titleLabel.font = [UIFont fontWithName:fontName size:20];
-        [newGameButton setTitleColor:[UIColor colorWithRed:255.0/255 green:239.0/255 blue:129.0/255 alpha:0.8] forState:UIControlStateNormal];
+        [newGameButton setTitle:@"Restart" forState:UIControlStateNormal];
+        [newGameButton buttonWithMyStyleAndSizePriority:medium];
         
         UIButton *endGameButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.view addSubview:endGameButton];
@@ -266,13 +308,12 @@
         [endGameButton.widthAnchor constraintEqualToConstant:150].active = YES;
         [endGameButton.heightAnchor constraintEqualToConstant:30].active = YES;
         [endGameButton setTitle:@"End Game" forState:UIControlStateNormal];
-        endGameButton.titleLabel.font = [UIFont fontWithName:fontName size:20];
-        [endGameButton setTitleColor:[UIColor colorWithRed:255.0/255 green:239.0/255 blue:129.0/255 alpha:0.8] forState:UIControlStateNormal];
+        [endGameButton buttonWithMyStyleAndSizePriority:medium];
         
         // vertical lines
         for (NSUInteger i = 0; i<4; i++) {
             UIView *VLine = [UIView new];
-            VLine.backgroundColor = [UIColor whiteColor];
+            VLine.backgroundColor = ASNLightestColor;
             [VLine setTranslatesAutoresizingMaskIntoConstraints:NO];
             [numbersContainerView addSubview:VLine];
             [VLine.widthAnchor constraintEqualToConstant:2].active = YES;
@@ -280,16 +321,16 @@
             [VLine.centerYAnchor constraintEqualToAnchor:numbersContainerView.centerYAnchor].active = YES;
             
             if (i == 0) {
-                [VLine.centerXAnchor constraintEqualToAnchor:numbersContainerView.centerXAnchor constant:-outsideLineConstant].active = YES;
+                [VLine.centerXAnchor constraintEqualToAnchor:numbersContainerView.centerXAnchor constant:-self.outsideLineConstraint].active = YES;
             }
             else if (i == 1) {
-                [VLine.centerXAnchor constraintEqualToAnchor:numbersContainerView.centerXAnchor constant:-insideLineConstant].active = YES;
+                [VLine.centerXAnchor constraintEqualToAnchor:numbersContainerView.centerXAnchor constant:-self.insideLineConstraint].active = YES;
             }
             else if (i == 2) {
-                [VLine.centerXAnchor constraintEqualToAnchor:numbersContainerView.centerXAnchor constant:insideLineConstant].active = YES;
+                [VLine.centerXAnchor constraintEqualToAnchor:numbersContainerView.centerXAnchor constant:self.insideLineConstraint].active = YES;
             }
             else if (i == 3) {
-                [VLine.centerXAnchor constraintEqualToAnchor:numbersContainerView.centerXAnchor constant:outsideLineConstant].active = YES;
+                [VLine.centerXAnchor constraintEqualToAnchor:numbersContainerView.centerXAnchor constant:self.outsideLineConstraint].active = YES;
             }
         }
         
@@ -305,10 +346,9 @@
                 [hitsContainerView setTranslatesAutoresizingMaskIntoConstraints:NO];
                 [numbersContainerView addSubview:hitsContainerView];
                 [hitsContainerView.heightAnchor constraintEqualToConstant:(heightConstant/7)-(heightConstant/20)].active = YES;
-                [hitsContainerView.widthAnchor constraintEqualToConstant:outsideLineConstant-insideLineConstant-(heightConstant/20)].active = YES;
-                // This moves the column of numberviews horizontally, based on the number of teams
-                // TODO check with 3, 4 teams
-                NSInteger teamHorizontalMultiplier = 0;
+                [hitsContainerView.widthAnchor constraintEqualToConstant:self.outsideLineConstraint-self.insideLineConstraint-(heightConstant/20)].active = YES;
+                // This moves the column of tappable numberviews horizontally, based on the number of teams
+                CGFloat teamHorizontalMultiplier = 0;
                 if (teamIndex == 0) {
                     teamHorizontalMultiplier = -1;
                 }
@@ -316,12 +356,12 @@
                     teamHorizontalMultiplier = 1;
                 }
                 else if (teamIndex == 2) {
-                    teamHorizontalMultiplier = -2;
+                    teamHorizontalMultiplier = -2.2;
                 }
                 else if (teamIndex == 3) {
-                    teamHorizontalMultiplier = 2;
+                    teamHorizontalMultiplier = 2.2;
                 }
-                [hitsContainerView.centerXAnchor constraintEqualToAnchor:numbersContainerView.centerXAnchor constant:teamHorizontalMultiplier * (insideLineConstant + outsideLineConstant)/2].active = YES;
+                [hitsContainerView.centerXAnchor constraintEqualToAnchor:numbersContainerView.centerXAnchor constant:teamHorizontalMultiplier * (self.insideLineConstraint + self.outsideLineConstraint)/2].active = YES;
                 [hitsContainerView.centerYAnchor constraintEqualToAnchor:numbersContainerView.topAnchor constant:(heightConstant/7)*((20-j) + 0.5)].active = YES;
                 hitsContainerView.alpha = 0.1;
                 
@@ -341,12 +381,13 @@
 
 -(void)updateImageOfImageView:(ASNHitsContainerViews *)imageView withValue:(NSUInteger)newValue {
     dispatch_async(dispatch_get_main_queue(), ^{
-        imageView.tintColor = [UIColor whiteColor];
+        imageView.tintColor = ASNLightestColor;
         if (newValue == 0) {
             imageView.alpha = 0.1;
         }
         else if (newValue == 1) {
             [imageView.hitImageView setImage:[UIImage imageNamed:@"one"]];
+            imageView.contentMode = UIViewContentModeScaleAspectFit;
             imageView.alpha = 1;
             
         }
@@ -440,22 +481,35 @@
     for (NSArray *teamPlayerLabelArray in self.playerNamesLabelsArray) {
         for (UILabel *playerNameLabel in teamPlayerLabelArray) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                playerNameLabel.font = [UIFont systemFontOfSize:15];
-                playerNameLabel.textColor = [UIColor whiteColor];
-                playerNameLabel.transform = CGAffineTransformIdentity;
+                if ([playerNameLabel.text hasPrefix:self.currentGame.currentPlayer.name]) {
+                    // for current player
+                    playerNameLabel.font = [UIFont systemFontOfSize:16];
+                    playerNameLabel.textColor = ASNLightestColor;
+                    [UIView animateWithDuration:0.25 animations:^{
+                        playerNameLabel.transform = CGAffineTransformScale(playerNameLabel.transform, 1.25, 1.25);
+                    }];
+
+                }
+                else {
+                    // for all other players
+                    playerNameLabel.font = [UIFont systemFontOfSize:15];
+                    playerNameLabel.textColor = ASNLightColor;
+                    playerNameLabel.transform = CGAffineTransformIdentity;
+                }
+                
             });
         }
     }
-    // make current player's label bigger
-    NSUInteger teamIndex = [self.currentGame.teams indexOfObject:self.currentGame.currentTeam];
-    UILabel *playerLabel = ((UILabel *)self.playerNamesLabelsArray[teamIndex][0]);
-    dispatch_async(dispatch_get_main_queue(), ^{
-        playerLabel.font = [UIFont systemFontOfSize:18];
-        playerLabel.textColor = [UIColor colorWithRed:255.0/255 green:239.0/255 blue:129.0/255 alpha:1];
-        [UIView animateWithDuration:0.25 animations:^{
-            playerLabel.transform = CGAffineTransformScale(playerLabel.transform, 1.25, 1.25);
-        }];
-    });
+//    // make current player's label bigger
+//    NSUInteger teamIndex = [self.currentGame.teams indexOfObject:self.currentGame.currentTeam];
+//    UILabel *playerLabel = ((UILabel *)self.playerNamesLabelsArray[teamIndex][0]);
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        playerLabel.font = [UIFont systemFontOfSize:16];
+//        playerLabel.textColor = ASNLightestColor;
+//        [UIView animateWithDuration:0.25 animations:^{
+//            playerLabel.transform = CGAffineTransformScale(playerLabel.transform, 1.25, 1.25);
+//        }];
+//    });
 }
 
 -(void)updateCurrentPlayerLabel {
@@ -554,7 +608,7 @@
 
 -(void)handleNewGameButtonTapped:(id)sender {
     // present alert
-    UIAlertController *newGameAlert = [UIAlertController alertControllerWithTitle:@"Restart?" message:@"New game with same teams" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *newGameAlert = [UIAlertController alertControllerWithTitle:@"Restart?" message:@"Are you sure?" preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *yes = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self handleNewGameTappedAtEndOfGame];
         self.isAlertControllerPresented = NO;

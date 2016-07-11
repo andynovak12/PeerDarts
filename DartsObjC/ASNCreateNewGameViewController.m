@@ -78,6 +78,7 @@
     self.team3TableView.delegate = self;
     self.team4TableView.dataSource = self;
     self.team4TableView.delegate = self;
+    
 
 }
 
@@ -121,7 +122,7 @@
 -(void)viewDidLayoutSubviews{
     NSLog(@"This is my name: %@ and peerID: %@ and my sessionID: %@", self.appDelegate.mcManager.peerID.displayName, self.appDelegate.mcManager.peerID, self.appDelegate.mcManager.session.myPeerID);
     
-    [self updateTeamTableViewsUI];
+//    [self updateTeamTableViewsUI];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -285,7 +286,8 @@
 
 -(void)browser:(MCNearbyServiceBrowser *)browser foundPeer:(MCPeerID *)peerID withDiscoveryInfo:(NSDictionary<NSString *,NSString *> *)info {
     NSLog(@"Found a nearby advertising peer %@ withDiscoveryInfo %@", peerID, info);
-    if (([info[@"isGame"] isEqualToString:@"no"]) && (![peerID isEqual:self.appDelegate.mcManager.peerID]) && (![self.connectedPlayerArray containsObject:peerID])){
+    
+    if (([info[@"isGame"] isEqualToString:@"no"]) && (![peerID.displayName isEqual:self.appDelegate.mcManager.peerID.displayName]) && (![self.connectedPlayerArray containsObject:peerID])){
         [self.availablePlayerArray addObject:peerID];
         [self reloadAvailablePlayersUI];
     }
