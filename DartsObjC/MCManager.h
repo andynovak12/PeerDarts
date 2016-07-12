@@ -24,5 +24,6 @@
 -(void)setupMCServiceBrowser;
 -(void)advertiseSelf:(BOOL)shouldAdvertise;
 -(void)advertiseGame:(BOOL)shouldAdvertise;
+-(NSString *)deviceNameWithoutApostrophe;
 
 @end

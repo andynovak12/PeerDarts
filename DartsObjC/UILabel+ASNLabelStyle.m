@@ -12,6 +12,8 @@
 -(void) labelWithMyStyleAndSizePriority:(enum UIPriority) priority {
     self.textColor = ASNLightestColor;
 
+    self.minimumScaleFactor = 0.4;
+    self.adjustsFontSizeToFitWidth = YES;
     
     if (priority == high) {
         self.font = [UIFont fontWithName:fontName size:35];

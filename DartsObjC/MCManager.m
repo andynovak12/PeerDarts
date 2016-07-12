@@ -112,7 +112,7 @@
 -(void)setupPeerAndSessionWithDisplayName:(NSString *)displayName{
     if (!self.peerID) {
         if (displayName.length == 0) {
-            _peerID = [[MCPeerID alloc] initWithDisplayName:[[UIDevice currentDevice] name]];
+            _peerID = [[MCPeerID alloc] initWithDisplayName:[self deviceNameWithoutApostrophe]];
         }
         else {
             _peerID = [[MCPeerID alloc] initWithDisplayName:displayName];
@@ -127,6 +127,15 @@
     
 }
 
+-(NSString *)deviceNameWithoutApostrophe {
+    // Convert "Andy's iPhone" to "Andy"
+    NSMutableString *playerName = [[UIDevice currentDevice].name mutableCopy];
+    if ([playerName containsString:@"'"]) {
+        NSRange lastChar = [playerName rangeOfString:@"'" options:NSBackwardsSearch];
+        playerName = [[playerName substringToIndex:lastChar.location] mutableCopy];
+    }
+    return playerName;
+}
 
 
 //The serviceType defines the type of service that the browser should look for, and it’s a small text that describes it. This text should be the same for both the browser and the advertiser in order for the first one to be able to discover the second. There are two rules about its name: Must be 1–15 characters long.Can contain only ASCII lowercase letters, numbers, and hyphens.

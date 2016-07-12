@@ -13,6 +13,7 @@
 -(void) buttonWithMyStyleAndSizePriority:(enum UIPriority) priority {
     self.backgroundColor = ASNDarkestColor;
     [self setTitleColor:ASNYellowColor forState:normal];
+    self.titleLabel.textAlignment = NSTextAlignmentCenter;
     // change this to adjust the corner radius size
     CGFloat cornerRadiusPercentage = 0.15;
     
@@ -23,6 +24,19 @@
     (buttonWidth > buttonHeight) ? (smallerSide = buttonHeight) : (smallerSide = buttonWidth);
     
     self.layer.cornerRadius = cornerRadiusPercentage * smallerSide;
+    
+    // Gradient
+    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+    gradientLayer.frame = self.layer.bounds;
+    gradientLayer.colors = [NSArray arrayWithObjects:
+                            (id)ASNMiddleColor.CGColor,
+                            (id)ASNDarkColor.CGColor,
+                            nil];
+    gradientLayer.startPoint = CGPointMake(0, 0.5);
+    gradientLayer.endPoint = CGPointMake(1, 0.5);
+    gradientLayer.cornerRadius = self.layer.cornerRadius;
+    [self.layer insertSublayer:gradientLayer atIndex:0];
+    
     
     // shadow
     [ASNUIElements applyShadowTo:self];

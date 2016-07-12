@@ -47,6 +47,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.connectingView.layer.cornerRadius = 20;
+    self.connectingView.backgroundColor = ASNDarkColor;
+    [self.connectingTopLabel labelWithMyStyleAndSizePriority:high];
+    [self.connectingLowerLabel labelWithMyStyleAndSizePriority:medium];
+    [self.connectingRetryButton buttonWithMyStyleAndSizePriority:low];
+    [self.connectingCancelButton buttonWithMyStyleAndSizePriority:low];
+    
     
     self.receivedDataUnarchived = [NSMutableArray new];
     
@@ -59,19 +65,7 @@
     
     
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(peerDidChangeStateWithNotification:)
-                                                 name:@"MCDidChangeStateNotification"
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(didReceiveDataNotification:)
-                                                 name:@"MCDidReceiveDataNotification"
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(didReceiveInvitationNotification:)
-                                                 name:@"MCDidReceiveInvitationNotification"
-                                               object:nil];
+
     
     // sets text of back button in NavBar
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:nil action:nil];
@@ -111,8 +105,9 @@
         self.displayNameTextField.font = [UIFont fontWithName:fontName size:15];
         self.displayNameTextField.textColor = ASNDarkColor;
         // set placeholder text and color
-        self.displayNameTextField.text = self.appDelegate.mcManager.peerID.displayName;
         self.displayNameTextField.textAlignment = NSTextAlignmentRight;
+        
+        
 
     });
 
@@ -127,9 +122,20 @@
     
     self.inviterPeerID = nil;
 
+//    // Convert "Andy's iPhone" to "Andy"
+//    NSMutableString *playerName = [[UIDevice currentDevice].name mutableCopy];
+//    if ([playerName containsString:@"'"]) {
+//        NSRange lastChar = [playerName rangeOfString:@"'" options:NSBackwardsSearch];
+//        playerName = [[playerName substringToIndex:lastChar.location] mutableCopy];
+//    }
+    if (!self.appDelegate.mcManager.peerID) {
+        NSLog(@"SETTING UP PEER AND SESSION");
+        [self.appDelegate.mcManager setupPeerAndSessionWithDisplayName:[self.appDelegate.mcManager deviceNameWithoutApostrophe]];
+    }
+
     
-    [self.appDelegate.mcManager setupPeerAndSessionWithDisplayName:[UIDevice currentDevice].name];
     [self.appDelegate.mcManager advertiseSelf:self.visibilitySwitch.isOn];
+    
     // added this to automatically start looking for available games
     [self searchForAvailableGames];
     
@@ -138,6 +144,9 @@
         self.blurView.hidden = YES;
         self.connectingView.hidden = YES;
         self.connectingRetryButton.hidden = YES;
+
+        self.displayNameTextField.text = self.appDelegate.mcManager.peerID.displayName;
+
     });
 
 
@@ -148,7 +157,19 @@
 //    NSLog(@"This is my name: %@ and peerID: %@ and my sessionID: %@", self.appDelegate.mcManager.peerID.displayName, self.appDelegate.mcManager.peerID, self.appDelegate.mcManager.session.myPeerID);
     
     
-
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(peerDidChangeStateWithNotification:)
+                                                 name:@"MCDidChangeStateNotification"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveDataNotification:)
+                                                 name:@"MCDidReceiveDataNotification"
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveInvitationNotification:)
+                                                 name:@"MCDidReceiveInvitationNotification"
+                                               object:nil];
 }
 
 
@@ -159,7 +180,8 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"MCDidReceiveInvitationNotification" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"MCDidChangeStateNotification" object:nil];
     
-    [self.appDelegate.mcManager.advertiser stopAdvertisingPeer];
+//    [self.appDelegate.mcManager.advertiser stopAdvertisingPeer];
+    [self.appDelegate.mcManager advertiseSelf:NO];
     [self.appDelegate.mcManager.serviceBrowser stopBrowsingForPeers];
 }
 
@@ -364,6 +386,7 @@
 
 
 -(void)didReceiveInvitationNotification:(NSNotification *)notification {
+    NSLog(@"I recieved an invitation: %@", self.appDelegate.mcManager.peerID.displayName);
     self.inviterPeerID = [[notification userInfo] objectForKey:@"peerID"];
     NSString *peerDisplayName = self.inviterPeerID.displayName;
     NSUInteger teamIndex = [[[notification userInfo] objectForKey:@"teamIndex"] intValue];

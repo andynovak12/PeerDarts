@@ -57,15 +57,6 @@
 -(void)viewDidLoad {
     [super viewDidLoad];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(peerDidChangeStateWithNotification:)
-                                                 name:@"MCDidChangeStateNotification"
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(didReceiveDataNotification:)
-                                                 name:@"MCDidReceiveDataNotification"
-                                               object:nil];
     
     self.appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
@@ -117,6 +108,16 @@
 //        [self reloadViewForTeam:self.teamsArray[0]];
     }
     
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(peerDidChangeStateWithNotification:)
+                                                 name:@"MCDidChangeStateNotification"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveDataNotification:)
+                                                 name:@"MCDidReceiveDataNotification"
+                                               object:nil];
 }
 
 -(void)viewDidLayoutSubviews{
@@ -128,8 +129,12 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
-    [self.appDelegate.mcManager.advertiser stopAdvertisingPeer];
+//    [self.appDelegate.mcManager.advertiser stopAdvertisingPeer];
+    [self.appDelegate.mcManager advertiseGame:NO];
     [self.appDelegate.mcManager.serviceBrowser stopBrowsingForPeers];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"MCDidChangeStateNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"MCDidReceiveDataNotification" object:nil];
 }
 
 -(void)updateTeamTableViewsUI{
