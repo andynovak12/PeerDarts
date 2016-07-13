@@ -15,8 +15,9 @@
 #import "UISwitch+ASNSwitchStyle.h"
 #import "UILabel+ASNLabelStyle.h"
 #import "UIButton+ASNButtonStyle.h"
+#import <DCPathButton/DCPathButton.h>
 
-@interface ASNMainGameViewController ()
+@interface ASNMainGameViewController () <DCPathButtonDelegate>
 
 //@property (strong, nonatomic) ASNDataStore *dataStore;
 @property (nonatomic, strong) AppDelegate *appDelegate;
@@ -39,6 +40,8 @@
 @property (nonatomic) CGFloat insideLineConstraint;
 @property (nonatomic) CGFloat outsideLineConstraint;
 
+@property (strong, nonatomic) UIView *numbersContainerView;
+@property (strong, nonatomic) DCPathButton *centerButton;
 @end
 
 @implementation ASNMainGameViewController
@@ -50,6 +53,8 @@
     self.appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
 
+    
+    
     
     
     self.navigationController.navigationBarHidden = YES;
@@ -115,6 +120,7 @@
                                                object:nil];
 }
 
+
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     
@@ -139,6 +145,36 @@
     [self setupNumbersContainerView];
     
 
+    // center Button
+    self.centerButton = [[DCPathButton alloc] initWithCenterImage:[UIImage imageNamed:@"more"] highlightedImage:[UIImage imageNamed:@"cancel"]];
+    self.centerButton.delegate = self;
+    self.centerButton.allowSounds = NO;
+    self.centerButton.bloomDirection = kDCPathButtonBloomDirectionTopLeft;
+    // controls the color of the background view when button pressed
+    self.centerButton.bottomViewColor = ASNDarkestColor;
+    self.centerButton.dcButtonCenter = CGPointMake(self.view.frame.size.width - 30, self.view.frame.size.height - 30);
+
+    DCPathItemButton *refreshButton = [[DCPathItemButton alloc]initWithImage:[UIImage imageNamed:@"refresh"]
+                                                            highlightedImage:[UIImage imageNamed:@"refresh"]
+                                                             backgroundImage:[UIImage imageNamed:@"refresh"]
+                                                  backgroundHighlightedImage:[UIImage imageNamed:@"refresh"]];
+    DCPathItemButton *endGameButton = [[DCPathItemButton alloc]initWithImage:[UIImage imageNamed:@"exit"]
+                                                            highlightedImage:[UIImage imageNamed:@"exit"]
+                                                             backgroundImage:[UIImage imageNamed:@"exit"]
+                                                  backgroundHighlightedImage:[UIImage imageNamed:@"exit"]];
+    DCPathItemButton *undoButton = [[DCPathItemButton alloc]initWithImage:[UIImage imageNamed:@"undo"]
+                                                         highlightedImage:[UIImage imageNamed:@"undo"]
+                                                          backgroundImage:[UIImage imageNamed:@"undo"]
+                                               backgroundHighlightedImage:[UIImage imageNamed:@"undo"]];
+    self.centerButton.tintColor = ASNYellowColor;
+    
+    refreshButton.tintColor = ASNYellowColor;
+    endGameButton.tintColor = ASNYellowColor;
+    undoButton.tintColor = ASNYellowColor;
+    [self.centerButton addPathItems:@[refreshButton, undoButton, endGameButton]];
+    
+
+
     dispatch_async(dispatch_get_main_queue(), ^{
         // setup log turn button
         UIButton *logTurnButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -147,7 +183,7 @@
         [logTurnButton addTarget:self action:@selector(handleLogButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [logTurnButton setTranslatesAutoresizingMaskIntoConstraints:NO];
         [logTurnButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
-        [logTurnButton.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-10].active = YES;
+        [logTurnButton.topAnchor constraintEqualToAnchor:self.numbersContainerView.bottomAnchor constant:20].active = YES;
         [logTurnButton.widthAnchor constraintEqualToConstant:self.insideLineConstraint*2].active = YES;
         [logTurnButton.heightAnchor constraintEqualToConstant:60].active = YES;
         
@@ -158,6 +194,9 @@
         logTurnButton.titleLabel.adjustsFontSizeToFitWidth = YES;
         logTurnButton.titleLabel.numberOfLines = 2;
         [logTurnButton buttonWithMyStyleAndSizePriority:medium];
+        
+        [self.view insertSubview:self.centerButton aboveSubview:logTurnButton];
+        
         
         [self makeCurrentPlayerNameBig];
     });
@@ -281,17 +320,17 @@
 
 - (void) setupNumbersContainerView {
     // container view of numbers, lines, buttons
-    UIView *numbersContainerView = [[UIView alloc] init];
+    self.numbersContainerView = [[UIView alloc] init];
 //    numbersContainerView.backgroundColor = [UIColor blueColor];
     dispatch_async(dispatch_get_main_queue(), ^{
-        [numbersContainerView setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [self.view addSubview:numbersContainerView];
-        [numbersContainerView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
-        [numbersContainerView.topAnchor constraintEqualToAnchor:((UIView *)self.teamContainersArray[0]).bottomAnchor constant:10].active = YES;
+        [self.numbersContainerView setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [self.view addSubview:self.numbersContainerView];
+        [self.numbersContainerView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
+        [self.numbersContainerView.topAnchor constraintEqualToAnchor:((UIView *)self.teamContainersArray[0]).bottomAnchor constant:10].active = YES;
         // this controls the height of the scoreboard
         CGFloat heightConstant = self.view.frame.size.height * self.heightOfScoreBoardArea;
-        [numbersContainerView.heightAnchor constraintEqualToAnchor:self.view.heightAnchor multiplier:self.heightOfScoreBoardArea].active = YES;
-        [numbersContainerView.widthAnchor constraintEqualToAnchor:self.view.widthAnchor multiplier:0.85].active = YES;
+        [self.numbersContainerView.heightAnchor constraintEqualToAnchor:self.view.heightAnchor multiplier:self.heightOfScoreBoardArea].active = YES;
+        [self.numbersContainerView.widthAnchor constraintEqualToAnchor:self.view.widthAnchor multiplier:0.85].active = YES;
         
         // set up numbers
         CGFloat counterForNumbers = 0;
@@ -301,20 +340,20 @@
             [numberLabel labelWithMyStyleAndSizePriority:low];
             numberLabel.font = [UIFont fontWithName:fontName size:20];
             [numberLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
-            [numbersContainerView addSubview:numberLabel];
-            [numberLabel.centerXAnchor constraintEqualToAnchor:numbersContainerView.centerXAnchor].active = YES;
-            [numberLabel.centerYAnchor constraintEqualToAnchor:numbersContainerView.topAnchor constant:(heightConstant/7)*(counterForNumbers + 0.5)].active = YES;
+            [self.numbersContainerView addSubview:numberLabel];
+            [numberLabel.centerXAnchor constraintEqualToAnchor:self.numbersContainerView.centerXAnchor].active = YES;
+            [numberLabel.centerYAnchor constraintEqualToAnchor:self.numbersContainerView.topAnchor constant:(heightConstant/7)*(counterForNumbers + 0.5)].active = YES;
             
             // add bottom line
             if (counterForNumbers < 6) {
                 UIView *bottomLine = [UIView new];
                 bottomLine.backgroundColor = ASNLightestColor;
                 [bottomLine setTranslatesAutoresizingMaskIntoConstraints:NO];
-                [numbersContainerView addSubview:bottomLine];
-                [bottomLine.widthAnchor constraintEqualToAnchor:numbersContainerView.widthAnchor constant:20].active = YES;
+                [self.numbersContainerView addSubview:bottomLine];
+                [bottomLine.widthAnchor constraintEqualToAnchor:self.numbersContainerView.widthAnchor constant:20].active = YES;
                 [bottomLine.heightAnchor constraintEqualToConstant:2].active = YES;
-                [bottomLine.centerYAnchor constraintEqualToAnchor:numbersContainerView.topAnchor constant:(heightConstant/7)*(counterForNumbers+1)].active = YES;
-                [bottomLine.centerXAnchor constraintEqualToAnchor:numbersContainerView.centerXAnchor].active = YES;
+                [bottomLine.centerYAnchor constraintEqualToAnchor:self.numbersContainerView.topAnchor constant:(heightConstant/7)*(counterForNumbers+1)].active = YES;
+                [bottomLine.centerXAnchor constraintEqualToAnchor:self.numbersContainerView.centerXAnchor].active = YES;
             }
             
             counterForNumbers++;
@@ -322,50 +361,50 @@
         
 
         
-        // End Game and New Game Buttons
-        UIButton *newGameButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.view addSubview:newGameButton];
-        [newGameButton addTarget:self action:@selector(handleNewGameButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [newGameButton setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [newGameButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant:-80].active = YES;
-        [newGameButton.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor].active = YES;
-        [newGameButton.widthAnchor constraintEqualToConstant:150].active = YES;
-        [newGameButton.heightAnchor constraintEqualToConstant:30].active = YES;
-        [newGameButton setTitle:@"Restart" forState:UIControlStateNormal];
-        [newGameButton buttonWithMyStyleAndSizePriority:low];
-        
-        UIButton *endGameButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.view addSubview:endGameButton];
-        [endGameButton addTarget:self action:@selector(handleEndGameButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [endGameButton setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [endGameButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant:80].active = YES;
-        [endGameButton.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor].active = YES;
-        [endGameButton.widthAnchor constraintEqualToConstant:150].active = YES;
-        [endGameButton.heightAnchor constraintEqualToConstant:30].active = YES;
-        [endGameButton setTitle:@"End Game" forState:UIControlStateNormal];
-        [endGameButton buttonWithMyStyleAndSizePriority:low];
+//        // End Game and New Game Buttons
+//        UIButton *newGameButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//        [self.view addSubview:newGameButton];
+//        [newGameButton addTarget:self action:@selector(handleNewGameButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+//        [newGameButton setTranslatesAutoresizingMaskIntoConstraints:NO];
+//        [newGameButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant:-80].active = YES;
+//        [newGameButton.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor].active = YES;
+//        [newGameButton.widthAnchor constraintEqualToConstant:150].active = YES;
+//        [newGameButton.heightAnchor constraintEqualToConstant:30].active = YES;
+//        [newGameButton setTitle:@"Restart" forState:UIControlStateNormal];
+//        [newGameButton buttonWithMyStyleAndSizePriority:low];
+//        
+//        UIButton *endGameButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//        [self.view addSubview:endGameButton];
+//        [endGameButton addTarget:self action:@selector(handleEndGameButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+//        [endGameButton setTranslatesAutoresizingMaskIntoConstraints:NO];
+//        [endGameButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant:80].active = YES;
+//        [endGameButton.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor].active = YES;
+//        [endGameButton.widthAnchor constraintEqualToConstant:150].active = YES;
+//        [endGameButton.heightAnchor constraintEqualToConstant:30].active = YES;
+//        [endGameButton setTitle:@"End Game" forState:UIControlStateNormal];
+//        [endGameButton buttonWithMyStyleAndSizePriority:low];
         
         // vertical lines
         for (NSUInteger i = 0; i<4; i++) {
             UIView *VLine = [UIView new];
             VLine.backgroundColor = ASNLightestColor;
             [VLine setTranslatesAutoresizingMaskIntoConstraints:NO];
-            [numbersContainerView addSubview:VLine];
+            [self.numbersContainerView addSubview:VLine];
             [VLine.widthAnchor constraintEqualToConstant:2].active = YES;
-            [VLine.heightAnchor constraintEqualToAnchor:numbersContainerView.heightAnchor].active = YES;
-            [VLine.centerYAnchor constraintEqualToAnchor:numbersContainerView.centerYAnchor].active = YES;
+            [VLine.heightAnchor constraintEqualToAnchor:self.numbersContainerView.heightAnchor].active = YES;
+            [VLine.centerYAnchor constraintEqualToAnchor:self.numbersContainerView.centerYAnchor].active = YES;
             
             if (i == 0) {
-                [VLine.centerXAnchor constraintEqualToAnchor:numbersContainerView.centerXAnchor constant:-self.outsideLineConstraint].active = YES;
+                [VLine.centerXAnchor constraintEqualToAnchor:self.numbersContainerView.centerXAnchor constant:-self.outsideLineConstraint].active = YES;
             }
             else if (i == 1) {
-                [VLine.centerXAnchor constraintEqualToAnchor:numbersContainerView.centerXAnchor constant:-self.insideLineConstraint].active = YES;
+                [VLine.centerXAnchor constraintEqualToAnchor:self.numbersContainerView.centerXAnchor constant:-self.insideLineConstraint].active = YES;
             }
             else if (i == 2) {
-                [VLine.centerXAnchor constraintEqualToAnchor:numbersContainerView.centerXAnchor constant:self.insideLineConstraint].active = YES;
+                [VLine.centerXAnchor constraintEqualToAnchor:self.numbersContainerView.centerXAnchor constant:self.insideLineConstraint].active = YES;
             }
             else if (i == 3) {
-                [VLine.centerXAnchor constraintEqualToAnchor:numbersContainerView.centerXAnchor constant:self.outsideLineConstraint].active = YES;
+                [VLine.centerXAnchor constraintEqualToAnchor:self.numbersContainerView.centerXAnchor constant:self.outsideLineConstraint].active = YES;
             }
         }
         
@@ -380,7 +419,7 @@
                 
                 
                 [hitsContainerView setTranslatesAutoresizingMaskIntoConstraints:NO];
-                [numbersContainerView addSubview:hitsContainerView];
+                [self.numbersContainerView addSubview:hitsContainerView];
                 [hitsContainerView.heightAnchor constraintEqualToConstant:(heightConstant/7)-(heightConstant/20)].active = YES;
                 [hitsContainerView.widthAnchor constraintEqualToConstant:self.outsideLineConstraint-self.insideLineConstraint-(heightConstant/20)].active = YES;
                 // This moves the column of tappable numberviews horizontally, based on the number of teams
@@ -397,8 +436,8 @@
                 else if (teamIndex == 3) {
                     teamHorizontalMultiplier = 2.2;
                 }
-                [hitsContainerView.centerXAnchor constraintEqualToAnchor:numbersContainerView.centerXAnchor constant:teamHorizontalMultiplier * (self.insideLineConstraint + self.outsideLineConstraint)/2].active = YES;
-                [hitsContainerView.centerYAnchor constraintEqualToAnchor:numbersContainerView.topAnchor constant:(heightConstant/7)*((20-j) + 0.5)].active = YES;
+                [hitsContainerView.centerXAnchor constraintEqualToAnchor:self.numbersContainerView.centerXAnchor constant:teamHorizontalMultiplier * (self.insideLineConstraint + self.outsideLineConstraint)/2].active = YES;
+                [hitsContainerView.centerYAnchor constraintEqualToAnchor:self.numbersContainerView.topAnchor constant:(heightConstant/7)*((20-j) + 0.5)].active = YES;
 //                hitsContainerView.backgroundColor = ASNLightestColor;
 //                hitsContainerView.alpha = 0.1;
                 
@@ -655,7 +694,7 @@
 
 -(void)handleNewGameButtonTapped:(id)sender {
     // present alert
-    UIAlertController *newGameAlert = [UIAlertController alertControllerWithTitle:@"Restart" message:@"Are you sure?" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *newGameAlert = [UIAlertController alertControllerWithTitle:@"Restart Game" message:@"Are you sure?" preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *yes = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self handleNewGameTappedAtEndOfGame];
         self.isAlertControllerPresented = NO;
@@ -787,6 +826,22 @@
             [self dismissViewControllerAnimated:YES completion:nil];
         }
         [self newGame];
+    }
+}
+
+# pragma mark -- DCPathButton Delegate
+
+- (void)pathButton:(DCPathButton *)dcPathButton clickItemButtonAtIndex:(NSUInteger)itemButtonIndex {
+    NSLog(@"You tap %@ at index : %lu", dcPathButton, (unsigned long)itemButtonIndex);
+    if (itemButtonIndex == 0) {
+        [self handleNewGameButtonTapped:nil];
+    }
+    else if (itemButtonIndex == 1) {
+        // TODO: Make Edit function
+        NSLog(@"you selected Undo");
+    }
+    else if (itemButtonIndex == 2) {
+        [self handleEndGameButtonTapped:nil];
     }
 }
 

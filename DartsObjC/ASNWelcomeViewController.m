@@ -122,14 +122,7 @@
     
     self.inviterPeerID = nil;
 
-//    // Convert "Andy's iPhone" to "Andy"
-//    NSMutableString *playerName = [[UIDevice currentDevice].name mutableCopy];
-//    if ([playerName containsString:@"'"]) {
-//        NSRange lastChar = [playerName rangeOfString:@"'" options:NSBackwardsSearch];
-//        playerName = [[playerName substringToIndex:lastChar.location] mutableCopy];
-//    }
     if (!self.appDelegate.mcManager.peerID) {
-        NSLog(@"SETTING UP PEER AND SESSION");
         [self.appDelegate.mcManager setupPeerAndSessionWithDisplayName:[self.appDelegate.mcManager deviceNameWithoutApostrophe]];
     }
 
@@ -153,9 +146,6 @@
     self.isAttemptingToConnect = NO;
     [self reloadAvailableGamesUI];
 
-    
-//    NSLog(@"This is my name: %@ and peerID: %@ and my sessionID: %@", self.appDelegate.mcManager.peerID.displayName, self.appDelegate.mcManager.peerID, self.appDelegate.mcManager.session.myPeerID);
-    
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(peerDidChangeStateWithNotification:)

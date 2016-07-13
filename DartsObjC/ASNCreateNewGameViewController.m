@@ -120,11 +120,9 @@
                                                object:nil];
 }
 
--(void)viewDidLayoutSubviews{
-    NSLog(@"This is my name: %@ and peerID: %@ and my sessionID: %@", self.appDelegate.mcManager.peerID.displayName, self.appDelegate.mcManager.peerID, self.appDelegate.mcManager.session.myPeerID);
-    
-//    [self updateTeamTableViewsUI];
-}
+//-(void)viewDidLayoutSubviews{    
+////    [self updateTeamTableViewsUI];
+//}
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
