@@ -1,4 +1,4 @@
-//
+
 //  ASNMainGameViewController.m
 //  DartsObjC
 //
@@ -42,6 +42,7 @@
 @property (nonatomic) CGFloat outsideLineConstraint;
 
 @property (strong, nonatomic) UIView *numbersContainerView;
+@property (strong, nonatomic) UIButton *logTurnButton;
 @property (strong, nonatomic) DCPathButton *centerButton;
 @end
 
@@ -116,7 +117,11 @@
                                                  name:@"MCDidReceiveDataNotification"
                                                object:nil];
 }
-
+-(void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    
+    [self.logTurnButton buttonWithMyStyleAndSizePriority:medium];
+}
 
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
@@ -171,31 +176,36 @@
     [self.centerButton addPathItems:@[refreshButton, undoButton, endGameButton]];
     
 
+    [self makeCurrentPlayerNameBig];
+    
+    [self setupLogTurnButton];
 
     dispatch_async(dispatch_get_main_queue(), ^{
-        // setup log turn button
-        UIButton *logTurnButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.view addSubview:logTurnButton];
-        
-        [logTurnButton addTarget:self action:@selector(handleLogButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [logTurnButton setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [logTurnButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
-        [logTurnButton.topAnchor constraintEqualToAnchor:self.numbersContainerView.bottomAnchor constant:20].active = YES;
-        [logTurnButton.widthAnchor constraintEqualToConstant:self.insideLineConstraint*2].active = YES;
-        [logTurnButton.heightAnchor constraintEqualToConstant:60].active = YES;
-        
-//        logTurnButton.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
-        logTurnButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-        [logTurnButton setTitle:@"Log\nTurn" forState:UIControlStateNormal];
-        logTurnButton.titleLabel.minimumScaleFactor = 0.5;
-        logTurnButton.titleLabel.adjustsFontSizeToFitWidth = YES;
-        logTurnButton.titleLabel.numberOfLines = 2;
-        [logTurnButton buttonWithMyStyleAndSizePriority:medium];
-        
-        [self.view insertSubview:self.centerButton aboveSubview:logTurnButton];
+        // setup log turn butto
+        [self.view insertSubview:self.centerButton aboveSubview:self.logTurnButton];
         
         
-        [self makeCurrentPlayerNameBig];
+    });
+}
+
+-(void)setupLogTurnButton {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (!self.logTurnButton) {
+            // setup log turn button
+            self.logTurnButton = [UIButton buttonWithType:UIButtonTypeSystem];
+            [self.view addSubview:self.logTurnButton];
+            
+            [self.logTurnButton addTarget:self action:@selector(handleLogButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+            [self.logTurnButton setTranslatesAutoresizingMaskIntoConstraints:NO];
+            [self.logTurnButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
+            [self.logTurnButton.topAnchor constraintEqualToAnchor:self.numbersContainerView.bottomAnchor constant:20].active = YES;
+            [self.logTurnButton.widthAnchor constraintEqualToConstant:self.insideLineConstraint*2].active = YES;
+            [self.logTurnButton.heightAnchor constraintEqualToConstant:60].active = YES;
+            
+            [self.logTurnButton setTitle:@"Log\nTurn" forState:UIControlStateNormal];
+            self.logTurnButton.titleLabel.numberOfLines = 2;            
+        }
+        
     });
 }
 

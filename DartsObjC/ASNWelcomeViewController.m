@@ -301,6 +301,18 @@
     self.blurView.hidden = YES;
     self.connectingView.hidden = YES;
 }
+- (IBAction)statsTapped:(id)sender {
+    // present Alert
+    UIAlertController *statsAlert = [UIAlertController alertControllerWithTitle:@"We're Working On It" message:@"In future versions, you will be able to see your stats from previous games" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *ok = [UIAlertAction actionWithTitle:@"I'll Wait" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    }];
+    [statsAlert addAction:ok];
+    [statsAlert.view setNeedsLayout];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:statsAlert animated:YES completion:nil];
+    });
+
+}
 - (IBAction)connectingRetryButtonTapped:(id)sender {
     // TODO: Fix this
     // this might cause problems with more than 2 people, cus the session is not the session of the peer creating hte game

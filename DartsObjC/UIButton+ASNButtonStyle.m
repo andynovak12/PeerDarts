@@ -22,13 +22,13 @@
     CGFloat buttonHeight = self.frame.size.height;
     CGFloat smallerSide = 0;
     (buttonWidth > buttonHeight) ? (smallerSide = buttonHeight) : (smallerSide = buttonWidth);
-    CGFloat buttonRadius = cornerRadiusPercentage * smallerSide;
-    if (buttonRadius == 0) {
-        self.layer.cornerRadius = 5;
-    }
-    else {
+//    CGFloat buttonRadius = cornerRadiusPercentage * smallerSide;
+//    if (buttonRadius == 0) {
+//        self.layer.cornerRadius = 5;
+//    }
+//    else {
         self.layer.cornerRadius = cornerRadiusPercentage * smallerSide;
-    }
+//    }
     
     // Gradient
     CAGradientLayer *gradientLayer = [CAGradientLayer layer];

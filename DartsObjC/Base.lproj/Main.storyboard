@@ -388,12 +388,6 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="- OR JOIN GAME - " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GFR-ks-NE2">
-                                <rect key="frame" x="71" y="169" width="232" height="53"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Visible To Nearby Users?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i9E-ly-Ef5">
                                 <rect key="frame" x="20" y="237" width="226" height="35"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -470,6 +464,18 @@
                                     <constraint firstItem="8zd-Hm-9Z8" firstAttribute="centerX" secondItem="4nD-F2-ZSD" secondAttribute="centerX" id="tfy-3f-8CH"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Stay On This Page To Be Added To A New Game" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oDK-LA-66Q">
+                                <rect key="frame" x="3" y="466" width="369" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="- OR GET ADDED TO A NEW GAME - " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GFR-ks-NE2">
+                                <rect key="frame" x="30" y="169" width="312" height="53"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -492,7 +498,11 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Cricket" id="Jw7-Ho-WTa">
-                        <barButtonItem key="rightBarButtonItem" title="Stats" id="jUH-xq-Crr"/>
+                        <barButtonItem key="rightBarButtonItem" title="Stats" id="jUH-xq-Crr">
+                            <connections>
+                                <action selector="statsTapped:" destination="7bH-k2-vn3" id="T2V-xP-ql0"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                     <connections>
@@ -539,6 +549,6 @@
         <image name="background" width="1920" height="1080"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="chg-le-Vib"/>
+        <segue reference="wpe-Sa-1cH"/>
     </inferredMetricsTieBreakers>
 </document>
