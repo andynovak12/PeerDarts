@@ -10,7 +10,7 @@
 #import "ASNCreateTeamView.h"
 #import <MultipeerConnectivity/MultipeerConnectivity.h>
 
-@interface ASNCreateNewGameViewController : UIViewController <MCNearbyServiceBrowserDelegate, ASNCreateTeamViewDelegate, UITableViewDelegate, UITableViewDataSource>
+@interface ASNCreateNewGameViewController : UIViewController <MCNearbyServiceBrowserDelegate, UITableViewDelegate, UITableViewDataSource>
 
 @property (strong, nonatomic) NSMutableArray *teamsArray;
 @end

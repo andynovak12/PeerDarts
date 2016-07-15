@@ -102,5 +102,34 @@
     return YES;
 }
 
+-(void)undoPreviousTurn {
+    if (self.previousTeam.previousPlayer) {
+        // erase any progress of currentPlayer
+        [self.currentPlayer setupPlayerForRound];
+
+        // remove previous hits from team
+        NSDictionary *previousHits = ((ASNTurn *)[self.previousTeam.previousPlayer.turnsOfPlayer lastObject]).hits;
+
+        for (NSString *hit in previousHits) {
+            self.previousTeam.hitsInCurrentRound[hit] = [NSString stringWithFormat:@"%ld", [self.previousTeam.hitsInCurrentRound[hit] integerValue] - [previousHits[hit] integerValue]];
+        }
+        
+        
+        [self.previousTeam.previousPlayer removePreviousTurn];
+        self.currentPlayer = self.previousTeam.previousPlayer;
+        
+        // Update teams teams
+        NSUInteger currentTeamIndex = [self.teams indexOfObject:self.currentTeam];
+        NSUInteger previousPreviousTeamIndex = (currentTeamIndex - 2) % self.teams.count;
+        self.currentTeam = self.previousTeam;
+        self.previousTeam = self.teams[previousPreviousTeamIndex];
+
+    }
+    else {
+        NSLog(@"There is no prevous player");
+    }
+
+    
+}
 
 @end

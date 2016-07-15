@@ -74,4 +74,9 @@
     [self.turnsOfPlayer addObject:turn];
 }
 
+-(void)removePreviousTurn {
+    [self.turnsOfPlayer removeLastObject];
+    [self setupPlayerForRound];
+}
+
 @end

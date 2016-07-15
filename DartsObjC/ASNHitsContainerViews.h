@@ -10,6 +10,9 @@
 
 @interface ASNHitsContainerViews : UIView
 @property (strong, nonatomic) UILabel *additionalHitsLabel;
-@property (strong, nonatomic) UIImageView *hitImageView;
+@property (strong, nonatomic) UIImageView *hitImageViewTop;
+@property (strong, nonatomic) UIImageView *hitImageViewMiddle;
+@property (strong, nonatomic) UIImageView *hitImageViewBottom;
+@property (strong, nonatomic) NSArray *hitImageViewsArray;
 
 @end

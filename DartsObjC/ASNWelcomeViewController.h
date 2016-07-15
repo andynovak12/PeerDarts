@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import <MultipeerConnectivity/MultipeerConnectivity.h>
 
-@interface ASNWelcomeViewController : UIViewController <UITextFieldDelegate, MCNearbyServiceBrowserDelegate>
+@interface ASNWelcomeViewController : UIViewController <UITextFieldDelegate>
 
 @end

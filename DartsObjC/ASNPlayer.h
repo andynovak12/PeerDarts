@@ -19,6 +19,7 @@
 
 -(void) setupPlayerForRound;
 -(void) addHitToCurrentHits:(NSString *)hit;
--(void)addTurnToPlayer:(ASNTurn *)turn;
+-(void) addTurnToPlayer:(ASNTurn *)turn;
+-(void)removePreviousTurn;
 
 @end

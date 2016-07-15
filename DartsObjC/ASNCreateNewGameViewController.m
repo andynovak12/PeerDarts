@@ -19,8 +19,9 @@
 #import "UIButton+ASNButtonStyle.h"
 
 @interface ASNCreateNewGameViewController ()
-//@property (weak, nonatomic) IBOutlet UIButton *addTeamButton;
 
+@property (weak, nonatomic) IBOutlet UIVisualEffectView *blurView;
+@property (strong, nonatomic) IBOutlet UITapGestureRecognizer *blurViewTapRecognizer;
 @property (weak, nonatomic) IBOutlet UIButton *startGameButton;
 //@property (strong, nonatomic) ASNDataStore *dataStore;
 
@@ -29,7 +30,6 @@
 @property (nonatomic, strong) NSMutableArray *connectedPlayerArray;
 @property (nonatomic, strong) NSMutableArray *availablePlayerViewsArray;
 @property (nonatomic, strong) NSMutableArray *pendingInvites;
-//@property (nonatomic, strong) NSMutableArray *createNewTeamViewsArray;
 
 @property (nonatomic) float distanceToCenterFromFirstRow;
 @property (nonatomic) float distanceToCenterFromSecondRow;
@@ -44,11 +44,9 @@
 @property (weak, nonatomic) IBOutlet UIView *team3CoverView;
 @property (weak, nonatomic) IBOutlet UIView *team4CoverView;
 @property (weak, nonatomic) IBOutlet UIButton *refreshButton;
-@property (weak, nonatomic) IBOutlet UISwitch *visibilityToggle;
-@property (weak, nonatomic) IBOutlet UILabel *visibleToOthersLabel;
+//@property (weak, nonatomic) IBOutlet UISwitch *visibilityToggle;
+//@property (weak, nonatomic) IBOutlet UILabel *visibleToOthersLabel;
 @property (weak, nonatomic) IBOutlet UILabel *availablePlayersLabel;
-
-//@property (strong, nonatomic) NSString *fontName;
 
 @end
 
@@ -57,8 +55,8 @@
 -(void)viewDidLoad {
     [super viewDidLoad];
 
-    
     self.appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.blurView.hidden = YES;
     
     // tableviews
     self.team1TableView.dataSource = self;
@@ -69,8 +67,6 @@
     self.team3TableView.delegate = self;
     self.team4TableView.dataSource = self;
     self.team4TableView.delegate = self;
-    
-
 }
 
 
@@ -87,7 +83,7 @@
     
     [self setupUI];
  
-    [self.appDelegate.mcManager advertiseGame:self.visibilityToggle.isOn];
+//    [self.appDelegate.mcManager advertiseGame:self.visibilityToggle.isOn];
     
     // added this to automatically start looking for available games
     [self searchForAvailablePlayers];
@@ -96,7 +92,7 @@
     
     // this is for the position of the createNewTeamVCs and the addTeamButton
     CGRect screenRect = [[UIScreen mainScreen] bounds];
-    CGFloat screenWidth = screenRect.size.width;
+//    CGFloat screenWidth = screenRect.size.width;
     CGFloat screenHeight = screenRect.size.height;
     self.distanceToCenterFromFirstRow = -screenHeight/5;
     self.distanceToCenterFromSecondRow = screenHeight/15;
@@ -120,15 +116,12 @@
                                                object:nil];
 }
 
-//-(void)viewDidLayoutSubviews{    
-////    [self updateTeamTableViewsUI];
-//}
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
 //    [self.appDelegate.mcManager.advertiser stopAdvertisingPeer];
-    [self.appDelegate.mcManager advertiseGame:NO];
+//    [self.appDelegate.mcManager advertiseGame:NO];
     [self.appDelegate.mcManager.serviceBrowser stopBrowsingForPeers];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"MCDidChangeStateNotification" object:nil];
@@ -189,10 +182,10 @@
 -(void)setupUI {
     
     [self.startGameButton buttonWithMyStyleAndSizePriority:high];
-    [self.visibilityToggle switchWithMyStyle];
+//    [self.visibilityToggle switchWithMyStyle];
     [self.refreshButton buttonWithMyStyleAndSizePriority:low];
     [self.availablePlayersLabel labelWithMyStyleAndSizePriority:medium];
-    [self.visibleToOthersLabel labelWithMyStyleAndSizePriority:low];
+//    [self.visibleToOthersLabel labelWithMyStyleAndSizePriority:low];
     
     // set borders and corner radii
     for (UITableView *tableview in self.tableViewArray) {
@@ -211,68 +204,6 @@
     view.layer.cornerRadius = 10;
     view.layer.borderColor = ASNLightestColor.CGColor;
 }
-
-//-(BOOL)viewExistsForTeam:(ASNTeam *)team {
-//    for (ASNCreateTeamView *view in self.createNewTeamViewsArray) {
-//        if (view.team == team) {
-//            return YES;
-//        }
-//    }
-//    return NO;
-//}
-
-//-(void)reloadViewForTeam:(ASNTeam *)team {
-//    if (![self viewExistsForTeam:team]) {
-//        ASNCreateTeamView *newTeamView = [[ASNCreateTeamView alloc] init];
-//        // border and rounded corners
-//        newTeamView.layer.cornerRadius = 10.0;
-//        newTeamView.layer.masksToBounds = YES;
-//        [newTeamView.layer setBorderWidth:2.0];
-//        [newTeamView.layer setBorderColor:[[UIColor colorWithPatternImage:[UIImage imageNamed:@"dash.png"]] CGColor]];///just add image name and create image with dashed or doted drawing and add here
-//        
-//        newTeamView.team = team;
-//        [self.createNewTeamViewsArray addObject:newTeamView];
-//        NSUInteger teamIndex = [self.teamsArray indexOfObject:team];
-//        
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [self.view addSubview:newTeamView];
-//            [newTeamView setTranslatesAutoresizingMaskIntoConstraints:NO];
-//            newTeamView.userInteractionEnabled = YES;
-//            [newTeamView.widthAnchor constraintEqualToAnchor:self.view.widthAnchor multiplier:0.4].active = YES;
-//            [newTeamView.heightAnchor constraintEqualToAnchor:self.view.heightAnchor multiplier:0.23].active = YES;
-//            
-//            if (teamIndex == 0) {
-//                [newTeamView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor constant:self.distanceToCenterFromFirstRow].active = YES;
-//                [newTeamView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor constant:20].active  = YES;
-//            }
-//            else if (teamIndex == 1) {
-//                [newTeamView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor constant:self.distanceToCenterFromFirstRow].active = YES;
-//                [newTeamView.rightAnchor constraintEqualToAnchor:self.view.rightAnchor constant:-20].active  = YES;
-//            }
-//            else if (teamIndex == 2) {
-//                [newTeamView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor constant:self.distanceToCenterFromSecondRow].active = YES;
-//                [newTeamView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor constant:20].active  = YES;
-//            }
-//            else if (teamIndex == 3) {
-//                [newTeamView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor constant:self.distanceToCenterFromSecondRow].active = YES;
-//                [newTeamView.rightAnchor constraintEqualToAnchor:self.view.rightAnchor constant:-20].active  = YES;
-//            }
-//        });
-//        
-//        newTeamView.delegate = self;
-//        [newTeamView updateUI];
-//    }
-//    else {
-//        for (ASNCreateTeamView *view in self.createNewTeamViewsArray) {
-//            if (view.team == team) {
-//                [view updateUI];
-//            }
-//        }
-//    }
-//    self.startGameButton.enabled = (team.players.count > 0);
-//    
-//}
-
 
 
 - (IBAction)refreshTapped:(id)sender {
@@ -313,7 +244,7 @@
     }
     self.availablePlayerViewsArray = [NSMutableArray new];
     // add the new player views
-    // TODO make second row
+    // TODO: make this a collection view
     NSUInteger counter = 0;
     for (MCPeerID *peerID in self.availablePlayerArray) {
         ASNAvailableView *newPlayerView = [ASNAvailableView new];
@@ -384,33 +315,10 @@
     [self.pendingInvites addObject:inviteDict];
 }
 
-- (IBAction)toggleVisibility:(id)sender {
-    [self.appDelegate.mcManager advertiseGame:self.visibilityToggle.isOn];
-}
-
-//-(BOOL)textFieldShouldReturn:(UITextField *)textField{
-//    [self.displayNameTextField resignFirstResponder];
-//    
-//    self.appDelegate.mcManager.peerID = nil;
-//    self.appDelegate.mcManager.session = nil;
-//    //    _appDelegate.mcManager.browser = nil;
-//    // added this
-//    self.appDelegate.mcManager.serviceBrowser = nil;
-//    
-//    if ([self.visibilityToggle isOn]) {
-//        [self.appDelegate.mcManager.advertiser stopAdvertisingPeer];
-//    }
-//    self.appDelegate.mcManager.advertiser = nil;
-//    
-//    
-//    [self.appDelegate.mcManager setupPeerAndSessionWithDisplayName:self.displayNameTextField.text];
-//    //    [_appDelegate.mcManager setupMCBrowser];
-//    // added this
-//    [self.appDelegate.mcManager setupMCServiceBrowser];
+//- (IBAction)toggleVisibility:(id)sender {
 //    [self.appDelegate.mcManager advertiseGame:self.visibilityToggle.isOn];
-//    
-//    return YES;
 //}
+
 
 -(void)peerDidChangeStateWithNotification:(NSNotification *)notification{
     MCPeerID *peerID = [[notification userInfo] objectForKey:@"peerID"];
@@ -505,6 +413,7 @@
 
 - (IBAction)addTeamButtonTapped:(id)sender {
     [self addTeam];
+    [self addPlayerToTeam:self.teamsArray.lastObject];
 }
 
 -(void)addTeam {
@@ -519,34 +428,6 @@
     });
 }
 
-//-(void)addPlayerButtonTappedInView:(ASNCreateTeamView *)view{
-//    UIAlertController *addPlayerAlert = [UIAlertController alertControllerWithTitle:@"Add Player" message:nil preferredStyle:UIAlertControllerStyleAlert];
-//    [addPlayerAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-//        textField.placeholder = @"Player Name";
-//        textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
-//        [textField addTarget:self
-//                      action:@selector(alertTextFieldDidChange:)
-//            forControlEvents:UIControlEventEditingChanged];
-//    }];
-//    
-//    UIAlertAction *submit = [UIAlertAction actionWithTitle:@"Submit" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//        UITextField *nameField = addPlayerAlert.textFields.firstObject;
-//        
-//        [self addPlayerWithName:nameField.text withPeerID:nil toTeam:view.team];
-//        // this is too slow
-////        [view updateUI];
-//    }];
-//    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDestructive handler:nil];
-//    
-//    [addPlayerAlert addAction:cancel];
-//    [addPlayerAlert addAction:submit];
-//    [addPlayerAlert.view setNeedsLayout];
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        submit.enabled = NO;
-//        [self presentViewController:addPlayerAlert animated:YES completion:nil];
-//    });
-//}
-
 -(void)addPlayerWithName:(NSString *)playerName withPeerID:(MCPeerID *)peerID toTeam:(ASNTeam *)team {
     ASNPlayer *player = [ASNPlayer new];
     player.name = playerName;
@@ -556,14 +437,12 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableViewArray[teamIndex] reloadData];
     });
-
-//    [self reloadViewForTeam:team];
 }
 
--(void)teamNameEntered:(UITextField *)textField {
-    NSLog(@"this is the text %@", textField.text);
-    [textField resignFirstResponder];
-}
+//-(void)teamNameEntered:(UITextField *)textField {
+//    NSLog(@"this is the text %@", textField.text);
+//    [textField resignFirstResponder];
+//}
 
 -(void)didReceiveDataNotification:(NSNotification *)notification {
     MCPeerID *peerID = [[notification userInfo] objectForKey:@"peerID"];
@@ -572,6 +451,35 @@
     NSData *receivedData = [[notification userInfo] objectForKey:@"data"];
     NSString *receivedDataUnarchived = [[NSString alloc] initWithData:receivedData encoding:NSUTF8StringEncoding];
     NSLog(@"this is the unarchived data i received in MainGameVC: %@ from %@", receivedDataUnarchived, peerDisplayName);
+}
+- (IBAction)startGameTapped:(id)sender {
+    for (ASNTeam *team in self.teamsArray) {
+        if (![self teamHasAtLeastOnePlayer:team]) {
+            // present Alert
+            UIAlertController *teamsMustHaveAtLeastOnePlayerAlert = [UIAlertController alertControllerWithTitle:@"Teams Must Have At Least One Player" message:nil preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *ok = [UIAlertAction actionWithTitle:@"Got It" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            }];
+            [teamsMustHaveAtLeastOnePlayerAlert addAction:ok];
+            [teamsMustHaveAtLeastOnePlayerAlert.view setNeedsLayout];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self presentViewController:teamsMustHaveAtLeastOnePlayerAlert animated:YES completion:nil];
+            });
+
+
+            return;
+        }
+    }
+   
+    [self performSegueWithIdentifier:@"startGameSegue" sender:self];
+}
+
+-(BOOL)teamHasAtLeastOnePlayer:(ASNTeam *)team {
+    if (team.players.count == 0) {
+        return NO;
+    }
+    else {
+        return YES;
+    }
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -661,6 +569,12 @@
             cell.textLabel.font = [UIFont fontWithName:fontNameBold size:22];
             cell.textLabel.textColor = ASNLightestColor;
             cell.backgroundColor = ASNMiddleColor;
+            
+            // add doubleTap gesture
+            UITapGestureRecognizer *teamNameTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(teamNameDoubleTapped:)];
+            [teamNameTapRecognizer setNumberOfTapsRequired:2];
+            [cell.contentView addGestureRecognizer:teamNameTapRecognizer];
+            [cell.contentView setTag:tableViewIndex];
         }
         else {
             NSUInteger numberOfPlayersOnTeam = team.players.count;
@@ -676,7 +590,7 @@
                 [cell.contentView setUserInteractionEnabled:YES];
                 // this determines what team the player is added to
                 cell.contentView.tag = tableViewIndex;
-                UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gestureHandler:)];
+                UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(addPlayerCellTapped:)];
                 
                 [cell.contentView addGestureRecognizer:tapGestureRecognizer];
             }
@@ -686,7 +600,8 @@
     return cell;
 }
 
--(void)gestureHandler:(UIGestureRecognizer *)recognizer {
+// Used when "Add Player" Button tapped
+-(void)addPlayerCellTapped:(UIGestureRecognizer *)recognizer {
     UIAlertController *addPlayerAlert = [UIAlertController alertControllerWithTitle:@"Add Player" message:nil preferredStyle:UIAlertControllerStyleAlert];
     [addPlayerAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         textField.placeholder = @"Player Name";
@@ -712,6 +627,35 @@
         [self presentViewController:addPlayerAlert animated:YES completion:nil];
     });
 }
+
+// Used when new team created
+-(void)addPlayerToTeam:(ASNTeam *)team {
+    UIAlertController *addPlayerAlert = [UIAlertController alertControllerWithTitle:@"Add Player" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    [addPlayerAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.placeholder = @"Player Name";
+        textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
+        [textField addTarget:self
+                      action:@selector(alertTextFieldDidChange:)
+            forControlEvents:UIControlEventEditingChanged];
+    }];
+    
+    UIAlertAction *submit = [UIAlertAction actionWithTitle:@"Submit" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        UITextField *nameField = addPlayerAlert.textFields.firstObject;
+        
+        [self addPlayerWithName:nameField.text withPeerID:nil toTeam:team];
+        
+    }];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDestructive handler:nil];
+    
+    [addPlayerAlert addAction:cancel];
+    [addPlayerAlert addAction:submit];
+    [addPlayerAlert.view setNeedsLayout];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        submit.enabled = NO;
+        [self presentViewController:addPlayerAlert animated:YES completion:nil];
+    });
+
+}
 //-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 //    return 30;
 //}
@@ -722,10 +666,15 @@
     NSUInteger tableViewIndex = [self.tableViewArray indexOfObject:tableView];
     if (self.teamsArray.count > tableViewIndex) {
         NSUInteger numberOfPlayersOnTeam = ((ASNTeam *)self.teamsArray[tableViewIndex]).players.count;
-        // Do not allow deleting only player
+        // Do not allow deleting first player on team 1
         if (tableViewIndex == 0 && numberOfPlayersOnTeam == 1) {
             return NO;
         }
+        // allow deleting all teams except team 1
+        else if (tableViewIndex != 0 && indexPath.section == 0) {
+            return YES;
+        }
+            
         // Do not give delete option on "Add Player" cell
         else if (numberOfPlayersOnTeam == 4 || numberOfPlayersOnTeam > indexPath.row) {
             return YES;
@@ -737,10 +686,42 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     NSUInteger tableViewIndex = [self.tableViewArray indexOfObject:tableView];
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [((ASNTeam *)self.teamsArray[tableViewIndex]).players removeObjectAtIndex:indexPath.row];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [tableView reloadData];
-        });
+        // Delete team
+        if (indexPath.section == 0) {
+            
+            UIAlertController *deleteTeamAlert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"Delete %@", ((ASNTeam *)self.teamsArray[tableViewIndex]).teamName] message:@"Are you sure?" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *yes = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                //delete team
+                [self.teamsArray removeObjectAtIndex:tableViewIndex];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    // reload view
+                    for (UITableView *tableView in self.tableViewArray) {
+                        [tableView reloadData];
+                    }
+                    [self updateTeamTableViewsUI];
+
+                });
+
+            }];
+            UIAlertAction *no = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            }];
+            
+            [deleteTeamAlert addAction:no];
+            [deleteTeamAlert addAction:yes];
+            [deleteTeamAlert.view setNeedsLayout];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self presentViewController:deleteTeamAlert animated:YES completion:nil];
+            });
+        }
+        
+        // Delete Player
+        else {
+            [((ASNTeam *)self.teamsArray[tableViewIndex]).players removeObjectAtIndex:indexPath.row];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [tableView reloadData];
+            });
+        }
+       
     }
 }
 
@@ -758,31 +739,77 @@
 //    [self.team3TableView setEditing:YES animated:YES];
 //    [self.team4TableView setEditing:YES animated:YES];
 
-//- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-//    NSUInteger tableViewIndex = [self.tableViewArray indexOfObject:tableView];
-//    if (self.teamsArray.count > tableViewIndex && indexPath.section == 1) {
-//        NSUInteger numberOfPlayersOnTeam = ((ASNTeam *)self.teamsArray[tableViewIndex]).players.count;
-//        // Do not give drag option on "Add Player" cell, or if there is only 1 player on team
-//        if (numberOfPlayersOnTeam <= 1) {
-//            return NO;
-//        }
-//        else if (numberOfPlayersOnTeam == 4 || numberOfPlayersOnTeam > indexPath.row ) {
-//            return YES;
-//        }
-//    }
-//
-//    return NO;
-//}
-//- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-//    NSUInteger tableViewIndex = [self.tableViewArray indexOfObject:tableView];
-//    if (self.teamsArray.count > tableViewIndex) {
-//        NSMutableArray *playersArray = ((ASNTeam *)self.teamsArray[tableViewIndex]).players;
-//        ASNPlayer *player = [playersArray objectAtIndex:fromIndexPath.row];
-//        [playersArray removeObjectAtIndex:fromIndexPath.row];
-//        [playersArray insertObject:player atIndex:toIndexPath.row];
-//    }
-//}
-//
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSUInteger tableViewIndex = [self.tableViewArray indexOfObject:tableView];
+    if (self.teamsArray.count > tableViewIndex && indexPath.section == 1) {
+        NSUInteger numberOfPlayersOnTeam = ((ASNTeam *)self.teamsArray[tableViewIndex]).players.count;
+        // Do not give drag option on "Add Player" cell, or if there is only 1 player on team
+        if (numberOfPlayersOnTeam <= 1) {
+            return NO;
+        }
+        else if (numberOfPlayersOnTeam == 4 || numberOfPlayersOnTeam > indexPath.row ) {
+            return YES;
+        }
+    }
+
+    return NO;
+}
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+    NSUInteger tableViewIndex = [self.tableViewArray indexOfObject:tableView];
+    if (self.teamsArray.count > tableViewIndex) {
+        NSMutableArray *playersArray = ((ASNTeam *)self.teamsArray[tableViewIndex]).players;
+        ASNPlayer *player = [playersArray objectAtIndex:fromIndexPath.row];
+        [playersArray removeObjectAtIndex:fromIndexPath.row];
+        [playersArray insertObject:player atIndex:toIndexPath.row];
+    }
+}
+
+- (IBAction)longPressedTeam:(UIGestureRecognizer *)sender {
+    self.blurView.hidden = NO;
+    [self.view bringSubviewToFront:self.blurView];
+    self.blurViewTapRecognizer.enabled = YES;
+    [self.view bringSubviewToFront:sender.view];
+    [((UITableView *)sender.view) setEditing:YES animated:YES];
+}
+
+- (IBAction)blurViewTapped:(id)sender {
+    self.blurView.hidden = YES;
+    [self.team1TableView setEditing:NO animated:YES];
+    [self.team2TableView setEditing:NO animated:YES];
+    [self.team3TableView setEditing:NO animated:YES];
+    [self.team4TableView setEditing:NO animated:YES];
+}
+
+- (void)teamNameDoubleTapped:(UIGestureRecognizer *)sender {
+    ASNTeam *team = self.teamsArray[sender.view.tag];
+
+    UIAlertController *changeNameAlert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"Change Name of %@", team.teamName] message:nil preferredStyle:UIAlertControllerStyleAlert];
+    [changeNameAlert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.placeholder = @"Team Name";
+        textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
+        [textField addTarget:self
+                      action:@selector(alertTextFieldDidChange:)
+            forControlEvents:UIControlEventEditingChanged];
+    }];
+    
+    UIAlertAction *submit = [UIAlertAction actionWithTitle:@"Submit" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        UITextField *nameField = changeNameAlert.textFields.firstObject;
+        team.teamName = nameField.text;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableViewArray[sender.view.tag] reloadData];
+        });
+    }];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDestructive handler:nil];
+    
+    [changeNameAlert addAction:cancel];
+    [changeNameAlert addAction:submit];
+    [changeNameAlert.view setNeedsLayout];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        submit.enabled = NO;
+        [self presentViewController:changeNameAlert animated:YES completion:nil];
+    });
+    
+}
 //// these two methods hide the red circle created when implementing moverowatindexpath
 //- (BOOL)tableView:(UITableView *)tableview shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath {
 //    return NO;
@@ -790,26 +817,26 @@
 //- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
 //    return UITableViewCellEditingStyleNone;
 //}
-//
-//// this prevents users from dragging past the "Add Player" cell
-//- (NSIndexPath *)tableView:(UITableView *)tableView targetIndexPathForMoveFromRowAtIndexPath:(NSIndexPath *)sourceIndexPath toProposedIndexPath:(NSIndexPath *)proposedDestinationIndexPath
-//{
-//    if( sourceIndexPath.section != proposedDestinationIndexPath.section )
-//    {
-//        return sourceIndexPath;
-//    }
-//    else
-//    {
-//        NSUInteger tableViewIndex = [self.tableViewArray indexOfObject:tableView];
-//        
-//
-//        if (proposedDestinationIndexPath.row == ((ASNTeam *)self.teamsArray[tableViewIndex]).players.count) {
-//            return sourceIndexPath;
-//        } else {
-//            return proposedDestinationIndexPath;
-//        }
-//    }
-//}
+
+// this prevents users from dragging past the "Add Player" cell
+- (NSIndexPath *)tableView:(UITableView *)tableView targetIndexPathForMoveFromRowAtIndexPath:(NSIndexPath *)sourceIndexPath toProposedIndexPath:(NSIndexPath *)proposedDestinationIndexPath
+{
+    if( sourceIndexPath.section != proposedDestinationIndexPath.section )
+    {
+        return sourceIndexPath;
+    }
+    else
+    {
+        NSUInteger tableViewIndex = [self.tableViewArray indexOfObject:tableView];
+        
+
+        if (proposedDestinationIndexPath.row == ((ASNTeam *)self.teamsArray[tableViewIndex]).players.count) {
+            return sourceIndexPath;
+        } else {
+            return proposedDestinationIndexPath;
+        }
+    }
+}
 
 
 @end

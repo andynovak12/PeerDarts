@@ -7,6 +7,7 @@
 //
 
 #import "ASNHitsContainerViews.h"
+#import "UILabel+ASNLabelStyle.h"
 
 @implementation ASNHitsContainerViews
 
@@ -28,29 +29,59 @@
 
 -(void)commonInit {
     self.additionalHitsLabel = [UILabel new];
-    self.hitImageView = [UIImageView new];
+    self.hitImageViewTop = [UIImageView new];
+    self.hitImageViewMiddle = [UIImageView new];
+    self.hitImageViewBottom = [UIImageView new];
 //    self.backgroundColor = [UIColor redColor];
+    self.hitImageViewsArray = @[self.hitImageViewTop, self.hitImageViewMiddle, self.hitImageViewBottom, self.additionalHitsLabel];
     
 
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self addSubview:self.additionalHitsLabel];
-        self.additionalHitsLabel.minimumScaleFactor = 5./self.additionalHitsLabel.font.pointSize;
-        self.additionalHitsLabel.adjustsFontSizeToFitWidth = YES;
-        self.additionalHitsLabel.textColor = [UIColor whiteColor];
-        self.additionalHitsLabel.backgroundColor = [UIColor clearColor];
+        
+        [self addSubview:self.hitImageViewBottom];
+        [self.hitImageViewBottom setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [self.hitImageViewBottom.topAnchor constraintEqualToAnchor:self.topAnchor].active = YES;
+        [self.hitImageViewBottom.bottomAnchor constraintEqualToAnchor:self.bottomAnchor].active = YES;
+        [self.hitImageViewBottom.leftAnchor constraintEqualToAnchor:self.leftAnchor].active = YES;
+        [self.hitImageViewBottom.rightAnchor constraintEqualToAnchor:self.rightAnchor].active = YES;
+        self.hitImageViewBottom.image = [UIImage imageNamed:@"ForwardSlash"];
+        
+        // same as hitImageViewBottom
+        [self addSubview:self.hitImageViewMiddle];
+        [self.hitImageViewMiddle setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [self.hitImageViewMiddle.topAnchor constraintEqualToAnchor:self.topAnchor].active = YES;
+        [self.hitImageViewMiddle.bottomAnchor constraintEqualToAnchor:self.bottomAnchor].active = YES;
+        [self.hitImageViewMiddle.leftAnchor constraintEqualToAnchor:self.leftAnchor].active = YES;
+        [self.hitImageViewMiddle.rightAnchor constraintEqualToAnchor:self.rightAnchor].active = YES;
+        self.hitImageViewMiddle.image = [UIImage imageNamed:@"BackSlash"];
 
+        // same as hitImageViewBottom
+        [self addSubview:self.hitImageViewTop];
+        [self.hitImageViewTop setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [self.hitImageViewTop.topAnchor constraintEqualToAnchor:self.topAnchor].active = YES;
+        [self.hitImageViewTop.bottomAnchor constraintEqualToAnchor:self.bottomAnchor].active = YES;
+        [self.hitImageViewTop.leftAnchor constraintEqualToAnchor:self.leftAnchor].active = YES;
+        [self.hitImageViewTop.rightAnchor constraintEqualToAnchor:self.rightAnchor].active = YES;
+        self.hitImageViewTop.image = [UIImage imageNamed:@"Circle"];
+
+        [self addSubview:self.additionalHitsLabel];
+        [self.additionalHitsLabel labelWithMyStyleAndSizePriority:low];
+        self.additionalHitsLabel.minimumScaleFactor = 0.3;
+        self.additionalHitsLabel.adjustsFontSizeToFitWidth = YES;
+        self.additionalHitsLabel.backgroundColor = [UIColor clearColor];
+        
         [self.additionalHitsLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
         [self.additionalHitsLabel.topAnchor constraintEqualToAnchor:self.topAnchor].active = YES;
-        [self.additionalHitsLabel.heightAnchor constraintEqualToAnchor:self.heightAnchor multiplier:0.25].active = YES;
+        [self.additionalHitsLabel.heightAnchor constraintEqualToAnchor:self.widthAnchor multiplier:0.25].active = YES;
         [self.additionalHitsLabel.rightAnchor constraintEqualToAnchor:self.rightAnchor].active = YES;
         [self.additionalHitsLabel.widthAnchor constraintEqualToAnchor:self.widthAnchor multiplier:0.25].active = YES;
         
-        [self addSubview:self.hitImageView];
-        [self.hitImageView setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [self.hitImageView.topAnchor constraintEqualToAnchor:self.topAnchor].active = YES;
-        [self.hitImageView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor].active = YES;
-        [self.hitImageView.leftAnchor constraintEqualToAnchor:self.leftAnchor].active = YES;
-        [self.hitImageView.rightAnchor constraintEqualToAnchor:self.rightAnchor].active = YES;
+        self.hitImageViewTop.hidden = YES;
+        self.hitImageViewMiddle.hidden = YES;
+        self.hitImageViewBottom.hidden = YES;
+        self.hitImageViewTop.contentMode = UIViewContentModeScaleAspectFit;
+        self.hitImageViewMiddle.contentMode = UIViewContentModeScaleAspectFit;
+        self.hitImageViewBottom.contentMode = UIViewContentModeScaleAspectFit;
     });
     
 }
