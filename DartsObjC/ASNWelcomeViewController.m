@@ -38,6 +38,8 @@
 @property (nonatomic) BOOL isAttemptingToConnect;
 @property (weak, nonatomic) IBOutlet UILabel *orLabel;
 @property (weak, nonatomic) IBOutlet UILabel *displayNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *stayOnThisPageLabel;
+@property (weak, nonatomic) IBOutlet UILabel *makeSureLabel;
 
 @property (strong, nonatomic) MCPeerID *inviterPeerID;
 @end
@@ -55,6 +57,8 @@
     [self.connectingRetryButton buttonWithMyStyleAndSizePriority:low];
     [self.connectingCancelButton buttonWithMyStyleAndSizePriority:low];
     
+    [self.makeSureLabel labelWithMyStyleAndSizePriority:low];
+    [self.stayOnThisPageLabel labelWithMyStyleAndSizePriority:medium];
     
     self.receivedDataUnarchived = [NSMutableArray new];
     
@@ -313,13 +317,13 @@
     });
 
 }
-- (IBAction)connectingRetryButtonTapped:(id)sender {
-    // TODO: Fix this
-    // this might cause problems with more than 2 people, cus the session is not the session of the peer creating hte game
-       [self.appDelegate.mcManager.serviceBrowser invitePeer:self.inviterPeerID toSession:self.appDelegate.mcManager.session withContext:nil timeout:30];
-    
-    self.connectingRetryButton.hidden = YES;
-}
+//- (IBAction)connectingRetryButtonTapped:(id)sender {
+//    // TODO: Fix this
+//    // this might cause problems with more than 2 people, cus the session is not the session of the peer creating hte game
+//       [self.appDelegate.mcManager.serviceBrowser invitePeer:self.inviterPeerID toSession:self.appDelegate.mcManager.session withContext:nil timeout:30];
+//    
+//    self.connectingRetryButton.hidden = YES;
+//}
 
 -(void)peerDidChangeStateWithNotification:(NSNotification *)notification{
     MCPeerID *peerID = [[notification userInfo] objectForKey:@"peerID"];
@@ -348,7 +352,7 @@
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.connectingTopLabel.text = @"Connection Failed";
                     self.connectingLowerLabel.text = [NSString stringWithFormat: @"Could not connect to %@ ", peerDisplayName];
-                    self.connectingRetryButton.hidden = NO;
+//                    self.connectingRetryButton.hidden = NO;
                     self.connectingSpinner.hidden = YES;
                 });
                 self.isAttemptingToConnect = NO;

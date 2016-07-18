@@ -359,16 +359,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="yus-el-KUH" userLabel="background image">
-                                <rect key="frame" x="-1" y="0.0" width="375" height="667"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="yus-el-KUH" userLabel="background image">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Your Display Name… (Optional)" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="NMs-wA-N9l">
                                 <rect key="frame" x="156" y="289" width="199" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xig-mk-ZZO">
-                                <rect key="frame" x="20" y="81" width="335" height="67"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xig-mk-ZZO">
+                                <rect key="frame" x="16" y="83" width="343" height="67"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="35"/>
                                 <state key="normal" title="Create Game"/>
@@ -384,6 +384,12 @@
                             </switch>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Display Name:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A5Y-yC-m5w">
                                 <rect key="frame" x="20" y="287" width="166" height="35"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="- OR GET ADDED TO A NEW GAME - " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GFR-ks-NE2">
+                                <rect key="frame" x="30" y="169" width="312" height="53"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -416,11 +422,11 @@
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cPu-4q-JlU" userLabel="Connecting View">
                                 <rect key="frame" x="47" y="267" width="281" height="133"/>
                                 <subviews>
-                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="q6t-Sz-8yL">
-                                        <rect key="frame" x="110" y="54" width="20" height="20"/>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="q6t-Sz-8yL">
+                                        <rect key="frame" x="131" y="57" width="20" height="20"/>
                                     </activityIndicatorView>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4O8-ok-yL1">
-                                        <rect key="frame" x="101" y="98" width="48" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4O8-ok-yL1">
+                                        <rect key="frame" x="117" y="85" width="48" height="30"/>
                                         <state key="normal" title="Cancel">
                                             <color key="titleColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
@@ -428,21 +434,21 @@
                                             <action selector="connectingCancelButtonTapped:" destination="7bH-k2-vn3" eventType="touchUpInside" id="dvJ-12-QoB"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fXU-3g-BGH">
-                                        <rect key="frame" x="97" y="49" width="46" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fXU-3g-BGH">
+                                        <rect key="frame" x="122" y="52" width="37" height="30"/>
                                         <state key="normal" title="Retry"/>
                                         <connections>
                                             <action selector="connectingRetryButtonTapped:" destination="7bH-k2-vn3" eventType="touchUpInside" id="sTe-ba-EOE"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Attempting to connect" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="4nD-F2-ZSD" userLabel="Connecting Lower Label">
-                                        <rect key="frame" x="8" y="54" width="224" height="21"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Attempting to connect" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="4nD-F2-ZSD" userLabel="Connecting Lower Label">
+                                        <rect key="frame" x="8" y="30" width="265" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Connecting" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="8zd-Hm-9Z8">
-                                        <rect key="frame" x="8" y="20" width="224" height="21"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connecting" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="8zd-Hm-9Z8">
+                                        <rect key="frame" x="8" y="7" width="265" height="26"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
@@ -452,7 +458,7 @@
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="4nD-F2-ZSD" secondAttribute="trailing" constant="8" id="EGW-ze-X1E"/>
                                     <constraint firstItem="4nD-F2-ZSD" firstAttribute="leading" secondItem="cPu-4q-JlU" secondAttribute="leading" constant="8" id="M7C-bX-maP"/>
-                                    <constraint firstItem="4O8-ok-yL1" firstAttribute="centerY" secondItem="cPu-4q-JlU" secondAttribute="centerY" multiplier="1.7" id="Nml-zu-dTe"/>
+                                    <constraint firstItem="4O8-ok-yL1" firstAttribute="centerY" secondItem="cPu-4q-JlU" secondAttribute="centerY" multiplier="1.5" id="Nml-zu-dTe"/>
                                     <constraint firstItem="4nD-F2-ZSD" firstAttribute="centerY" secondItem="cPu-4q-JlU" secondAttribute="centerY" multiplier="0.6" id="YUM-tW-CQJ"/>
                                     <constraint firstItem="fXU-3g-BGH" firstAttribute="centerX" secondItem="cPu-4q-JlU" secondAttribute="centerX" id="agG-yJ-LDe"/>
                                     <constraint firstItem="q6t-Sz-8yL" firstAttribute="centerY" secondItem="cPu-4q-JlU" secondAttribute="centerY" id="f34-s1-bcz"/>
@@ -464,14 +470,18 @@
                                     <constraint firstItem="8zd-Hm-9Z8" firstAttribute="centerX" secondItem="4nD-F2-ZSD" secondAttribute="centerX" id="tfy-3f-8CH"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Stay On This Page To Be Added To A New Game" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oDK-LA-66Q">
-                                <rect key="frame" x="3" y="466" width="369" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oDK-LA-66Q">
+                                <rect key="frame" x="8" y="412" width="369" height="85"/>
+                                <string key="text">Stay On This Page To Be 
+Added To A New Game</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="- OR GET ADDED TO A NEW GAME - " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GFR-ks-NE2">
-                                <rect key="frame" x="30" y="169" width="312" height="53"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pSP-ZC-ug5">
+                                <rect key="frame" x="3" y="496" width="379" height="65"/>
+                                <string key="text">Make sure your Bluetooth and/or Wifi 
+is turned on</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -516,7 +526,9 @@
                         <outlet property="createGameButton" destination="xig-mk-ZZO" id="lPh-m3-oDX"/>
                         <outlet property="displayNameLabel" destination="A5Y-yC-m5w" id="kcY-PU-eem"/>
                         <outlet property="displayNameTextField" destination="NMs-wA-N9l" id="yHH-1M-Vtz"/>
+                        <outlet property="makeSureLabel" destination="pSP-ZC-ug5" id="K5q-tF-IcD"/>
                         <outlet property="orLabel" destination="GFR-ks-NE2" id="pmW-SJ-7gI"/>
+                        <outlet property="stayOnThisPageLabel" destination="oDK-LA-66Q" id="nRZ-Z0-QQW"/>
                         <outlet property="visibilitySwitch" destination="HDB-ud-VPg" id="3jN-x7-F1F"/>
                         <outlet property="visibleToOthersLabel" destination="i9E-ly-Ef5" id="zaf-c8-ZHh"/>
                         <segue destination="BYZ-38-t0r" kind="push" identifier="goToMainGameSegue" id="wpe-Sa-1cH"/>

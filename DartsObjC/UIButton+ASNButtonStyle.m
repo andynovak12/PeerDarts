@@ -14,6 +14,8 @@
     self.backgroundColor = ASNDarkestColor;
     [self setTitleColor:ASNYellowColor forState:normal];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
+    self.titleLabel.minimumScaleFactor = 0.4;
+    self.titleLabel.adjustsFontSizeToFitWidth = YES;
     // change this to adjust the corner radius size
     CGFloat cornerRadiusPercentage = 0.15;
     
