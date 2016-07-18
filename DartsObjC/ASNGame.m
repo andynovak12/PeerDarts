@@ -46,8 +46,14 @@
     self.previousTeam = self.currentTeam;
     self.currentTeam = self.teams[nextTeamIndex];
     
-    NSUInteger previousPlayerIndex = [self.currentTeam.players indexOfObject:self.currentTeam.previousPlayer];
-    self.currentPlayer = self.currentTeam.players[(previousPlayerIndex+1)%self.currentTeam.players.count];
+//  if this is the first player going, and no previousPlayer
+    if (self.currentTeam.previousPlayer) {
+        NSUInteger previousPlayerIndex = [self.currentTeam.players indexOfObject:self.currentTeam.previousPlayer];
+        self.currentPlayer = self.currentTeam.players[(previousPlayerIndex+1)%self.currentTeam.players.count];
+    }
+    else {
+        self.currentPlayer = self.currentTeam.players[0];
+    }
     [self.currentPlayer setupPlayerForRound];
 }
 
@@ -104,14 +110,15 @@
 
 -(void)undoPreviousTurn {
     if (self.previousTeam.previousPlayer) {
-        // erase any progress of currentPlayer
-        [self.currentPlayer setupPlayerForRound];
 
         // remove previous hits from team
         NSDictionary *previousHits = ((ASNTurn *)[self.previousTeam.previousPlayer.turnsOfPlayer lastObject]).hits;
 
         for (NSString *hit in previousHits) {
             self.previousTeam.hitsInCurrentRound[hit] = [NSString stringWithFormat:@"%ld", [self.previousTeam.hitsInCurrentRound[hit] integerValue] - [previousHits[hit] integerValue]];
+            if ([self.previousTeam.hitsInCurrentRound[hit] integerValue] < 0) {
+                NSLog(@"here");
+            }
         }
         
         

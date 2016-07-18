@@ -161,6 +161,9 @@ typedef NS_ENUM(NSUInteger, kDCPathButtonBloomDirection) {
  */
 @property (assign, nonatomic) kDCPathButtonBloomDirection bloomDirection;
 
+@property (strong, nonatomic) NSMutableArray *itemButtons;
+
+
 /*!
  *  Creates a `DCPathButton` object with a given normal image and highlited images for center button.
  *

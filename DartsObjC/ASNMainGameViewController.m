@@ -44,6 +44,8 @@
 @property (strong, nonatomic) UIView *numbersContainerView;
 @property (strong, nonatomic) UIButton *logTurnButton;
 @property (strong, nonatomic) DCPathButton *centerButton;
+
+
 @end
 
 @implementation ASNMainGameViewController
@@ -55,6 +57,7 @@
     self.appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     self.navigationController.navigationBarHidden = YES;
+
     
     // set chalkboard background image
     UIImageView *chalkboardImageView = [[UIImageView alloc] init];
@@ -121,6 +124,7 @@
     [super viewDidLayoutSubviews];
     
     [self.logTurnButton buttonWithMyStyleAndSizePriority:medium];
+    
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
@@ -148,7 +152,7 @@
     
 
     // center Button
-    self.centerButton = [[DCPathButton alloc] initWithCenterImage:[UIImage imageNamed:@"more"] highlightedImage:[UIImage imageNamed:@"cancel"]];
+    self.centerButton = [[DCPathButton alloc] initWithCenterImage:[UIImage imageNamed:@"more"] highlightedImage:[UIImage imageNamed:@"more"]];
     self.centerButton.delegate = self;
     self.centerButton.allowSounds = NO;
     self.centerButton.bloomDirection = kDCPathButtonBloomDirectionTopLeft;
@@ -159,21 +163,27 @@
     DCPathItemButton *refreshButton = [[DCPathItemButton alloc]initWithImage:[UIImage imageNamed:@"refresh"]
                                                             highlightedImage:[UIImage imageNamed:@"refresh"]
                                                              backgroundImage:[UIImage imageNamed:@"refresh"]
-                                                  backgroundHighlightedImage:[UIImage imageNamed:@"refresh"]];
+                                                  backgroundHighlightedImage:[UIImage imageNamed:@"lightCircle"]];
     DCPathItemButton *endGameButton = [[DCPathItemButton alloc]initWithImage:[UIImage imageNamed:@"exit"]
                                                             highlightedImage:[UIImage imageNamed:@"exit"]
                                                              backgroundImage:[UIImage imageNamed:@"exit"]
-                                                  backgroundHighlightedImage:[UIImage imageNamed:@"exit"]];
+                                                  backgroundHighlightedImage:[UIImage imageNamed:@"lightCircle"]];
     DCPathItemButton *undoButton = [[DCPathItemButton alloc]initWithImage:[UIImage imageNamed:@"undo"]
                                                          highlightedImage:[UIImage imageNamed:@"undo"]
                                                           backgroundImage:[UIImage imageNamed:@"undo"]
-                                               backgroundHighlightedImage:[UIImage imageNamed:@"undo"]];
+                                               backgroundHighlightedImage:[UIImage imageNamed:@"lightCircle"]];
+    DCPathItemButton *eraseButton = [[DCPathItemButton alloc]initWithImage:[UIImage imageNamed:@"erase"]
+                                                         highlightedImage:[UIImage imageNamed:@"erase"]
+                                                          backgroundImage:[UIImage imageNamed:@"erase"]
+                                               backgroundHighlightedImage:[UIImage imageNamed:@"lightCircle"]];
+    
     self.centerButton.tintColor = ASNYellowColor;
     
     refreshButton.tintColor = ASNYellowColor;
     endGameButton.tintColor = ASNYellowColor;
     undoButton.tintColor = ASNYellowColor;
-    [self.centerButton addPathItems:@[refreshButton, undoButton, endGameButton]];
+    eraseButton.tintColor = ASNYellowColor;
+    [self.centerButton addPathItems:@[refreshButton, undoButton, eraseButton, endGameButton]];
     
 
     [self makeCurrentPlayerNameBig];
@@ -215,10 +225,30 @@
     NSUInteger numberOfPlayersOnTeam = team.players.count;
     // get index of team
     NSUInteger teamIndex = [self.currentGame.teams indexOfObject:team];
+    
+    
+    UIView *playerNamesSubView = [[UIView alloc]initWithFrame:CGRectNull];
+    
+    [playerNamesSubView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [((UIView *)self.teamContainersArray[teamIndex]) addSubview:playerNamesSubView];
+        [playerNamesSubView.centerXAnchor constraintEqualToAnchor:((UIView *)self.teamContainersArray[teamIndex]).centerXAnchor].active = YES;
+        [playerNamesSubView.centerYAnchor constraintEqualToAnchor:((UIView *)self.teamContainersArray[teamIndex]).centerYAnchor].active = YES;
+        [playerNamesSubView.widthAnchor constraintEqualToAnchor:((UIView *)self.teamContainersArray[teamIndex]).widthAnchor multiplier:0.9].active = YES;
+        [playerNamesSubView.heightAnchor constraintEqualToAnchor:((UIView *)self.teamContainersArray[teamIndex]).heightAnchor multiplier:0.25].active = YES;
+//        playerNamesSubView.backgroundColor = [UIColor blackColor];
+        
+    });
+    
+
+    
     for (NSUInteger i = 0; i <= numberOfPlayersOnTeam; i++) {
 
         UILabel *currentLabel = [[UILabel alloc] init];
         currentLabel.textAlignment = NSTextAlignmentCenter;
+        currentLabel.minimumScaleFactor = 0.5;
+        currentLabel.adjustsFontSizeToFitWidth = YES;
+        
 //        currentLabel.font = [UIFont fontWithName:fontName size:15];
         [currentLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
         if (i < numberOfPlayersOnTeam) {
@@ -226,11 +256,51 @@
 
             dispatch_async(dispatch_get_main_queue(), ^{
                 [((UIView *)self.teamContainersArray[teamIndex]) addSubview:currentLabel];
-                [currentLabel.centerXAnchor constraintEqualToAnchor:((UIView *)self.teamContainersArray[teamIndex]).centerXAnchor].active = YES;
-                [currentLabel.centerYAnchor constraintEqualToAnchor:((UIView *)self.teamContainersArray[teamIndex]).centerYAnchor constant:20*i].active = YES;
-                [currentLabel.widthAnchor constraintEqualToAnchor:((UIView *)self.teamContainersArray[teamIndex]).widthAnchor multiplier:0.9].active = YES;
-                //            [currentLabel.heightAnchor constraintEqualToAnchor:((UIView *)self.teamContainersArray[teamIndex]).heightAnchor multiplier:0.5].active = YES;
+                [currentLabel.centerXAnchor constraintEqualToAnchor:playerNamesSubView.centerXAnchor].active = YES;
+                [currentLabel.widthAnchor constraintEqualToAnchor:playerNamesSubView.widthAnchor].active = YES;
+                [currentLabel.heightAnchor constraintEqualToAnchor:playerNamesSubView.heightAnchor multiplier:0.25].active = YES;
                 
+                switch (numberOfPlayersOnTeam) {
+                    case 1:
+                        [currentLabel.centerYAnchor constraintEqualToAnchor:playerNamesSubView.centerYAnchor].active = YES;
+                        break;
+                    case 2:
+                        if (i == 0) {
+                            [currentLabel.topAnchor constraintEqualToAnchor:playerNamesSubView.topAnchor].active = YES;
+                        }
+                        else {
+                            [currentLabel.bottomAnchor constraintEqualToAnchor:playerNamesSubView.bottomAnchor ].active = YES;
+                        }
+                        break;
+                    case 3:
+                        if (i == 0) {
+                            [currentLabel.bottomAnchor constraintEqualToAnchor:playerNamesSubView.topAnchor].active = YES;
+                        }
+                        else if (i == 1) {
+                            [currentLabel.centerYAnchor constraintEqualToAnchor:playerNamesSubView.centerYAnchor].active = YES;
+                        }
+                        else {
+                            [currentLabel.topAnchor constraintEqualToAnchor:playerNamesSubView.bottomAnchor].active = YES;
+                        }
+                        break;
+                    case 4:
+                        if (i == 0) {
+                            [currentLabel.bottomAnchor constraintEqualToAnchor:playerNamesSubView.topAnchor].active = YES;
+                        }
+                        else if (i == 1) {
+                            [currentLabel.topAnchor constraintEqualToAnchor:playerNamesSubView.topAnchor].active = YES;
+                        }
+                        else if (i == 2) {
+                            [currentLabel.bottomAnchor constraintEqualToAnchor:playerNamesSubView.bottomAnchor].active = YES;
+                        }
+                        else {
+                            [currentLabel.topAnchor constraintEqualToAnchor:playerNamesSubView.bottomAnchor].active = YES;
+                        }
+                        break;
+                    default:
+                        NSLog(@"There are more than 4 players on the team");
+                        break;
+                }
             });
 
         }
@@ -242,9 +312,9 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 [((UIView *)self.teamContainersArray[teamIndex]) addSubview:currentLabel];
                 [currentLabel.centerXAnchor constraintEqualToAnchor:((UIView *)self.teamContainersArray[teamIndex]).centerXAnchor].active = YES;
-                [currentLabel.centerYAnchor constraintEqualToAnchor:((UIView *)self.teamContainersArray[teamIndex]).centerYAnchor constant:30*i].active = YES;
+                [currentLabel.bottomAnchor constraintEqualToAnchor:((UIView *)self.teamContainersArray[teamIndex]).bottomAnchor constant:-5].active = YES;
                 [currentLabel.widthAnchor constraintEqualToAnchor:((UIView *)self.teamContainersArray[teamIndex]).widthAnchor multiplier:0.9].active = YES;
-                //            [currentLabel.heightAnchor constraintEqualToAnchor:((UIView *)self.teamContainersArray[teamIndex]).heightAnchor multiplier:0.5].active = YES;
+                [currentLabel.heightAnchor constraintEqualToAnchor:((UIView *)self.teamContainersArray[teamIndex]).heightAnchor multiplier:0.25].active = YES;
                 
             });
 
@@ -311,7 +381,20 @@
                     else if (counter == 1) {
                         [containerView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant:(containerWidth/2 + self.insideLineConstraint)].active = YES;
                     }
+                    break;
                 case 3:
+                    if (counter == 0) {
+                        [containerView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant:-(containerWidth/2 + self.insideLineConstraint)].active = YES;
+                    }
+                    else if (counter == 1) {
+                        [containerView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant:(containerWidth/2 + self.insideLineConstraint)].active = YES;
+                    }
+                    else if (counter == 2) {
+                        [containerView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant:-2.2*(containerWidth/2 + self.insideLineConstraint)].active = YES;
+                        
+                    }
+                    break;
+                    
                 case 4:
                     if (counter == 0) {
                         [containerView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor constant:-(containerWidth/2 + self.insideLineConstraint)].active = YES;
@@ -329,13 +412,13 @@
                     else {
                         NSLog(@"Dont know how to deal with more than 4 teams layout");
                     }
-                    
+                    break;
                     
             }
             
             
             UILabel *teamNameLabel = self.teamNameLabelsArray[counter];
-            teamNameLabel.numberOfLines = 3;
+            teamNameLabel.numberOfLines = 2;
             [teamNameLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
             
             [self updateTeamNameAndWins:team];
@@ -357,7 +440,7 @@
             [teamNameLabel.centerXAnchor constraintEqualToAnchor:containerView.centerXAnchor].active = YES;
             [teamNameLabel.topAnchor constraintEqualToAnchor:containerView.topAnchor].active = YES;
             [teamNameLabel.widthAnchor constraintEqualToAnchor:containerView.widthAnchor multiplier:0.9].active = YES;
-            
+//            [teamNameLabel.heightAnchor constraintEqualToAnchor:containerView.heightAnchor multiplier:0.25].active = YES;
             counter++;
         });
     }
@@ -563,7 +646,9 @@
                 UIView.tintColor = ASNLightestColor;
             });
         }
-        view.additionalHitsLabel.textColor = ASNLightestColor;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            view.additionalHitsLabel.textColor = ASNLightestColor;
+        });
     }
 
 }
@@ -573,7 +658,6 @@
     UIFont *largerFont = [UIFont fontWithName:fontName size:22.0];
     NSDictionary *largerFontDict = [NSDictionary dictionaryWithObject: largerFont forKey:NSFontAttributeName];
     NSMutableAttributedString *firstLine = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n", team.teamName] attributes: largerFontDict];
-    
     UIFont *smallerFont = [UIFont fontWithName:fontName size:15.0];
     NSDictionary *smallerFontDict = [NSDictionary dictionaryWithObject:smallerFont forKey:NSFontAttributeName];
     NSMutableAttributedString *secondLine = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"W:%lu L:%lu", team.wins, team.loses] attributes:smallerFontDict];
@@ -658,6 +742,7 @@
 }
 
 -(void)makeCurrentPlayerNameBig {
+    
     // make all labels small
     for (NSArray *teamPlayerLabelArray in self.playerNamesLabelsArray) {
         for (UILabel *playerNameLabel in teamPlayerLabelArray) {
@@ -804,7 +889,7 @@
     
     [newGameAlert addAction:no];
     [newGameAlert addAction:yes];
-    [newGameAlert.view setNeedsLayout];
+//    [newGameAlert.view setNeedsLayout];
     dispatch_async(dispatch_get_main_queue(), ^{
         [self presentViewController:newGameAlert animated:YES completion:nil];
         self.isAlertControllerPresented = YES;
@@ -824,11 +909,12 @@
         [self updatePlayerNamesLabelsOfPreviousTeam:team];
     }
     for (ASNTeam *team in self.currentGame.teams) {
-        for (ASNHitsContainerViews *view in team.arrayOfNumberViews) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                view.tintColor = [UIColor clearColor];
-            });
-        }
+        [self refreshNumbersUIForTeam:team];
+//        for (ASNHitsContainerViews *view in team.arrayOfNumberViews) {
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                view.tintColor = [UIColor clearColor];
+//            });
+//        }
     }
 }
 -(void)handleEndGameButtonTapped:(id)sender {
@@ -889,7 +975,6 @@
     
     NSData *receivedData = [[notification userInfo] objectForKey:@"data"];
     NSString *receivedDataUnarchived = [[NSString alloc] initWithData:receivedData encoding:NSUTF8StringEncoding];
-    NSLog(@"this is the unarchived data i received in MainGameVC: %@ from %@", receivedDataUnarchived, peerDisplayName);
     
     if ([receivedDataUnarchived isEqualToString:@"logTurn"]) {
         [self logTurn];
@@ -929,12 +1014,19 @@
     else if ([receivedDataUnarchived isEqualToString:@"undo"]) {
         [self undoTurn];
     }
-
+    else if ([receivedDataUnarchived isEqualToString:@"erase"]) {
+        [self eraseCurrentHits];
+    }
 }
 
 # pragma mark -- DCPathButton Delegate
 
 - (void)pathButton:(DCPathButton *)dcPathButton clickItemButtonAtIndex:(NSUInteger)itemButtonIndex {
+    
+    for (DCPathItemButton *itemButton in dcPathButton.itemButtons) {
+        itemButton.tintColor = ASNYellowColor;
+    }
+    
     if (itemButtonIndex == 0) {
         [self handleNewGameButtonTapped:nil];
     }
@@ -942,18 +1034,37 @@
         [self handleUndoPressed];
     }
     else if (itemButtonIndex == 2) {
+        [self handleEraseTapped];
+    }
+    else if (itemButtonIndex == 3) {
         [self handleEndGameButtonTapped:nil];
     }
 }
 
 -(void)handleUndoPressed {
-    [self undoTurn];
-    [self sendToAllConnectedPeersString:@"undo"];
+    // present alert
+    UIAlertController *undoAlert = [UIAlertController alertControllerWithTitle:@"Undo?" message:[NSString stringWithFormat:@"Undo %@'s last turn? This will also erase any current hits of %@)", self.currentGame.previousTeam.previousPlayer.name, self.currentGame.currentPlayer.name] preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *yes = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self undoTurn];
+        [self sendToAllConnectedPeersString:@"undo"];
+        self.isAlertControllerPresented = NO;
+    }];
+    UIAlertAction *no = [UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        self.isAlertControllerPresented = NO;
+    }];
+    
+    [undoAlert addAction:no];
+    [undoAlert addAction:yes];
+    [undoAlert.view setNeedsLayout];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:undoAlert animated:YES completion:nil];
+        self.isAlertControllerPresented = YES;
+    });
 }
 
-//TODO: add observer for "undo" event
 
 -(void)undoTurn {
+    [self eraseCurrentHits];
     [self.currentGame undoPreviousTurn];
     
     [self updatePlayerNamesLabelsOfTeam:self.currentGame.currentTeam];
@@ -971,6 +1082,48 @@
     [self refreshNumbersUIForTeam:self.currentGame.teams[nextTeamIndex]];
 }
 
+-(void)handleEraseTapped {
+    // present alert
+    UIAlertController *eraseAlert = [UIAlertController alertControllerWithTitle:@"Erase?" message:[NSString stringWithFormat:@"Erase what's currently entered for %@", self.currentGame.currentPlayer.name] preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *yes = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self eraseCurrentHits];
+        [self sendToAllConnectedPeersString:@"erase"];
+        self.isAlertControllerPresented = NO;
+    }];
+    UIAlertAction *no = [UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        self.isAlertControllerPresented = NO;
+    }];
+    
+    [eraseAlert addAction:no];
+    [eraseAlert addAction:yes];
+    [eraseAlert.view setNeedsLayout];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:eraseAlert animated:YES completion:nil];
+        self.isAlertControllerPresented = YES;
+    });
+
+}
+
+-(void)eraseCurrentHits {
+    // erase any progress of currentPlayer
+    NSMutableDictionary *tempDictOfCurrentPlayerHits = [self.currentGame.currentPlayer.currentHits copy];
+    for (NSString *key in tempDictOfCurrentPlayerHits) {
+        NSInteger amountOfHits = [tempDictOfCurrentPlayerHits[key] integerValue];
+        NSUInteger newValue;
+        if ([tempDictOfCurrentPlayerHits[key] integerValue] - amountOfHits < 0) {
+            newValue = 0;
+        }
+        else {
+            newValue = ([self.currentGame.currentTeam.hitsInCurrentRound[key] integerValue] - amountOfHits);
+        }
+        
+        self.currentGame.currentTeam.hitsInCurrentRound[key] = [NSString stringWithFormat:@"%li", newValue];
+    }
+
+    [self.currentGame.currentPlayer setupPlayerForRound];
+    [self refreshNumbersUIForTeam:self.currentGame.currentTeam];
+}
+
 -(void)refreshNumbersUIForTeam:(ASNTeam *)team {
     // update current teams hits images
     for (NSUInteger j = 20; j>=14; j--) {
@@ -980,6 +1133,10 @@
         }
         else {
             teamValueForKey = team.hitsInCurrentRound[[NSString stringWithFormat:@"%lu", j]];
+            if ([teamValueForKey integerValue]<0) {
+                NSLog(@"the key is %lu and the amount it %@", j, teamValueForKey);
+
+            }
         }
         ASNHitsContainerViews *view = team.arrayOfNumberViews[20-j];
         

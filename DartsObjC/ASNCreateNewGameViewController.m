@@ -47,6 +47,8 @@
 //@property (weak, nonatomic) IBOutlet UISwitch *visibilityToggle;
 //@property (weak, nonatomic) IBOutlet UILabel *visibleToOthersLabel;
 @property (weak, nonatomic) IBOutlet UILabel *availablePlayersLabel;
+@property (weak, nonatomic) IBOutlet UIScrollView *availablePlayersScrollView;
+@property (weak, nonatomic) IBOutlet UILabel *availablePlayerInfoLabel;
 
 @end
 
@@ -67,6 +69,9 @@
     self.team3TableView.delegate = self;
     self.team4TableView.dataSource = self;
     self.team4TableView.delegate = self;
+    
+    [self.availablePlayerInfoLabel labelWithMyStyleAndSizePriority:medium];
+    self.availablePlayerInfoLabel.textColor = ASNLightColor;
 }
 
 
@@ -208,6 +213,8 @@
 
 - (IBAction)refreshTapped:(id)sender {
     self.availablePlayerArray = [NSMutableArray new];
+    self.availablePlayerInfoLabel.hidden = YES;
+
     [self searchForAvailablePlayers];
     [self reloadAvailablePlayersUI];
 }
@@ -231,11 +238,18 @@
     NSLog(@"lost peer %@",peerID.displayName);
     if (([self.availablePlayerArray containsObject:peerID]) && (![peerID isEqual:self.appDelegate.mcManager.peerID])) {
         [self.availablePlayerArray removeObject:peerID];
+//        for (ASNAvailableView *view in self.availablePlayerViewsArray) {
+//            if (view.peerID == peerID) {
+//                [view removeFromSuperview];
+//            }
+//        }
         [self reloadAvailablePlayersUI];
     }
 }
 
 -(void)reloadAvailablePlayersUI {
+
+    
     // remove the previous players
     for (ASNAvailableView *playerView in self.availablePlayerViewsArray) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -244,19 +258,19 @@
     }
     self.availablePlayerViewsArray = [NSMutableArray new];
     // add the new player views
-    // TODO: make this a collection view
     NSUInteger counter = 0;
     for (MCPeerID *peerID in self.availablePlayerArray) {
         ASNAvailableView *newPlayerView = [ASNAvailableView new];
         newPlayerView.peerID = peerID;
         newPlayerView.imageView.image = [UIImage imageNamed:@"defaultUserImage"];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.view addSubview:newPlayerView];
+            [self.availablePlayersScrollView addSubview:newPlayerView];
+//            [self.view addSubview:newPlayerView];
             [newPlayerView setTranslatesAutoresizingMaskIntoConstraints:NO];
-            [newPlayerView.heightAnchor constraintEqualToConstant:100].active = YES;
-            [newPlayerView.widthAnchor constraintEqualToConstant:100].active = YES;
-            [newPlayerView.topAnchor constraintEqualToAnchor:self.availablePlayersLabel.bottomAnchor constant:5].active = YES;
-            [newPlayerView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor constant:(20+(counter*110))].active = YES;
+            [newPlayerView.heightAnchor constraintEqualToAnchor:self.availablePlayersScrollView.heightAnchor multiplier:0.9].active = YES;
+            [newPlayerView.widthAnchor constraintEqualToAnchor:self.availablePlayersScrollView.heightAnchor multiplier:0.9].active = YES;
+            [newPlayerView.centerYAnchor constraintEqualToAnchor:self.availablePlayersScrollView.centerYAnchor].active = YES;
+            [newPlayerView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor constant:(20+(counter*self.availablePlayersScrollView.frame.size.width))].active = YES;
             newPlayerView.userInteractionEnabled = YES;
             UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapOfAvailablePlayer:)];
             [newPlayerView addGestureRecognizer:recognizer];
@@ -264,6 +278,15 @@
 
         [self.availablePlayerViewsArray addObject:newPlayerView];
         counter++;
+    }
+    
+    // TODO: this flashes because array is 0 at first every time this method called
+    // show/hide info
+    if (self.availablePlayerArray.count == 0) {
+        self.availablePlayerInfoLabel.hidden = NO;
+    }
+    else {
+        self.availablePlayerInfoLabel.hidden = YES;
     }
 }
 
@@ -359,20 +382,25 @@
                     if (playerView.peerID == peerID) {
                         [playerView.spinner stopAnimating];
                         
+                        // alert user that unable to connect
+                        UIAlertController *unableToConnectAlert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"Unable To Connect With %@", peerDisplayName] message:nil preferredStyle:UIAlertControllerStyleAlert];
                         
-//                        // make background flash red 
-//                        CABasicAnimation *theAnimation;
-//                        theAnimation=[CABasicAnimation animationWithKeyPath:@"opacity"];
-//                        theAnimation.duration=1.0;
-//                        theAnimation.repeatCount=HUGE_VALF;
-//                        theAnimation.autoreverses=YES;
-//                        theAnimation.fromValue=[NSNumber numberWithFloat:1.0];
-//                        theAnimation.toValue=[NSNumber numberWithFloat:0.0];
-//                        [playerView.layer addAnimation:theAnimation forKey:@"animateOpacity"];
+                        UIAlertAction *retry = [UIAlertAction actionWithTitle:@"Retry" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                            [self.appDelegate.mcManager.serviceBrowser invitePeer:peerID toSession:self.appDelegate.mcManager.session withContext:nil timeout:30];
+                        }];
+                        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+                            [self.pendingInvites removeObjectsInArray:matchingObjects];
+                        }];
+                        
+                        [unableToConnectAlert addAction:cancel];
+                        [unableToConnectAlert addAction:retry];
+                        [unableToConnectAlert.view setNeedsLayout];
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self presentViewController:unableToConnectAlert animated:YES completion:nil];
+                        });
                         
                     }
                 }
-                [self.pendingInvites removeObjectsInArray:matchingObjects];
             }
             
             if ([self.connectedPlayerArray containsObject:peerID]) {
@@ -384,19 +412,34 @@
                     for (ASNPlayer *player in team.players) {
                         if (player.playersPeerID == peerID) {
                             [team removePlayerFromTeam:player];
+                            
                             // if the team now has no players, remove this team
-//                            if (team.players.count == 0) {
-//                                 remove team from array
-//                                [self.teamsArray removeObject:team];
-//                                for (ASNCreateTeamView *view in self.createNewTeamViewsArray) {
-//                                    if (view.team == team) {
-//                                        [self.createNewTeamViewsArray removeObject:view];
-//                                        break;
-//                                        
-//                                    }
-//                                }
-//                            }
-//                            [self reloadViewForTeam:team];
+                            if (team.players.count == 0) {
+                                //delete team
+                                [self.teamsArray removeObject:team];
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    // reload view
+                                    for (UITableView *tableView in self.tableViewArray) {
+                                        [tableView reloadData];
+                                    }
+                                    [self updateTeamTableViewsUI];
+                                    
+                                });
+                            }                            
+                            
+                            // alert user that lost player
+                            UIAlertController *lostPlayerAlert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"Lost Connection With %@", peerDisplayName] message:nil preferredStyle:UIAlertControllerStyleAlert];
+  
+                            UIAlertAction *ok = [UIAlertAction actionWithTitle:@"That's A Shame" style:UIAlertActionStyleDefault handler:nil];
+                            
+                            [lostPlayerAlert addAction:ok];
+                            
+                            [lostPlayerAlert.view setNeedsLayout];
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [self presentViewController:lostPlayerAlert animated:YES completion:nil];
+                            });
+
+                            
                         }
                     }
                 }
@@ -450,13 +493,12 @@
     
     NSData *receivedData = [[notification userInfo] objectForKey:@"data"];
     NSString *receivedDataUnarchived = [[NSString alloc] initWithData:receivedData encoding:NSUTF8StringEncoding];
-    NSLog(@"this is the unarchived data i received in MainGameVC: %@ from %@", receivedDataUnarchived, peerDisplayName);
 }
 - (IBAction)startGameTapped:(id)sender {
     for (ASNTeam *team in self.teamsArray) {
         if (![self teamHasAtLeastOnePlayer:team]) {
             // present Alert
-            UIAlertController *teamsMustHaveAtLeastOnePlayerAlert = [UIAlertController alertControllerWithTitle:@"Teams Must Have At Least One Player" message:nil preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertController *teamsMustHaveAtLeastOnePlayerAlert = [UIAlertController alertControllerWithTitle:@"Teams Must Have At Least One Player" message:@"To delete a team, swipe left on the team's name" preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *ok = [UIAlertAction actionWithTitle:@"Got It" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             }];
             [teamsMustHaveAtLeastOnePlayerAlert addAction:ok];

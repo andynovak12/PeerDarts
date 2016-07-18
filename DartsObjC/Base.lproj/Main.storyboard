@@ -51,8 +51,8 @@
                                     <outletCollection property="gestureRecognizers" destination="HHx-VN-165" appends="YES" id="NUD-Cc-F96"/>
                                 </connections>
                             </visualEffectView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="kMf-Zj-xaN" userLabel="background image">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="kMf-Zj-xaN" userLabel="background image">
+                                <rect key="frame" x="-43" y="0.0" width="375" height="667"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Ws-Xm-LRy">
                                 <rect key="frame" x="51" y="604" width="273" height="55"/>
@@ -70,7 +70,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Available Players:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LSo-Va-eQc">
-                                <rect key="frame" x="9" y="457" width="282" height="27"/>
+                                <rect key="frame" x="9" y="456" width="282" height="27"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -240,6 +240,19 @@
                                     <outletCollection property="gestureRecognizers" destination="rep-C1-B31" appends="YES" id="3UB-gB-TQ4"/>
                                 </connections>
                             </view>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceHorizontal="YES" translatesAutoresizingMaskIntoConstraints="NO" id="J3x-fp-XPg">
+                                <rect key="frame" x="9" y="492" width="357" height="128"/>
+                            </scrollView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d0J-V8-9Of">
+                                <rect key="frame" x="-1" y="432" width="356" height="156"/>
+                                <string key="text">Available players will show up here. Make sure:
+Your Bluetooth and/or Wifi is on
+Their Bluetooth and/or Wifi is on
+They have this app open to the first page</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -288,7 +301,9 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                     <connections>
+                        <outlet property="availablePlayerInfoLabel" destination="d0J-V8-9Of" id="CC2-8Y-JfN"/>
                         <outlet property="availablePlayersLabel" destination="LSo-Va-eQc" id="Jha-hR-2cI"/>
+                        <outlet property="availablePlayersScrollView" destination="J3x-fp-XPg" id="9HL-VD-MUc"/>
                         <outlet property="blurView" destination="BP3-5Y-Nx7" id="o3C-fr-OV2"/>
                         <outlet property="blurViewTapRecognizer" destination="HHx-VN-165" id="2Wl-Q8-GZC"/>
                         <outlet property="refreshButton" destination="d9r-G1-4vR" id="tID-8H-6zQ"/>
@@ -447,7 +462,7 @@
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connecting" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="8zd-Hm-9Z8">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connecting..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="8zd-Hm-9Z8">
                                         <rect key="frame" x="8" y="7" width="265" height="26"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>

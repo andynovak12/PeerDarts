@@ -58,7 +58,9 @@
     [self.connectingCancelButton buttonWithMyStyleAndSizePriority:low];
     
     [self.makeSureLabel labelWithMyStyleAndSizePriority:low];
+    self.makeSureLabel.textColor = ASNLightColor;
     [self.stayOnThisPageLabel labelWithMyStyleAndSizePriority:medium];
+    self.stayOnThisPageLabel.textColor = ASNLightColor;
     
     self.receivedDataUnarchived = [NSMutableArray new];
     
@@ -375,7 +377,6 @@
     
     NSData *receivedData = [[notification userInfo] objectForKey:@"data"];
     self.receivedDataUnarchived = [NSKeyedUnarchiver unarchiveObjectWithData:receivedData];
-    NSLog(@"this is the unarchived data i received in WelcomeVC: %@", self.receivedDataUnarchived);
     dispatch_async(dispatch_get_main_queue(), ^{
         [self performSegueWithIdentifier:@"goToMainGameSegue" sender:self];
     });
@@ -383,6 +384,10 @@
 
 
 -(void)didReceiveInvitationNotification:(NSNotification *)notification {
+    if (!self.connectingView.hidden) {
+        self.connectingView.hidden = YES;
+    }
+    
     NSLog(@"I recieved an invitation: %@", self.appDelegate.mcManager.peerID.displayName);
     self.inviterPeerID = [[notification userInfo] objectForKey:@"peerID"];
     NSString *peerDisplayName = self.inviterPeerID.displayName;
@@ -402,6 +407,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             self.blurView.hidden = NO;
             self.connectingView.hidden = NO;
+            self.connectingTopLabel.text = @"Connecting...";
             self.connectingLowerLabel.text = [NSString stringWithFormat:@"Attempting to connect to %@", peerDisplayName];
         });
         

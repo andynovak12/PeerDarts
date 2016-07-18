@@ -8,6 +8,7 @@
 
 #import "DCPathButton.h"
 
+
 @interface DCPathButton ()<DCPathItemButtonDelegate>
 
 #pragma mark - Private Property
@@ -28,7 +29,6 @@
 
 @property (strong, nonatomic) UIView *bottomView;
 @property (strong, nonatomic) UIButton *pathCenterButton;
-@property (strong, nonatomic) NSMutableArray *itemButtons;
 
 @property (assign, nonatomic) SystemSoundID foldSound;
 @property (assign, nonatomic) SystemSoundID bloomSound;
@@ -126,6 +126,7 @@
     _pathCenterButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, self.centerImage.size.width, self.centerImage.size.height)];
     [_pathCenterButton setImage:self.centerImage forState:UIControlStateNormal];
     [_pathCenterButton setImage:self.centerHighlightedImage forState:UIControlStateHighlighted];
+    
     [_pathCenterButton addTarget:self action:@selector(centerButtonTapped) forControlEvents:UIControlEventTouchUpInside];
     _pathCenterButton.center = CGPointMake(self.frame.size.width/2, self.frame.size.height/2);
     [self addSubview:_pathCenterButton];
