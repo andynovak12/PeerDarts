@@ -222,7 +222,7 @@
             [self.logTurnButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
             [self.logTurnButton.topAnchor constraintEqualToAnchor:self.numbersContainerView.bottomAnchor constant:20].active = YES;
             [self.logTurnButton.widthAnchor constraintEqualToConstant:self.insideLineConstraint*2].active = YES;
-            [self.logTurnButton.heightAnchor constraintEqualToConstant:60].active = YES;
+            [self.logTurnButton.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-11].active = YES;
             
             [self.logTurnButton setTitle:@"Log\nTurn" forState:UIControlStateNormal];
             self.logTurnButton.titleLabel.numberOfLines = 2;            
@@ -679,7 +679,9 @@
 //    NSMutableString *teamNameAndScore = [[NSString stringWithFormat:@"%@\nScore: %lu",team.teamName, team.scoreOfCurrentRound] mutableCopy];
     NSUInteger indexOfTeam = [self.currentGame.teams indexOfObject:team];
     dispatch_async(dispatch_get_main_queue(), ^{
-        ((UILabel *)self.teamNameLabelsArray[indexOfTeam]).attributedText = firstLine;;
+        ((UILabel *)self.teamNameLabelsArray[indexOfTeam]).attributedText = firstLine;
+        ((UILabel *)self.teamNameLabelsArray[indexOfTeam]).adjustsFontSizeToFitWidth = YES;
+        ((UILabel *)self.teamNameLabelsArray[indexOfTeam]).minimumScaleFactor = 0.5;
     });
 }
 
@@ -763,6 +765,8 @@
                     playerNameLabel.font = [UIFont fontWithName:fontNameBold size:16];
 //                    playerNameLabel.font = [UIFont systemFontOfSize:16];
                     playerNameLabel.textColor = ASNLightestColor;
+                    
+                    
 //                    [UIView animateWithDuration:0.25 animations:^{
 //                        playerNameLabel.transform = CGAffineTransformScale(playerNameLabel.transform, 1.25, 1.25);
 //                    }];
@@ -1055,11 +1059,50 @@
 
 # pragma mark -- DCPathButton Delegate
 
+// Disable Buttons (undo and erase)
+-(void)willPresentDCPathButtonItems:(DCPathButton *)dcPathButton {
+    // Erase Button
+    if ([self playerHasNoCurrentHits:self.currentGame.currentPlayer]) {
+        // Disable Erase Button
+        ((DCPathItemButton *)dcPathButton.itemButtons[2]).enabled = NO;
+        ((DCPathItemButton *)dcPathButton.itemButtons[2]).tintColor = ASNDarkColor;
+    }
+    else {
+        // Enable Erase Button
+        ((DCPathItemButton *)dcPathButton.itemButtons[2]).enabled = YES;
+        ((DCPathItemButton *)dcPathButton.itemButtons[2]).tintColor = ASNYellowColor;
+    }
+    
+    // Undo button
+    if (!self.currentGame.previousTeam) {
+        // Disable Undo Button
+        ((DCPathItemButton *)dcPathButton.itemButtons[1]).enabled = NO;
+        ((DCPathItemButton *)dcPathButton.itemButtons[1]).tintColor = ASNDarkColor;
+    }
+    else {
+        // Enable Undo Button
+        ((DCPathItemButton *)dcPathButton.itemButtons[1]).enabled = YES;
+        ((DCPathItemButton *)dcPathButton.itemButtons[1]).tintColor = ASNYellowColor;
+    }
+    
+}
+
+-(BOOL)playerHasNoCurrentHits:(ASNPlayer *)player {
+    for (NSString *key in player.currentHits) {
+        NSInteger numberOfHitsForKey = [player.currentHits[key] integerValue];
+        if (numberOfHitsForKey > 0) {
+            return NO;
+        }
+    }
+    return YES;
+}
+
 - (void)pathButton:(DCPathButton *)dcPathButton clickItemButtonAtIndex:(NSUInteger)itemButtonIndex {
     
-    for (DCPathItemButton *itemButton in dcPathButton.itemButtons) {
-        itemButton.tintColor = ASNYellowColor;
-    }
+//    for (DCPathItemButton *itemButton in dcPathButton.itemButtons) {
+//        itemButton.tintColor = ASNYellowColor;
+//    }
+
     
     if (itemButtonIndex == 0) {
         [self handleNewGameButtonTapped:nil];
