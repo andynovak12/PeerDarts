@@ -40,7 +40,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BP3-5Y-Nx7">
-                                <rect key="frame" x="-0.5" y="0.5" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="EDp-Mv-4Aw">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -55,7 +55,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Ws-Xm-LRy">
-                                <rect key="frame" x="19" y="593" width="337.5" height="53.5"/>
+                                <rect key="frame" x="16" y="593" width="343" height="53.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="Start Game"/>
                                 <connections>
@@ -63,14 +63,14 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d9r-G1-4vR">
-                                <rect key="frame" x="306" y="427" width="53" height="30"/>
+                                <rect key="frame" x="306" y="428" width="53" height="30"/>
                                 <state key="normal" title="Refresh"/>
                                 <connections>
                                     <action selector="refreshTapped:" destination="uGD-Ji-WDQ" eventType="touchUpInside" id="BC0-3x-hmB"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Available Players:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LSo-Va-eQc">
-                                <rect key="frame" x="5" y="427" width="156.5" height="30"/>
+                                <rect key="frame" x="16" y="427" width="157" height="33.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -241,10 +241,10 @@
                                 </connections>
                             </view>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" translatesAutoresizingMaskIntoConstraints="NO" id="J3x-fp-XPg">
-                                <rect key="frame" x="9" y="465" width="357" height="108.5"/>
+                                <rect key="frame" x="9" y="468" width="357" height="104.5"/>
                             </scrollView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d0J-V8-9Of">
-                                <rect key="frame" x="18" y="465" width="337.5" height="81.5"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d0J-V8-9Of">
+                                <rect key="frame" x="18" y="468" width="337.5" height="104.5"/>
                                 <string key="text">Available players will show up here. Make sure:
 Your Bluetooth and/or Wifi is on
 Their Bluetooth and/or Wifi is on
@@ -256,37 +256,37 @@ They have this app open to the first page</string>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="LSo-Va-eQc" firstAttribute="width" relation="lessThanOrEqual" secondItem="rZj-P4-f66" secondAttribute="width" multiplier="0.6" id="0M2-ar-faR"/>
                             <constraint firstItem="BP3-5Y-Nx7" firstAttribute="centerY" secondItem="rZj-P4-f66" secondAttribute="centerY" id="3M9-Q3-SFC"/>
                             <constraint firstItem="kMf-Zj-xaN" firstAttribute="centerX" secondItem="rZj-P4-f66" secondAttribute="centerX" id="4FO-Nr-0Oy"/>
                             <constraint firstItem="Xqi-H9-9Kc" firstAttribute="centerY" secondItem="RFc-ez-p32" secondAttribute="centerY" id="5KD-RX-Nte"/>
                             <constraint firstItem="bRj-YU-Bx6" firstAttribute="width" secondItem="iNb-dw-VCA" secondAttribute="width" id="5Z2-le-2yo"/>
                             <constraint firstItem="bRj-YU-Bx6" firstAttribute="centerY" secondItem="rZj-P4-f66" secondAttribute="centerY" id="5nl-IT-erB"/>
-                            <constraint firstItem="4Ws-Xm-LRy" firstAttribute="width" secondItem="rZj-P4-f66" secondAttribute="width" multiplier="0.9" id="788-gi-etF"/>
+                            <constraint firstItem="4Ws-Xm-LRy" firstAttribute="height" secondItem="rZj-P4-f66" secondAttribute="height" multiplier="0.08" id="5xh-OF-dcX"/>
                             <constraint firstItem="rMP-cC-hwE" firstAttribute="centerX" secondItem="bRj-YU-Bx6" secondAttribute="centerX" id="7nZ-W3-e1N"/>
                             <constraint firstItem="d0J-V8-9Of" firstAttribute="top" secondItem="LSo-Va-eQc" secondAttribute="bottom" constant="8" id="9G7-bN-LBj"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="4Ws-Xm-LRy" secondAttribute="trailing" id="9ff-Rj-lDP"/>
                             <constraint firstItem="RFc-ez-p32" firstAttribute="width" secondItem="iNb-dw-VCA" secondAttribute="width" id="BCE-qU-lL3"/>
                             <constraint firstItem="kMf-Zj-xaN" firstAttribute="centerY" secondItem="rZj-P4-f66" secondAttribute="centerY" id="BZc-zj-904"/>
                             <constraint firstItem="iNb-dw-VCA" firstAttribute="centerX" secondItem="kMf-Zj-xaN" secondAttribute="centerX" multiplier="0.5" id="CkL-Kx-lmR"/>
                             <constraint firstItem="kMf-Zj-xaN" firstAttribute="height" secondItem="rZj-P4-f66" secondAttribute="height" id="EX6-mS-c7X"/>
                             <constraint firstItem="ETR-j1-SUH" firstAttribute="top" secondItem="4Ws-Xm-LRy" secondAttribute="bottom" constant="20" id="F0G-ZV-VcM"/>
+                            <constraint firstItem="J3x-fp-XPg" firstAttribute="bottom" secondItem="d0J-V8-9Of" secondAttribute="bottom" id="GWQ-fV-pRh"/>
                             <constraint firstItem="rMP-cC-hwE" firstAttribute="centerY" secondItem="bRj-YU-Bx6" secondAttribute="centerY" id="H9e-Zj-W6z"/>
                             <constraint firstItem="rRL-Ct-drP" firstAttribute="height" secondItem="bRj-YU-Bx6" secondAttribute="height" id="HDH-pL-qoK"/>
-                            <constraint firstItem="LSo-Va-eQc" firstAttribute="leading" secondItem="rZj-P4-f66" secondAttribute="leadingMargin" constant="-11" id="HaC-7z-D7S"/>
+                            <constraint firstItem="LSo-Va-eQc" firstAttribute="leading" secondItem="rZj-P4-f66" secondAttribute="leadingMargin" id="HaC-7z-D7S"/>
+                            <constraint firstItem="4Ws-Xm-LRy" firstAttribute="leading" secondItem="rZj-P4-f66" secondAttribute="leadingMargin" id="Hqc-x8-KhC"/>
                             <constraint firstItem="J3x-fp-XPg" firstAttribute="leading" secondItem="iNb-dw-VCA" secondAttribute="leading" id="Ibx-n2-Z4z"/>
-                            <constraint firstItem="4Ws-Xm-LRy" firstAttribute="height" secondItem="rZj-P4-f66" secondAttribute="height" multiplier="0.08" id="IfV-i9-5ZA"/>
-                            <constraint firstItem="4Ws-Xm-LRy" firstAttribute="centerX" secondItem="rZj-P4-f66" secondAttribute="centerX" id="Jet-ji-Cp2"/>
                             <constraint firstItem="iNb-dw-VCA" firstAttribute="height" secondItem="kMf-Zj-xaN" secondAttribute="height" multiplier="0.22" id="Mhp-Da-vWP"/>
-                            <constraint firstItem="d9r-G1-4vR" firstAttribute="height" secondItem="LSo-Va-eQc" secondAttribute="height" id="N1N-4S-rzy"/>
                             <constraint firstItem="RFc-ez-p32" firstAttribute="centerX" secondItem="rZj-P4-f66" secondAttribute="centerX" multiplier="1.5" id="NAZ-Em-cnM"/>
                             <constraint firstItem="RFc-ez-p32" firstAttribute="height" secondItem="iNb-dw-VCA" secondAttribute="height" id="PRd-nT-Igd"/>
                             <constraint firstItem="X7A-fj-BfJ" firstAttribute="height" secondItem="rRL-Ct-drP" secondAttribute="height" id="Pt6-2T-pzE"/>
                             <constraint firstItem="iNb-dw-VCA" firstAttribute="width" secondItem="kMf-Zj-xaN" secondAttribute="width" multiplier="0.45" id="RGN-3P-aMZ"/>
                             <constraint firstItem="kMf-Zj-xaN" firstAttribute="width" secondItem="rZj-P4-f66" secondAttribute="width" id="Weo-ws-kDm"/>
                             <constraint firstItem="Xqi-H9-9Kc" firstAttribute="centerX" secondItem="RFc-ez-p32" secondAttribute="centerX" id="XlO-wP-qzk"/>
+                            <constraint firstItem="4Ws-Xm-LRy" firstAttribute="top" secondItem="d0J-V8-9Of" secondAttribute="bottom" constant="20" id="Yhl-rB-pSq"/>
                             <constraint firstItem="Xqi-H9-9Kc" firstAttribute="width" secondItem="RFc-ez-p32" secondAttribute="width" id="aqM-sa-GAJ"/>
                             <constraint firstItem="rMP-cC-hwE" firstAttribute="height" secondItem="bRj-YU-Bx6" secondAttribute="height" id="djT-NP-VUU"/>
-                            <constraint firstItem="4Ws-Xm-LRy" firstAttribute="top" secondItem="J3x-fp-XPg" secondAttribute="bottom" constant="20" id="e29-Lh-PAS"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="d9r-G1-4vR" secondAttribute="trailing" id="e8t-CG-zRf"/>
                             <constraint firstItem="BP3-5Y-Nx7" firstAttribute="height" secondItem="rZj-P4-f66" secondAttribute="height" id="eCV-mq-3Bg"/>
                             <constraint firstItem="X7A-fj-BfJ" firstAttribute="centerY" secondItem="rRL-Ct-drP" secondAttribute="centerY" id="ehX-AB-ytB"/>
                             <constraint firstItem="Xqi-H9-9Kc" firstAttribute="height" secondItem="RFc-ez-p32" secondAttribute="height" id="f8g-Rl-nOx"/>
@@ -305,7 +305,9 @@ They have this app open to the first page</string>
                             <constraint firstItem="X7A-fj-BfJ" firstAttribute="width" secondItem="rRL-Ct-drP" secondAttribute="width" id="rJM-ed-tOL"/>
                             <constraint firstItem="rMP-cC-hwE" firstAttribute="width" secondItem="bRj-YU-Bx6" secondAttribute="width" id="stk-6N-kBB"/>
                             <constraint firstItem="BP3-5Y-Nx7" firstAttribute="centerX" secondItem="rZj-P4-f66" secondAttribute="centerX" id="tpe-cX-x8O"/>
+                            <constraint firstItem="d9r-G1-4vR" firstAttribute="trailing" secondItem="rZj-P4-f66" secondAttribute="trailingMargin" id="uOb-pN-CYe"/>
                             <constraint firstItem="bRj-YU-Bx6" firstAttribute="height" secondItem="iNb-dw-VCA" secondAttribute="height" id="ugD-v3-Gee"/>
+                            <constraint firstItem="LSo-Va-eQc" firstAttribute="height" secondItem="rZj-P4-f66" secondAttribute="height" multiplier="0.05" id="xNI-aN-1Aa"/>
                             <constraint firstItem="X7A-fj-BfJ" firstAttribute="centerX" secondItem="rRL-Ct-drP" secondAttribute="centerX" id="yeg-fs-2An"/>
                             <constraint firstItem="iNb-dw-VCA" firstAttribute="centerY" secondItem="kMf-Zj-xaN" secondAttribute="centerY" multiplier="0.5" id="zzN-Le-uPC"/>
                         </constraints>
@@ -623,6 +625,6 @@ is turned on</string>
         <image name="background" width="1920" height="1080"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="wpe-Sa-1cH"/>
+        <segue reference="chg-le-Vib"/>
     </inferredMetricsTieBreakers>
 </document>

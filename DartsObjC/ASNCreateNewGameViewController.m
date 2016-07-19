@@ -185,8 +185,10 @@
 }
 
 -(void)setupUI {
-    
-    [self.startGameButton buttonWithMyStyleAndSizePriority:high];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.startGameButton buttonWithMyStyleAndSizePriority:high];
+
+    });
 //    [self.visibilityToggle switchWithMyStyle];
     [self.refreshButton buttonWithMyStyleAndSizePriority:low];
     [self.availablePlayersLabel labelWithMyStyleAndSizePriority:medium];
