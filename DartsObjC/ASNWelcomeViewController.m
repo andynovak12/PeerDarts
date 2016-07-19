@@ -61,7 +61,7 @@
     [self.makeSureLabel labelWithMyStyleAndSizePriority:low];
     self.makeSureLabel.textColor = ASNLightColor;
     [self.stayOnThisPageLabel labelWithMyStyleAndSizePriority:medium];
-    self.stayOnThisPageLabel.textColor = ASNLightColor;
+//    self.stayOnThisPageLabel.textColor = ASNLightColor;
     
     self.receivedDataUnarchived = [NSMutableArray new];
     
@@ -91,9 +91,11 @@
         
         // Setup Labels
         [self.visibleToOthersLabel labelWithMyStyleAndSizePriority:low];
+        self.visibleToOthersLabel.textColor = ASNLightColor;
         [self.orLabel labelWithMyStyleAndSizePriority:medium];
-        self.orLabel.textColor = ASNLightColor;
+//        self.orLabel.textColor = ASNLightColor;
         [self.displayNameLabel labelWithMyStyleAndSizePriority:low];
+        self.displayNameLabel.textColor = ASNLightColor;
 //        [self.availableGamesLabel labelWithMyStyleAndSizePriority:medium];
         
         // Setup Switch
@@ -257,6 +259,7 @@
                        options:UIViewAnimationOptionTransitionCrossDissolve
                     animations:^{
                         self.displayNameTextField.hidden = !self.visibilitySwitch.isOn;
+                        self.makeSureLabel.hidden = !self.visibilitySwitch.isOn;
                     }
                     completion:NULL];
     [UIView transitionWithView:self.displayNameLabel
@@ -264,6 +267,7 @@
                        options:UIViewAnimationOptionTransitionCrossDissolve
                     animations:^{
                         self.displayNameLabel.hidden = !self.visibilitySwitch.isOn;
+                        self.makeSureLabel.hidden = !self.visibilitySwitch.isOn;
                     }
                     completion:NULL];
 
