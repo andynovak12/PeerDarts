@@ -33,8 +33,6 @@
 		A1BC23191CDACD1100C714C2 /* ASNGame.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BC23181CDACD1100C714C2 /* ASNGame.m */; };
 		A1BC231E1CDAED4500C714C2 /* ASNMainGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BC231D1CDAED4500C714C2 /* ASNMainGameViewController.m */; };
 		A1C58CD41CEBC8DD008E78A7 /* ASNCreateNewGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A1C58CD31CEBC8DD008E78A7 /* ASNCreateNewGameViewController.m */; };
-		A1C58CD61CEBCE93008E78A7 /* TeamForCreateGame.xib in Resources */ = {isa = PBXBuildFile; fileRef = A1C58CD51CEBCE93008E78A7 /* TeamForCreateGame.xib */; };
-		A1C58CD91CEBD398008E78A7 /* ASNCreateTeamView.m in Sources */ = {isa = PBXBuildFile; fileRef = A1C58CD81CEBD398008E78A7 /* ASNCreateTeamView.m */; };
 		A1EE7FD61CF79D1A0018ECD3 /* ASNWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A1EE7FD51CF79D1A0018ECD3 /* ASNWelcomeViewController.m */; };
 		A1EE7FD91CF79E790018ECD3 /* MCManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A1EE7FD81CF79E790018ECD3 /* MCManager.m */; };
 /* End PBXBuildFile section */
@@ -99,9 +97,6 @@
 		A1BC231D1CDAED4500C714C2 /* ASNMainGameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNMainGameViewController.m; sourceTree = "<group>"; };
 		A1C58CD21CEBC8DD008E78A7 /* ASNCreateNewGameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASNCreateNewGameViewController.h; sourceTree = "<group>"; };
 		A1C58CD31CEBC8DD008E78A7 /* ASNCreateNewGameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNCreateNewGameViewController.m; sourceTree = "<group>"; };
-		A1C58CD51CEBCE93008E78A7 /* TeamForCreateGame.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TeamForCreateGame.xib; sourceTree = "<group>"; };
-		A1C58CD71CEBD398008E78A7 /* ASNCreateTeamView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASNCreateTeamView.h; sourceTree = "<group>"; };
-		A1C58CD81CEBD398008E78A7 /* ASNCreateTeamView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNCreateTeamView.m; sourceTree = "<group>"; };
 		A1EE7FD41CF79D1A0018ECD3 /* ASNWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASNWelcomeViewController.h; sourceTree = "<group>"; };
 		A1EE7FD51CF79D1A0018ECD3 /* ASNWelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASNWelcomeViewController.m; sourceTree = "<group>"; };
 		A1EE7FD71CF79E790018ECD3 /* MCManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCManager.h; sourceTree = "<group>"; };
@@ -204,9 +199,6 @@
 				A17BE2481D0602EA009995B1 /* ASNHitsContainerViews.m */,
 				A14770151D2EE315005A5924 /* ASNAvailableView.h */,
 				A14770161D2EE315005A5924 /* ASNAvailableView.m */,
-				A1C58CD71CEBD398008E78A7 /* ASNCreateTeamView.h */,
-				A1C58CD81CEBD398008E78A7 /* ASNCreateTeamView.m */,
-				A1C58CD51CEBCE93008E78A7 /* TeamForCreateGame.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -365,7 +357,6 @@
 			files = (
 				A1BC22F01CDA7FE600C714C2 /* LaunchScreen.storyboard in Resources */,
 				A1BC22ED1CDA7FE600C714C2 /* Assets.xcassets in Resources */,
-				A1C58CD61CEBCE93008E78A7 /* TeamForCreateGame.xib in Resources */,
 				A1BC22E81CDA7FE600C714C2 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -443,7 +434,6 @@
 				A14770101D2EA5D5005A5924 /* UIButton+ASNButtonStyle.m in Sources */,
 				A17BE2491D0602EA009995B1 /* ASNHitsContainerViews.m in Sources */,
 				A1BC22EB1CDA7FE600C714C2 /* DartsObjC.xcdatamodeld in Sources */,
-				A1C58CD91CEBD398008E78A7 /* ASNCreateTeamView.m in Sources */,
 				A1BC22DF1CDA7FE600C714C2 /* main.m in Sources */,
 				A1BC230E1CDA840900C714C2 /* Turn.m in Sources */,
 				A1EE7FD91CF79E790018ECD3 /* MCManager.m in Sources */,

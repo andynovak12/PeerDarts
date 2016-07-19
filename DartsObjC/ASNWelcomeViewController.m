@@ -56,6 +56,7 @@
     [self.connectingLowerLabel labelWithMyStyleAndSizePriority:medium];
     [self.connectingRetryButton buttonWithMyStyleAndSizePriority:low];
     [self.connectingCancelButton buttonWithMyStyleAndSizePriority:low];
+    self.connectingCancelButton.layer.shadowOffset = CGSizeMake(0, 0);
     
     [self.makeSureLabel labelWithMyStyleAndSizePriority:low];
     self.makeSureLabel.textColor = ASNLightColor;
@@ -388,7 +389,6 @@
         self.connectingView.hidden = YES;
     }
     
-    NSLog(@"I recieved an invitation: %@", self.appDelegate.mcManager.peerID.displayName);
     self.inviterPeerID = [[notification userInfo] objectForKey:@"peerID"];
     NSString *peerDisplayName = self.inviterPeerID.displayName;
     NSUInteger teamIndex = [[[notification userInfo] objectForKey:@"teamIndex"] intValue];

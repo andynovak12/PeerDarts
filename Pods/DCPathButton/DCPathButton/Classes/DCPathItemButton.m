@@ -49,6 +49,9 @@
         //
         [self addTarget:_delegate action:@selector(itemButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         
+        
+        self.tintAdjustmentMode = UIViewTintAdjustmentModeNormal;
+        
     }
     return self;
 }

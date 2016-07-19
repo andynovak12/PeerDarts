@@ -543,8 +543,6 @@
             if (error) {
                 NSLog(@"%@", [error localizedDescription]);
             }
-            
-            NSLog(@"Sent data to all users. These are the unarchived teams: %@", self.teamsArray);
         }
        
     }

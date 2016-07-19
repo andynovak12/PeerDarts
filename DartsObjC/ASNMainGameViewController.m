@@ -30,6 +30,12 @@
 @property (strong, nonatomic) UILabel *team4NameLabel;
 @property (strong, nonatomic) NSArray *teamNameLabelsArray;
 
+@property (strong, nonatomic) UILabel *team1ScoreLabel;
+@property (strong, nonatomic) UILabel *team2ScoreLabel;
+@property (strong, nonatomic) UILabel *team3ScoreLabel;
+@property (strong, nonatomic) UILabel *team4ScoreLabel;
+@property (strong, nonatomic) NSArray *teamScoreLabelsArray;
+
 @property (strong, nonatomic) NSMutableArray *playerNamesLabelsArray;
 @property (strong, nonatomic) NSMutableArray *teamTouchIndicatorArray;
 
@@ -119,6 +125,10 @@
                                              selector:@selector(didReceiveDataNotification:)
                                                  name:@"MCDidReceiveDataNotification"
                                                object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(peerDidChangeStateWithNotification:)
+                                                 name:@"MCDidChangeStateNotification"
+                                               object:nil];
 }
 -(void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
@@ -136,6 +146,8 @@
     [self.appDelegate.mcManager.serviceBrowser  stopBrowsingForPeers];
 
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"MCDidReceiveDataNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"MCDidChangeStateNotification" object:nil];
+
 }
 
 # pragma mark -- Setup View Programatically
@@ -227,17 +239,29 @@
     NSUInteger teamIndex = [self.currentGame.teams indexOfObject:team];
     
     
-    UIView *playerNamesSubView = [[UIView alloc]initWithFrame:CGRectNull];
     
-    [playerNamesSubView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    
+    
+    
+
+    
+    
+    //Stack View
+    UIStackView *playerNamesStackView = [[UIStackView alloc] init];
+    
+    playerNamesStackView.axis = UILayoutConstraintAxisVertical;
+    playerNamesStackView.distribution = UIStackViewDistributionEqualSpacing;
+    playerNamesStackView.alignment = UIStackViewAlignmentCenter;
+    playerNamesStackView.spacing = 10;
+
+    playerNamesStackView.translatesAutoresizingMaskIntoConstraints = false;
+
     dispatch_async(dispatch_get_main_queue(), ^{
-        [((UIView *)self.teamContainersArray[teamIndex]) addSubview:playerNamesSubView];
-        [playerNamesSubView.centerXAnchor constraintEqualToAnchor:((UIView *)self.teamContainersArray[teamIndex]).centerXAnchor].active = YES;
-        [playerNamesSubView.centerYAnchor constraintEqualToAnchor:((UIView *)self.teamContainersArray[teamIndex]).centerYAnchor].active = YES;
-        [playerNamesSubView.widthAnchor constraintEqualToAnchor:((UIView *)self.teamContainersArray[teamIndex]).widthAnchor multiplier:0.9].active = YES;
-        [playerNamesSubView.heightAnchor constraintEqualToAnchor:((UIView *)self.teamContainersArray[teamIndex]).heightAnchor multiplier:0.25].active = YES;
-//        playerNamesSubView.backgroundColor = [UIColor blackColor];
-        
+        [((UIView *)self.teamContainersArray[teamIndex]) addSubview:playerNamesStackView];
+        [playerNamesStackView.centerXAnchor constraintEqualToAnchor:((UIView *)self.teamContainersArray[teamIndex]).centerXAnchor].active = YES;
+        [playerNamesStackView.centerYAnchor constraintEqualToAnchor:((UIView *)self.teamContainersArray[teamIndex]).centerYAnchor].active = YES;
+        [playerNamesStackView.widthAnchor constraintEqualToAnchor:((UIView *)self.teamContainersArray[teamIndex]).widthAnchor multiplier:0.9].active = YES;
+        [playerNamesStackView.heightAnchor constraintEqualToAnchor:((UIView *)self.teamContainersArray[teamIndex]).heightAnchor multiplier:0.3].active = YES;
     });
     
 
@@ -255,52 +279,12 @@
             currentLabel.text = ((Player *)team.players[i]).name;
 
             dispatch_async(dispatch_get_main_queue(), ^{
-                [((UIView *)self.teamContainersArray[teamIndex]) addSubview:currentLabel];
-                [currentLabel.centerXAnchor constraintEqualToAnchor:playerNamesSubView.centerXAnchor].active = YES;
-                [currentLabel.widthAnchor constraintEqualToAnchor:playerNamesSubView.widthAnchor].active = YES;
-                [currentLabel.heightAnchor constraintEqualToAnchor:playerNamesSubView.heightAnchor multiplier:0.25].active = YES;
-                
-                switch (numberOfPlayersOnTeam) {
-                    case 1:
-                        [currentLabel.centerYAnchor constraintEqualToAnchor:playerNamesSubView.centerYAnchor].active = YES;
-                        break;
-                    case 2:
-                        if (i == 0) {
-                            [currentLabel.topAnchor constraintEqualToAnchor:playerNamesSubView.topAnchor].active = YES;
-                        }
-                        else {
-                            [currentLabel.bottomAnchor constraintEqualToAnchor:playerNamesSubView.bottomAnchor ].active = YES;
-                        }
-                        break;
-                    case 3:
-                        if (i == 0) {
-                            [currentLabel.bottomAnchor constraintEqualToAnchor:playerNamesSubView.topAnchor].active = YES;
-                        }
-                        else if (i == 1) {
-                            [currentLabel.centerYAnchor constraintEqualToAnchor:playerNamesSubView.centerYAnchor].active = YES;
-                        }
-                        else {
-                            [currentLabel.topAnchor constraintEqualToAnchor:playerNamesSubView.bottomAnchor].active = YES;
-                        }
-                        break;
-                    case 4:
-                        if (i == 0) {
-                            [currentLabel.bottomAnchor constraintEqualToAnchor:playerNamesSubView.topAnchor].active = YES;
-                        }
-                        else if (i == 1) {
-                            [currentLabel.topAnchor constraintEqualToAnchor:playerNamesSubView.topAnchor].active = YES;
-                        }
-                        else if (i == 2) {
-                            [currentLabel.bottomAnchor constraintEqualToAnchor:playerNamesSubView.bottomAnchor].active = YES;
-                        }
-                        else {
-                            [currentLabel.topAnchor constraintEqualToAnchor:playerNamesSubView.bottomAnchor].active = YES;
-                        }
-                        break;
-                    default:
-                        NSLog(@"There are more than 4 players on the team");
-                        break;
-                }
+                [playerNamesStackView addArrangedSubview:currentLabel];
+
+//                [((UIView *)self.teamContainersArray[teamIndex]) addSubview:currentLabel];
+//                [currentLabel.centerXAnchor constraintEqualToAnchor:playerNamesSubView.centerXAnchor].active = YES;
+                [currentLabel.widthAnchor constraintEqualToAnchor:playerNamesStackView.widthAnchor].active = YES;
+                [currentLabel.heightAnchor constraintEqualToAnchor:playerNamesStackView.heightAnchor multiplier:0.22].active = YES;
             });
 
         }
@@ -334,6 +318,13 @@
     self.team3NameLabel = [UILabel new];
     self.team4NameLabel = [UILabel new];
     self.teamNameLabelsArray = @[self.team1NameLabel, self.team2NameLabel, self.team3NameLabel, self.team4NameLabel];
+
+    
+    self.team1ScoreLabel = [UILabel new];
+    self.team2ScoreLabel = [UILabel new];
+    self.team3ScoreLabel = [UILabel new];
+    self.team4ScoreLabel = [UILabel new];
+    self.teamScoreLabelsArray = @[self.team1ScoreLabel, self.team2ScoreLabel, self.team3ScoreLabel, self.team4ScoreLabel];
     
     __block NSUInteger counter = 0;
     NSUInteger numberOfTeams = teamsArray.count;
@@ -578,9 +569,29 @@
                 teamHorizontalMultiplier = 2.2;
             }
             [teamTouchIndicatorView.centerXAnchor constraintEqualToAnchor:self.numbersContainerView.centerXAnchor constant:teamHorizontalMultiplier * (self.insideLineConstraint + self.outsideLineConstraint)/2].active = YES;
+            
+            
+            // layout the score label
+            UILabel *scoreLabel = self.teamScoreLabelsArray[teamIndex];
+            [scoreLabel labelWithMyStyleAndSizePriority:low];
+            scoreLabel.textColor = ASNLightColor;
+            scoreLabel.textAlignment = NSTextAlignmentCenter;
+            [self.view insertSubview:scoreLabel aboveSubview:teamTouchIndicatorView];
+            [scoreLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
+            [scoreLabel.topAnchor constraintEqualToAnchor:teamTouchIndicatorView.bottomAnchor constant:2].active = YES;
+            [scoreLabel.centerXAnchor constraintEqualToAnchor:teamTouchIndicatorView.centerXAnchor].active = YES;
+            [scoreLabel.widthAnchor constraintEqualToAnchor:teamTouchIndicatorView.widthAnchor multiplier:0.9].active = YES;
+            scoreLabel.text = [NSString stringWithFormat:@"Score: 0"];
         }
         [self enableTouchingForTeam:self.currentGame.currentTeam];
 
+    });
+}
+
+-(void)updateScoreOfTeam:(ASNTeam *)team {
+    NSUInteger indexOfTeam = [self.currentGame.teams indexOfObject:team];
+    dispatch_async(dispatch_get_main_queue(), ^{
+         ((UILabel *)self.teamScoreLabelsArray[indexOfTeam]).text = [NSString stringWithFormat:@"%lu", ((ASNTeam *)self.currentGame.teams[indexOfTeam]).scoreOfCurrentRound];
     });
 }
 
@@ -826,7 +837,7 @@
     [self updateTeamNameAndWins:self.currentGame.currentTeam];
 //    [self updateCurrentPlayerLabel];
     [self updateImageOfImageView:associatedView withValue:newValueForKey];
-
+    [self updateScoreOfTeam:self.currentGame.currentTeam];
     ASNTeam *winner = [self.currentGame returnIfThereIsAWinner];
     if (winner) {
         //update wins/losses for each team
@@ -910,6 +921,7 @@
     }
     for (ASNTeam *team in self.currentGame.teams) {
         [self refreshNumbersUIForTeam:team];
+        [self updateScoreOfTeam:self.currentGame.currentTeam];
 //        for (ASNHitsContainerViews *view in team.arrayOfNumberViews) {
 //            dispatch_async(dispatch_get_main_queue(), ^{
 //                view.tintColor = [UIColor clearColor];
@@ -964,10 +976,12 @@
         if (error) {
             NSLog(@"%@", [error localizedDescription]);
         }
-        NSLog(@"sent log Turn to peers %@", allPeers);
+        
     }
 
 }
+
+
 
 -(void)didReceiveDataNotification:(NSNotification *)notification {
     MCPeerID *peerID = [[notification userInfo] objectForKey:@"peerID"];
@@ -1019,6 +1033,26 @@
     }
 }
 
+-(void)peerDidChangeStateWithNotification:(NSNotification *)notification {
+    MCPeerID *peerID = [[notification userInfo] objectForKey:@"peerID"];
+    NSString *peerDisplayName = peerID.displayName;
+    MCSessionState state = [[[notification userInfo] objectForKey:@"state"] intValue];
+    
+    if (state != MCSessionStateConnecting) {
+        if (state == MCSessionStateConnected) {
+            NSLog(@"Connected to %@", peerDisplayName);
+        }
+        else if (state == MCSessionStateNotConnected){
+            NSLog(@"Connection lost with %@", peerDisplayName);
+            // TODO: alert user, reconnect
+//            [self.appDelegate.mcManager.serviceBrowser invitePeer:peerID toSession:self.appDelegate.mcManager.session withContext:nil timeout:30];
+
+        }
+    }
+}
+
+
+
 # pragma mark -- DCPathButton Delegate
 
 - (void)pathButton:(DCPathButton *)dcPathButton clickItemButtonAtIndex:(NSUInteger)itemButtonIndex {
@@ -1043,7 +1077,7 @@
 
 -(void)handleUndoPressed {
     // present alert
-    UIAlertController *undoAlert = [UIAlertController alertControllerWithTitle:@"Undo?" message:[NSString stringWithFormat:@"Undo %@'s last turn? This will also erase any current hits of %@)", self.currentGame.previousTeam.previousPlayer.name, self.currentGame.currentPlayer.name] preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *undoAlert = [UIAlertController alertControllerWithTitle:@"Undo?" message:[NSString stringWithFormat:@"Undo %@'s last turn? This will erase any current hits of %@)", self.currentGame.previousTeam.previousPlayer.name, self.currentGame.currentPlayer.name] preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *yes = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [self undoTurn];
         [self sendToAllConnectedPeersString:@"undo"];
@@ -1071,15 +1105,11 @@
     [self updateTeamNameAndWins:self.currentGame.currentTeam];
     
     [self refreshNumbersUIForTeam:self.currentGame.currentTeam];
+    [self updateScoreOfTeam:self.currentGame.currentTeam];
+    [self makeHitsImagesWhiteForTeam:self.currentGame.currentTeam];
     
     [self makeCurrentPlayerNameBig];
     [self enableTouchingForTeam:self.currentGame.currentTeam];
-    
-    
-    // update UI of next team in case they changed anything before undo was clicked
-    NSUInteger currentTeamIndex = [self.currentGame.teams indexOfObject:self.currentGame.currentTeam];
-    NSUInteger nextTeamIndex = (currentTeamIndex + 1) % self.currentGame.teams.count;
-    [self refreshNumbersUIForTeam:self.currentGame.teams[nextTeamIndex]];
 }
 
 -(void)handleEraseTapped {
@@ -1122,6 +1152,9 @@
 
     [self.currentGame.currentPlayer setupPlayerForRound];
     [self refreshNumbersUIForTeam:self.currentGame.currentTeam];
+    [self makeHitsImagesWhiteForTeam:self.currentGame.currentTeam];
+    [self updateScoreOfTeam:self.currentGame.currentTeam];
+
 }
 
 -(void)refreshNumbersUIForTeam:(ASNTeam *)team {

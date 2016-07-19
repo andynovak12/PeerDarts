@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ASNCreateTeamView.h"
 #import <MultipeerConnectivity/MultipeerConnectivity.h>
 
 @interface ASNCreateNewGameViewController : UIViewController <MCNearbyServiceBrowserDelegate, UITableViewDelegate, UITableViewDataSource>

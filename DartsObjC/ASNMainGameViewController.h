@@ -10,6 +10,6 @@
 #import "ASNTeam.h"
 #import <MultipeerConnectivity/MultipeerConnectivity.h>
 
-@interface ASNMainGameViewController : UIViewController
+@interface ASNMainGameViewController : UIViewController 
 @property(strong,nonatomic)NSArray *teamsArray;
 @end
